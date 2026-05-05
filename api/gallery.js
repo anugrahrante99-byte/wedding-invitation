@@ -30,6 +30,11 @@ export default async function handler(req, res) {
     // Path ke folder foto di Vercel
     const folderPath = path.join(process.cwd(), 'public', category);
     
+    // Debug: Log folder path untuk troubleshooting
+    console.log(`Looking for folder: ${folderPath}`);
+    console.log(`Current working directory: ${process.cwd()}`);
+    console.log(`Folder exists: ${fs.existsSync(folderPath)}`);
+    
     // Cek folder exists
     if (!fs.existsSync(folderPath)) {
       console.log(`Folder not found: ${folderPath}`);
