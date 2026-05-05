@@ -3,11 +3,5 @@
     "api/gallery.js": {
       "maxDuration": 10
     }
-  },
-  "rewrites": [
-    {
-      "source": "/management",
-      "destination": "/management.html"
-    }
-  ]
+  }
 }
