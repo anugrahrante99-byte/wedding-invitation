@@ -3,19 +3,5 @@
     "api/gallery.js": {
       "maxDuration": 10
     }
-  },
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/management",
-      "destination": "/management.html"
-    },
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/$1"
-    }
-  ]
+  }
 }
