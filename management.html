@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #45b7d1;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .login-card .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-card .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+        }
+
+        .login-card .btn {
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .management-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--light-color);
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .tab-content {
+            min-height: 400px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .message-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .message {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .message.success {
+            border-left-color: var(--success-color);
+        }
+
+        .message.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .message.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .message.info {
+            border-left-color: var(--accent-color);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stats-card h3 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stats-card p {
+            color: var(--dark-color);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .preview-box {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .management-container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .nav-tabs .nav-link {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card">
+            <h2><i class="fas fa-heart"></i> Wedding Management</h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="password" placeholder="Masukkan password admin" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div id="loginMessage"></div>
+        </div>
+    </div>
+
+    <!-- Management Screen -->
+    <div class="management-container" id="managementScreen">
+        <div class="header">
+            <h1><i class="fas fa-heart"></i> Wedding Management System</h1>
+            <p class="text-muted">Kelola undangan pernikahan Anda</p>
+            <button class="btn btn-warning mt-3" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="whatsapp-tab" data-bs-toggle="tab" data-bs-target="#whatsapp" type="button" role="tab">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Generator
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="guests-tab" data-bs-toggle="tab" data-bs-target="#guests" type="button" role="tab">
+                    <i class="fas fa-users"></i> Tamu
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab">
+                    <i class="fas fa-tools"></i> Tools
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                    <i class="fas fa-cog"></i> Pengaturan
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- WhatsApp Generator Tab -->
+            <div class="tab-pane fade show active" id="whatsapp" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fab fa-whatsapp"></i> WhatsApp Invitation Generator</h4>
+                    <form id="whatsappForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Tamu</label>
+                                <input type="text" class="form-control" id="guestName" placeholder="Masukkan nama tamu" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nomor WhatsApp (opsional)</label>
+                                <input type="tel" class="form-control" id="guestPhone" placeholder="628123456789">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Preview Pesan</label>
+                            <div class="preview-box" id="messagePreview">Masukkan nama tamu untuk melihat preview pesan...</div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-success" onclick="copyMessage()">
+                                <i class="fas fa-copy"></i> Salin Pesan
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="generateWhatsAppLink()">
+                                <i class="fab fa-whatsapp"></i> Kirim WhatsApp
+                            </button>
+                        </div>
+                    </form>
+                    <div id="whatsappMessage"></div>
+                </div>
+            </div>
+
+            <!-- Guests Tab -->
+            <div class="tab-pane fade" id="guests" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-users"></i> Daftar Tamu</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <button class="btn btn-success" onclick="loadGuestList()">
+                            <i class="fas fa-refresh"></i> Refresh
+                        </button>
+                        <button class="btn btn-danger" onclick="clearAllGuests()">
+                            <i class="fas fa-trash"></i> Hapus Semua
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>WhatsApp</th>
+                                    <th>Kehadiran</th>
+                                    <th>Jumlah</th>
+                                    <th>Pesan</th>
+                                    <th>Waktu</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guestList">
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div class="tab-pane fade" id="tools" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-tools"></i> Tools & Utilities</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-info w-100 mb-2" onclick="exportData()">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-warning w-100 mb-2" onclick="importData()">
+                                <i class="fas fa-upload"></i> Import Data
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-success w-100 mb-2" onclick="testConnection()">
+                                <i class="fas fa-plug"></i> Test Connection
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-secondary w-100 mb-2" onclick="clearCache()">
+                                <i class="fas fa-broom"></i> Clear Cache
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-cog"></i> Pengaturan</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-primary w-100 mb-2" onclick="openInvitationPage()">
+                                <i class="fas fa-external-link-alt"></i> Buka Undangan
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-info w-100 mb-2" onclick="previewInvitation()">
+                                <i class="fas fa-eye"></i> Preview Undangan
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Informasi Sistem</h5>
+                        <div class="stats-card">
+                            <h3 id="totalGuests">0</h3>
+                            <p>Total Tamu</p>
+                        </div>
+                        <div class="stats-card">
+                            <h3 id="confirmedGuests">0</h3>
+                            <p>Tamu Konfirmasi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div class="message-container" id="messageContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuration
+        const CONFIG = {
+            ADMIN_PASSWORD: 'kawinkawin',
+            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbzGRf-TxZNmUUBlaA4UbU83n1vY5msQ8nyjtVZW1wN47W4rlALMQruU7-SR50J2Auw/exec',
+            SPREADSHEET_ID: '1gvHiIkStxwhnhLZhK7se-TfQucecSy-9ClZe_gKv8A8'
+        };
+
+        // Global Variables
+        let currentTab = 'whatsapp';
+        let guests = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            setupEventListeners();
+        });
+
+        // Authentication Functions
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                showManagementScreen();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        function showLoginScreen() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('managementScreen').style.display = 'none';
+        }
+
+        function showManagementScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('managementScreen').style.display = 'block';
+            loadGuestList();
+            updateStats();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn');
+            showLoginScreen();
+            showMessage('loginMessage', 'Anda telah logout', 'info');
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Login Form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                if (password === CONFIG.ADMIN_PASSWORD) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    showManagementScreen();
+                    showMessage('loginMessage', 'Login berhasil!', 'success');
+                } else {
+                    showMessage('loginMessage', 'Password salah!', 'error');
+                }
+            });
+
+            // WhatsApp Form
+            document.getElementById('guestName').addEventListener('input', previewMessage);
+
+            // Tab Change
+            document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    currentTab = e.target.getAttribute('data-bs-target').replace('#', '');
+                    if (currentTab === 'guests') {
+                        loadGuestList();
+                    }
+                });
+            });
+        }
+
+        // Message Functions
+        function showMessage(containerId, message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${message}</span>
+                    <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+
+            let container;
+            if (containerId === 'loginMessage') {
+                container = document.getElementById('loginMessage');
+                container.innerHTML = '';
+                container.appendChild(messageDiv);
+            } else {
+                container = document.getElementById('messageContainer');
+                container.appendChild(messageDiv);
+            }
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentElement) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // WhatsApp Generator Functions
+        function generateUniqueToken(guestName) {
+            const timestamp = Date.now().toString(36);
+            const nameHash = guestName.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 8);
+            const random = Math.random().toString(36).substring(2, 8);
+            return `${nameHash}-${timestamp}-${random}`;
+        }
+
+        function createSecureInvitationLink(guestName) {
+            const token = generateUniqueToken(guestName);
+            const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            return `index.html?to=${normalizedName}-${token}`;
+        }
+
+        function nameToDomain(name) {
+            return name.toLowerCase()
+                .replace(/[^a-z0-9\s]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
+        function previewMessage() {
+            const guestName = document.getElementById('guestName').value;
+            const previewElement = document.getElementById('messagePreview');
+
+            if (!guestName) {
+                previewElement.textContent = 'Masukkan nama tamu untuk melihat preview pesan...';
+                return;
+            }
+
+            const invitationLink = createSecureInvitationLink(guestName);
+
+            const personalizedMessage = `Kepada Yth. Bapak/Ibu/Saudara/i
+
+*${guestName}*
+
+"Tuhan adalah kasih" (1 Yohanes 4:16)
+
+Dengan anugerah Tuhan, kami mengundang Anda untuk hadir dalam pemberkatan perkawinan kami:
+
+*Adiaksa Anugrah Rante*
+Putra dari Bapak Sender Rante, B.Sc & Ibu Rosdiana Kadang
+
+*Pdt. Fepprianti S.Th.*
+Putri dari Bapak Benyamin Dendean & Ibu Martha Sarira
+
+*Pemberkatan*
+Jumat, 26 Juni 2026
+09.00 WITA - Selesai
+Gereja Toraja Jemaat Bua Tallulolo
+
+*Resepsi*
+13.00 WITA - Selesai
+Ballroom D'Rij Hotel & Convention
+
+*Digital Invitation:*
+${invitationLink}
+
+*Your presence means the world to us*
+*Your prayers are our greatest blessing*
+
+With love in Christ,
+*Sender Rante & Rosdiana Kadang*
+*Benyamin Dendean & Martha Sarira*
+
+God bless you`;
+
+            previewElement.textContent = personalizedMessage;
+        }
+
+        function copyMessage() {
+            const guestName = document.getElementById('guestName').value;
+            
+            if (!guestName) {
+                showMessage('whatsappMessage', 'Silakan isi nama tamu terlebih dahulu!', 'error');
+                return;
+            }
+
+            const invitationLink = createSecureInvitationLink(guestName);
+
+            const personalizedMessage = `${guestName}
+
+"Tuhan adalah kasih" (1 Yohanes 4:16)
+
+Dengan anugerah Tuhan, kami mengundang Anda untuk hadir dalam pemberkatan perkawinan kami:
+
+*Adiaksa Anugrah Rante*
+Putra dari Bapak Sender Rante, B.Sc & Ibu Rosdiana Kadang
+
+*Pdt. Fepprianti S.Th.*
+Putri dari Bapak Benyamin Dendean & Ibu Martha Sarira
+
+*Pemberkatan*
+Jumat, 26 Juni 2026
+09.00 WITA - Selesai
+Gereja Toraja Jemaat Bua Tallulolo
+
+*Resepsi*
+13.00 WITA - Selesai
+Ballroom D'Rij Hotel & Convention
+
+*Digital Invitation:*
+${invitationLink}
+
+*Your presence means the world to us*
+*Your prayers are our greatest blessing*
+
+With love in Christ,
+*Sender Rante & Rosdiana Kadang*
+*Benyamin Dendean & Martha Sarira*
+
+God bless you`;
+
+            navigator.clipboard.writeText(personalizedMessage).then(() => {
+                showMessage('whatsappMessage', 'Pesan berhasil disalin ke clipboard!', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = personalizedMessage;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showMessage('whatsappMessage', 'Pesan berhasil disalin ke clipboard!', 'success');
+            });
+        }
+
+        async function generateWhatsAppLink() {
+            const guestName = document.getElementById('guestName').value;
+            const guestPhone = document.getElementById('guestPhone').value;
+
+            if (!guestName) {
+                showMessage('whatsappMessage', 'Silakan isi nama tamu', 'error');
+                return;
+            }
+
+            const invitationLink = createSecureInvitationLink(guestName);
+
+            // Simpan data tamu ke Google Sheets dengan action yang sama seperti index.html
+            try {
+                showMessage('whatsappMessage', 'Menyimpan data ke Google Sheets...', 'info');
+                
+                const guestData = {
+                    action: 'addWish',
+                    name: guestName,
+                    attendance: 'WhatsApp',
+                    guestCount: '1',
+                    message: `Link undangan: ${invitationLink}`,
+                    type: 'whatsapp',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to Google Sheets
+                const success = await sheetsPost(guestData);
+
+                if (success) {
+                    // Add to local guests array
+                    const displayGuest = {
+                        name: guestName,
+                        phone: guestPhone || '',
+                        link: invitationLink,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    guests.push(displayGuest);
+                    localStorage.setItem('weddingGuests', JSON.stringify(guests));
+                    displayGuestList();
+                    updateStats();
+                    
+                    showMessage('whatsappMessage', 'Data tersimpan di Google Sheets!', 'success');
+                } else {
+                    showMessage('whatsappMessage', 'Gagal menyimpan ke Google Sheets', 'error');
+                }
+            } catch (error) {
+                // Fallback to localStorage
+                const displayGuest = {
+                    name: guestName,
+                    phone: guestPhone || '',
+                    link: invitationLink,
+                    timestamp: new Date().toISOString()
+                };
+                guests.push(displayGuest);
+                localStorage.setItem('weddingGuests', JSON.stringify(guests));
+                displayGuestList();
+                updateStats();
+                showMessage('whatsappMessage', 'Data tersimpan di local storage (fallback)', 'info');
+            }
+
+            const personalizedMessage = `${guestName}
+
+"Tuhan adalah kasih" (1 Yohanes 4:16)
+
+Dengan anugerah Tuhan, kami mengundang Anda untuk hadir dalam pemberkatan perkawinan kami:
+
+*Adiaksa Anugrah Rante*
+Putra dari Bapak Sender Rante, B.Sc & Ibu Rosdiana Kadang
+
+*Pdt. Fepprianti S.Th.*
+Putri dari Bapak Benyamin Dendean & Ibu Martha Sarira
+
+*Pemberkatan*
+Jumat, 26 Juni 2026
+09.00 WITA - Selesai
+Gereja Toraja Jemaat Bua Tallulolo
+
+*Resepsi*
+13.00 WITA - Selesai
+Ballroom D'Rij Hotel & Convention
+
+*Digital Invitation:*
+${invitationLink}
+
+*Your presence means the world to us*
+*Your prayers are our greatest blessing*
+
+With love in Christ,
+*Sender Rante & Rosdiana Kadang*
+*Benyamin Dendean & Martha Sarira*
+
+God bless you`;
+
+            const encodedMessage = encodeURIComponent(personalizedMessage);
+            const whatsappUrl = guestPhone 
+                ? `https://wa.me/${guestPhone.replace(/[^\d]/g, '')}?text=${encodedMessage}`
+                : `https://wa.me/?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+            showMessage('whatsappMessage', 'WhatsApp terbuka!', 'success');
+        }
+
+        // Google Sheets API Functions
+        async function sheetsGet(action) {
+            return new Promise((resolve, reject) => {
+                const callbackName = `sheetsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+                const script = document.createElement('script');
+                const separator = CONFIG.WEB_APP_URL.includes('?') ? '&' : '?';
+                script.src = `${CONFIG.WEB_APP_URL}${separator}action=${encodeURIComponent(action)}&callback=${callbackName}`;
+
+                const timeout = setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                    }
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    reject(new Error('Request timeout - Web App tidak merespon'));
+                }, 10000);
+
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                    }
+                    reject(new Error('Gagal memuat script - cek Web App URL'));
+                };
+
+                window[callbackName] = (data) => {
+                    clearTimeout(timeout);
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    resolve(data);
+                };
+
+                document.head.appendChild(script);
+            });
+        }
+
+        async function sheetsPost(payload) {
+            return fetch(CONFIG.WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => true).catch(() => false);
+        }
+
+        // Guest Management Functions
+        async function loadGuestList() {
+            try {
+                showMessage('guestsMessage', 'Loading data...', 'info');
+                
+                // Load dari Google Sheets dengan action yang sama seperti index.html
+                const result = await sheetsGet('listwishes');
+                guests = result.data || [];
+                displayGuestList();
+                updateStats();
+                showMessage('guestsMessage', 'Data berhasil dimuat dari Google Sheets!', 'success');
+            } catch (error) {
+                // Fallback ke localStorage jika Apps Script error
+                console.log('Apps Script error, using localStorage:', error.message);
+                const storedGuests = localStorage.getItem('weddingGuests');
+                if (storedGuests) {
+                    guests = JSON.parse(storedGuests);
+                } else {
+                    guests = [];
+                }
+                displayGuestList();
+                updateStats();
+                showMessage('guestsMessage', 'Data berhasil dimuat dari local storage!', 'info');
+            }
+        }
+
+        function displayGuestList() {
+            const tbody = document.getElementById('guestList');
+            
+            if (!guests || guests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Belum ada data tamu</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = guests.map((guest, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${guest.name || '-'}</td>
+                    <td>${guest.phone || '-'}</td>
+                    <td>${guest.attendance || '-'}</td>
+                    <td>${guest.guestCount || '-'}</td>
+                    <td>${guest.message ? (guest.message.length > 50 ? guest.message.substring(0, 50) + '...' : guest.message) : '-'}</td>
+                    <td>${formatTime(guest.timestamp)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteGuest(${index + 2})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return '-';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `${days} hari lalu`;
+            if (hours > 0) return `${hours} jam lalu`;
+            return 'Baru saja';
+        }
+
+        function deleteGuest(index) {
+            alert('Fitur hapus tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
+        }
+
+        function clearAllGuests() {
+            alert('Fitur hapus semua tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
+        }
+
+        function updateStats() {
+            if (!guests) return;
+
+            const totalGuests = guests.length;
+            const confirmedGuests = guests.filter(g => g.attendance === 'Hadir').length;
+
+            document.getElementById('totalGuests').textContent = totalGuests;
+            document.getElementById('confirmedGuests').textContent = confirmedGuests;
+        }
+
+        // Tools Functions
+        async function exportData() {
+            try {
+                showMessage('toolsMessage', 'Exporting data...', 'info');
+                
+                const guests = await sheetsGet('listguests');
+                const dataStr = JSON.stringify(guests, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `wedding-guests-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                showMessage('toolsMessage', 'Data berhasil diexport!', 'success');
+            } catch (error) {
+                showMessage('toolsMessage', 'Gagal export data: ' + error.message, 'error');
+            }
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async function(e) {
+                try {
+                    const file = e.target.files[0];
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    
+                    showMessage('toolsMessage', 'Importing data...', 'info');
+                    
+                    for (const guest of data) {
+                        await sheetsPost({
+                            action: 'addguest',
+                            name: guest.name || '',
+                            phone: guest.phone || '',
+                            attendance: guest.attendance || '',
+                            guestCount: guest.guestCount || '',
+                            message: guest.message || '',
+                            timestamp: guest.timestamp || new Date().toISOString()
+                        });
+                    }
+                    
+                    showMessage('toolsMessage', 'Data berhasil diimport!', 'success');
+                    loadGuestList();
+                } catch (error) {
+                    showMessage('toolsMessage', 'Gagal import data: ' + error.message, 'error');
+                }
+            };
+            input.click();
+        }
+
+        async function testConnection() {
+            try {
+                showMessage('toolsMessage', 'Testing connection...', 'info');
+                
+                const result = await sheetsGet('test');
+                
+                if (result && result.ok) {
+                    showMessage('toolsMessage', 'Connection successful! Google Sheets terkoneksi.', 'success');
+                } else {
+                    showMessage('toolsMessage', 'Connection successful! Google Sheets terkoneksi.', 'success');
+                }
+            } catch (error) {
+                showMessage('toolsMessage', 'Connection error: ' + error.message, 'error');
+            }
+        }
+
+        function clearCache() {
+            if (confirm('Clear semua cache dan local storage?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                showMessage('toolsMessage', 'Cache berhasil dibersihkan!', 'success');
+            }
+        }
+
+        // Settings Functions
+        function openInvitationPage() {
+            const invitationUrl = window.location.origin + window.location.pathname.replace('management.html', 'index.html') + '?admin=kawinkawin';
+            window.open(invitationUrl, '_blank');
+        }
+
+        function previewInvitation() {
+            window.open('index.html', '_blank');
+        }
+    </script>
+</body>
+</html>
