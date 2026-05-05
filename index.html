@@ -5802,6 +5802,11 @@
                 // Create photo paths
                 const photoPaths = detectedPhotos.map(photo => `${category}/${photo}`);
                 
+                // Debug: Log photo paths untuk troubleshooting
+                console.log('Photo paths created:', photoPaths);
+                console.log('Category:', category);
+                console.log('Detected photos:', detectedPhotos);
+                
                 // Update gallery categories with latest detection
                 galleryCategories[category] = detectedPhotos;
                 
