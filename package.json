@@ -4,15 +4,11 @@
   "description": "Digital Wedding Invitation with Gallery",
   "main": "index.html",
   "scripts": {
-    "start": "vercel dev",
-    "build": "echo 'Build complete'",
-    "dev": "vercel dev"
+    "build": "echo 'Static site build complete'",
+    "start": "echo 'Starting static site'"
   },
   "keywords": ["wedding", "invitation", "gallery"],
   "author": "Your Name",
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
-    "vercel": "^28.0.0"
-  }
+  "dependencies": {}
 }
