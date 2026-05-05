@@ -5046,8 +5046,9 @@
             try {
                 console.log(`Fetching photos from Vercel API for category: ${category}`);
                 
-                // Call Vercel API
-                const response = await fetch(`/api/gallery?category=${category}`);
+                // Call Vercel API with cache busting
+                const timestamp = Date.now();
+                const response = await fetch(`/api/gallery?category=${category}&_t=${timestamp}`);
                 
                 if (!response.ok) {
                     throw new Error(`API responded with ${response.status}`);
