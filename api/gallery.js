@@ -27,13 +27,21 @@ export default async function handler(req, res) {
   }
   
   try {
-    // Path ke folder foto di Vercel - cek di root folder (dimana gambar benar-benar ada)
-    const folderPath = path.join(process.cwd(), category);
+    // Path ke folder foto di Vercel - cek di public folder dulu (Vercel standard)
+    let folderPath = path.join(process.cwd(), 'public', category);
     
     // Debug: Log folder path untuk troubleshooting
     console.log(`Looking for folder: ${folderPath}`);
     console.log(`Current working directory: ${process.cwd()}`);
-    console.log(`Folder exists: ${fs.existsSync(folderPath)}`);
+    console.log(`Public folder exists: ${fs.existsSync(folderPath)}`);
+    
+    // Jika tidak ada di public, cek di root
+    if (!fs.existsSync(folderPath)) {
+      console.log(`Folder not found in public, checking root...`);
+      folderPath = path.join(process.cwd(), category);
+      console.log(`Trying root folder: ${folderPath}`);
+      console.log(`Root folder exists: ${fs.existsSync(folderPath)}`);
+    }
     
     // Cek folder exists
     if (!fs.existsSync(folderPath)) {
