@@ -4852,6 +4852,8 @@
             const guestCountInput = document.getElementById('guestCount');
             const messageInput = document.getElementById('guestMessage');
 
+            console.log("SUBMIT WORKING");
+
             const wish = {
                 action: 'addWish',
                 type: 'combined',
@@ -4861,6 +4863,8 @@
                 message: messageInput.value.trim(),
                 timestamp: new Date().toISOString()
             };
+
+            console.log(wish);
 
             if (!wish.name || !wish.attendance || !wish.guestCount || !wish.message) {
                 // Re-enable button if validation fails
