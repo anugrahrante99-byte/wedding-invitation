@@ -639,7 +639,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nama Tamu</label>
-                                <input type="text" class="form-control" id="guestName" placeholder="Masukkan nama tamu" required>
+                                <input type="text" class="form-control" id="guestName" placeholder="Masukkan nama tamu" required oninput="previewMessage()">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nomor WhatsApp (opsional)</label>
@@ -1293,6 +1293,16 @@ God bless you`;
 
             // Simpan data tamu ke Google Sheets dengan action marksent untuk sheet Terkirim
             try {
+                const guestData = {
+                    action: 'marksent',
+                    name: guestName,
+                    phone: guestPhone || '', // Nomor WhatsApp opsional
+                    link: guestPhone ? `https://wa.me/${guestPhone.replace(/[^\d]/g, '')}` : '',
+                    key: generateUniqueToken(guestName),
+                    timestamp: new Date().toISOString()
+                };
+
+                const success = await sheetsPost(guestData);
 
                 if (success) {
                     // Add to local guests array
