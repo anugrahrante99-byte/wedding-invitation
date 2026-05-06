@@ -4794,12 +4794,19 @@
 
         function sheetsPost(payload) {
             if (!sheetsEnabled()) return Promise.resolve(false);
+            
+            const formData = new URLSearchParams();
+            formData.append("action", payload.action);
+            formData.append("name", payload.name);
+            formData.append("attendance", payload.attendance);
+            formData.append("guestCount", payload.guestCount);
+            formData.append("message", payload.message);
+            formData.append("type", payload.type);
+            formData.append("timestamp", payload.timestamp);
+            
             return fetch(SHEETS_WEB_APP_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+                body: formData
             })
             .then(r => r.text())
             .then(res => {
