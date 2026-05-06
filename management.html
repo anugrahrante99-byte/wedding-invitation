@@ -560,54 +560,72 @@
             <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
                 <div class="form-section">
                     <h4><i class="fas fa-tachometer-alt"></i> Dashboard</h4>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="text-primary"><i class="fas fa-users"></i></h5>
-                                    <p class="card-text" id="totalGuests">0</p>
-                                    <small class="text-muted">Total Tamu</small>
-                                </div>
-                            </div>
+                    
+                    <!-- Wishes Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-comment"></i> Ucapan & Doa</h5>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Info:</strong> Kelola semua ucapan dan doa dari tamu undangan.
                         </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="text-success"><i class="fas fa-check"></i></h5>
-                                    <p class="card-text" id="confirmedGuests">0</p>
-                                    <small class="text-muted">Konfirmasi Hadir</small>
-                                </div>
-                            </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary" onclick="loadWishesFromSheets()">
+                                <i class="fas fa-sync"></i> Refresh Data
+                            </button>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="text-warning"><i class="fas fa-question"></i></h5>
-                                    <p class="card-text" id="pendingGuests">0</p>
-                                    <small class="text-muted">Ragu-Ragu</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="text-info"><i class="fas fa-envelope"></i></h5>
-                                    <p class="card-text" id="totalMessages">0</p>
-                                    <small class="text-muted">Total Pesan</small>
-                                </div>
+                        
+                        <div id="wishesMessage" class="message-container mb-3"></div>
+                        
+                        <div id="wishesList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
                             </div>
                         </div>
                     </div>
                     
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-chart-line"></i> Statistik Real-time</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="statsChart" width="400" height="200"></canvas>
-                                </div>
+                    <!-- Guests Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-users"></i> Data Tamu</h5>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Info:</strong> Kelola data tamu dari WhatsApp generator.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary" onclick="loadGuestsFromSheets()">
+                                <i class="fas fa-sync"></i> Refresh Data
+                            </button>
+                        </div>
+                        
+                        <div id="guestsMessage" class="message-container mb-3"></div>
+                        
+                        <div id="guestsList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Duplicates Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Deteksi Duplikat</h5>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Perhatian:</strong> Nama tamu duplikat akan terdeteksi otomatis.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-warning" onclick="mergeDuplicates()">
+                                <i class="fas fa-link"></i> Merge Semua Duplikat
+                            </button>
+                        </div>
+                        
+                        <div id="duplicatesMessage" class="message-container mb-3"></div>
+                        
+                        <div id="duplicatesList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
                             </div>
                         </div>
                     </div>
@@ -1499,62 +1517,89 @@ God bless you`;
             document.getElementById('pendingGuests').textContent = pendingGuests;
         }
 
-        function updateDashboardStats() {
-            const totalGuests = guests.length;
-            const confirmedGuests = guests.filter(g => g.attendance === 'hadir').length;
-            const pendingGuests = guests.filter(g => g.attendance === 'ragu').length;
-            const totalMessages = guests.filter(g => g.message && g.message.trim()).length;
-            
-            document.getElementById('totalGuests').textContent = totalGuests;
-            document.getElementById('confirmedGuests').textContent = confirmedGuests;
-            document.getElementById('pendingGuests').textContent = pendingGuests;
-            document.getElementById('totalMessages').textContent = totalMessages;
-            
-            // Update chart
-            updateStatsChart();
+        // Load data from Google Sheets and display in dashboard
+        async function loadWishesFromSheets() {
+            try {
+                showMessage('wishesMessage', 'Loading data...', 'info');
+                const result = await sheetsGet('listwishes');
+                
+                if (result && result.data) {
+                    displayWishesList(result.data);
+                    showMessage('wishesMessage', 'Data berhasil dimuat!', 'success');
+                } else {
+                    showMessage('wishesMessage', 'Tidak ada data', 'warning');
+                }
+            } catch (error) {
+                console.error('Error loading wishes:', error);
+                showMessage('wishesMessage', 'Gagal memuat data: ' + error.message, 'error');
+            }
         }
 
-        function updateStatsChart() {
-            const canvas = document.getElementById('statsChart');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Simple bar chart data
-            const confirmed = guests.filter(g => g.attendance === 'hadir').length;
-            const pending = guests.filter(g => g.attendance === 'ragu').length;
-            const notComing = guests.filter(g => g.attendance === 'tidak').length;
-            
-            // Clear previous chart
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw simple bars
-            const barWidth = 80;
-            const barSpacing = 20;
-            const maxHeight = 150;
-            const startX = 50;
-            const startY = 170;
-            
-            // Confirmed guests bar
-            const confirmedHeight = Math.min((confirmed / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
-            ctx.fillStyle = '#28a745';
-            ctx.fillRect(startX, startY - confirmedHeight, barWidth, confirmedHeight);
-            ctx.fillStyle = '#333';
-            ctx.fillText('Hadir', startX + 10, startY - confirmedHeight - 5);
-            
-            // Pending guests bar
-            const pendingHeight = Math.min((pending / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
-            ctx.fillStyle = '#ffc107';
-            ctx.fillRect(startX + barWidth + barSpacing, startY - pendingHeight, barWidth, pendingHeight);
-            ctx.fillStyle = '#333';
-            ctx.fillText('Ragu', startX + barWidth + barSpacing + 10, startY - pendingHeight - 5);
-            
-            // Not coming guests bar
-            const notComingHeight = Math.min((notComing / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
-            ctx.fillStyle = '#dc3545';
-            ctx.fillRect(startX + (barWidth + barSpacing) * 2, startY - notComingHeight, barWidth, notComingHeight);
-            ctx.fillStyle = '#333';
-            ctx.fillText('Tidak', startX + (barWidth + barSpacing) * 2 + 10, startY - notComingHeight - 5);
+        async function loadGuestsFromSheets() {
+            try {
+                showMessage('guestsMessage', 'Loading data...', 'info');
+                const result = await sheetsGet('listguests');
+                
+                if (result && result.data) {
+                    displayGuestsList(result.data);
+                    showMessage('guestsMessage', 'Data berhasil dimuat!', 'success');
+                } else {
+                    showMessage('guestsMessage', 'Tidak ada data', 'warning');
+                }
+            } catch (error) {
+                console.error('Error loading guests:', error);
+                showMessage('guestsMessage', 'Gagal memuat data: ' + error.message, 'error');
+            }
+        }
+
+        function displayWishesList(wishes) {
+            const container = document.getElementById('wishesList');
+            if (!wishes || wishes.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-4">Belum ada ucapan</div>';
+                return;
+            }
+
+            container.innerHTML = wishes.map((wish, index) => `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">${wish.name || '-'}</h6>
+                                <p class="mb-1">${wish.message || '-'}</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-users"></i> ${wish.guestCount || '0'} tamu | 
+                                    <i class="fas fa-check-circle"></i> ${wish.attendance || '-'}
+                                </small>
+                            </div>
+                            <small class="text-muted">${formatTime(wish.timestamp)}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayGuestsList(guests) {
+            const container = document.getElementById('guestsList');
+            if (!guests || guests.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-4">Belum ada data tamu</div>';
+                return;
+            }
+
+            container.innerHTML = guests.map((guest, index) => `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">${guest.name || '-'}</h6>
+                                <small class="text-muted">
+                                    <i class="fab fa-whatsapp"></i> ${guest.phone || 'Tidak ada nomor'}
+                                </small>
+                            </div>
+                            <small class="text-muted">${formatTime(guest.timestamp)}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Tools Functions
