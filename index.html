@@ -5087,6 +5087,13 @@
                 }
                 
             } catch (error) {
+                console.error('Error in dynamic file detection:', error);
+                return getKnownFilesForCategory(category);
+            }
+        }
+        
+        // Ultimate simple file system - reads all possible image files in folders
+        async function dynamicFileDetection(category) {
             const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
             const detectedFiles = [];
             
