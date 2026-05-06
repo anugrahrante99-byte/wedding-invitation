@@ -1216,17 +1216,15 @@ God bless you`;
 
             const invitationLink = createSecureInvitationLink(guestName);
 
-            // Simpan data tamu ke Google Sheets dengan action yang sama seperti index.html
+            // Simpan data tamu ke Google Sheets dengan action marksent untuk sheet Terkirim
             try {
                 showMessage('whatsappMessage', 'Menyimpan data ke Google Sheets...', 'info');
                 
                 const guestData = {
-                    action: 'addWish',
+                    action: 'marksent',
                     name: guestName,
-                    attendance: 'WhatsApp',
-                    guestCount: '1',
-                    message: `Link undangan: ${invitationLink}`,
-                    type: 'whatsapp',
+                    phone: guestPhone || '',
+                    link: invitationLink,
                     timestamp: new Date().toISOString()
                 };
 
