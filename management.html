@@ -211,6 +211,28 @@
         }
 
         .message-container {
+            margin-bottom: 10px;
+        }
+
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+
+        .list-container .row {
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px 0;
+        }
+
+        .list-container .row:last-child {
+            border-bottom: none;
+        }
+
+        .message-popup {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -526,6 +548,11 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="sheets-tab" data-bs-toggle="tab" data-bs-target="#sheets" type="button" role="tab">
+                    <i class="fas fa-table"></i> Google Sheets
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
                     <i class="fas fa-cog"></i> Pengaturan
                 </button>
@@ -751,6 +778,82 @@
                             <button class="btn btn-secondary w-100 mb-2" onclick="clearCache()">
                                 <i class="fas fa-broom"></i> Clear Cache
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Sheets Tab -->
+            <div class="tab-pane fade" id="sheets" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-table"></i> Google Sheets Management</h4>
+                    
+                    <!-- Wishes Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-comment"></i> Ucapan & Doa</h5>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Info:</strong> Kelola semua ucapan dan doa dari tamu undangan.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary" onclick="loadWishesFromSheets()">
+                                <i class="fas fa-sync"></i> Refresh Data
+                            </button>
+                        </div>
+                        
+                        <div id="wishesMessage" class="message-container mb-3"></div>
+                        
+                        <div id="wishesList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guests Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-users"></i> Data Tamu</h5>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Info:</strong> Kelola data tamu dari WhatsApp generator.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary" onclick="loadGuestsFromSheets()">
+                                <i class="fas fa-sync"></i> Refresh Data
+                            </button>
+                        </div>
+                        
+                        <div id="guestsMessage" class="message-container mb-3"></div>
+                        
+                        <div id="guestsList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Duplicates Management -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Deteksi Duplikat</h5>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Perhatian:</strong> Nama tamu duplikat akan terdeteksi otomatis.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-warning" onclick="mergeDuplicates()">
+                                <i class="fas fa-link"></i> Merge Semua Duplikat
+                            </button>
+                        </div>
+                        
+                        <div id="duplicatesMessage" class="message-container mb-3"></div>
+                        
+                        <div id="duplicatesList" class="list-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1965,7 +2068,257 @@ God bless you`;
             if (updateTokenForm) {
                 updateTokenForm.addEventListener('submit', updateToken);
             }
+            
+            // Initialize Sheets management
+            initializeSheetsManagement();
         });
+
+        // Google Sheets Management Functions
+        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw1234567890abcdef/exec'; // Replace with actual Web App URL
+
+        function initializeSheetsManagement() {
+            loadWishesFromSheets();
+            loadGuestsFromSheets();
+            loadDuplicatesFromSheets();
+        }
+
+        async function loadWishesFromSheets() {
+            try {
+                showMessage('wishesMessage', 'Loading wishes...', 'info');
+                const result = await sheetsGet('listwishes');
+                if (result && result.data) {
+                    displayWishesList(result.data);
+                    showMessage('wishesMessage', 'Data berhasil dimuat!', 'success');
+                }
+            } catch (error) {
+                console.error('Error loading wishes:', error);
+                showMessage('wishesMessage', 'Gagal memuat data: ' + error.message, 'danger');
+            }
+        }
+
+        async function loadGuestsFromSheets() {
+            try {
+                showMessage('guestsMessage', 'Loading guests...', 'info');
+                const result = await sheetsGet('listguests');
+                if (result && result.data) {
+                    displayGuestsList(result.data);
+                    showMessage('guestsMessage', 'Data tamu berhasil dimuat!', 'success');
+                }
+            } catch (error) {
+                console.error('Error loading guests:', error);
+                showMessage('guestsMessage', 'Gagal memuat data tamu: ' + error.message, 'danger');
+            }
+        }
+
+        async function loadDuplicatesFromSheets() {
+            try {
+                const result = await sheetsGet('listduplicates');
+                if (result && result.data) {
+                    displayDuplicatesList(result.data);
+                }
+            } catch (error) {
+                console.error('Error loading duplicates:', error);
+            }
+        }
+
+        function displayWishesList(wishes) {
+            const container = document.getElementById('wishesList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (wishes.length === 0) {
+                container.innerHTML = '<p class="text-muted">Belum ada ucapan</p>';
+                return;
+            }
+            
+            wishes.forEach((wish, index) => {
+                const row = document.createElement('div');
+                row.className = 'row mb-2 align-items-center';
+                row.innerHTML = `
+                    <div class="col-md-8">
+                        <strong>${escapeHtml(wish.name || '')}</strong>
+                        ${wish.message ? `<br><small class="text-muted">${escapeHtml(wish.message)}</small>` : ''}
+                        ${wish.attendance ? `<br><span class="badge bg-${getAttendanceColor(wish.attendance)}">${wish.attendance}</span>` : ''}
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn btn-sm btn-danger" onclick="deleteWish('${wish.rowId || wish.timestamp}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function displayGuestsList(guests) {
+            const container = document.getElementById('guestsList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (guests.length === 0) {
+                container.innerHTML = '<p class="text-muted">Belum ada data tamu</p>';
+                return;
+            }
+            
+            guests.forEach((guest, index) => {
+                const row = document.createElement('div');
+                row.className = 'row mb-2 align-items-center';
+                row.innerHTML = `
+                    <div class="col-md-8">
+                        <strong>${escapeHtml(guest.name || '')}</strong>
+                        ${guest.phone ? `<br><small class="text-muted"><i class="fas fa-phone"></i> ${guest.phone}</small>` : ''}
+                        ${guest.attendance ? `<br><span class="badge bg-${getAttendanceColor(guest.attendance)}">${guest.attendance}</span>` : ''}
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn btn-sm btn-danger" onclick="deleteGuest('${guest.rowId || guest.timestamp}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function displayDuplicatesList(duplicates) {
+            const container = document.getElementById('duplicatesList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (duplicates.length === 0) {
+                container.innerHTML = '<p class="text-muted">Tidak ada duplikat</p>';
+                return;
+            }
+            
+            duplicates.forEach((duplicate, index) => {
+                const row = document.createElement('div');
+                row.className = 'row mb-2 align-items-center';
+                row.innerHTML = `
+                    <div class="col-md-6">
+                        <strong>Original:</strong> ${escapeHtml(duplicate.originalName || '')}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Duplicate:</strong> ${escapeHtml(duplicate.duplicateName || '')}
+                        ${!duplicate.merged ? `<br><button class="btn btn-sm btn-warning" onclick="mergeDuplicate('${duplicate.rowId || duplicate.timestamp}')">
+                            <i class="fas fa-link"></i> Merge
+                        </button>` : '<br><span class="badge bg-success">Merged</span>'}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        async function deleteWish(rowId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) return;
+            
+            try {
+                const result = await sheetsPost({ action: 'deletewish', rowId });
+                if (result) {
+                    showMessage('wishesMessage', 'Ucapan berhasil dihapus!', 'success');
+                    loadWishesFromSheets();
+                }
+            } catch (error) {
+                showMessage('wishesMessage', 'Gagal menghapus ucapan: ' + error.message, 'danger');
+            }
+        }
+
+        async function deleteGuest(rowId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data tamu ini?')) return;
+            
+            try {
+                const result = await sheetsPost({ action: 'deleteguest', rowId });
+                if (result) {
+                    showMessage('guestsMessage', 'Data tamu berhasil dihapus!', 'success');
+                    loadGuestsFromSheets();
+                }
+            } catch (error) {
+                showMessage('guestsMessage', 'Gagal menghapus data tamu: ' + error.message, 'danger');
+            }
+        }
+
+        async function mergeDuplicate(rowId) {
+            try {
+                const result = await sheetsPost({ action: 'mergeduplicates' });
+                if (result) {
+                    showMessage('duplicatesMessage', 'Duplikat berhasil digabungkan!', 'success');
+                    loadDuplicatesFromSheets();
+                    loadGuestsFromSheets();
+                }
+            } catch (error) {
+                showMessage('duplicatesMessage', 'Gagal menggabungkan duplikat: ' + error.message, 'danger');
+            }
+        }
+
+        async function mergeDuplicates() {
+            if (!confirm('Apakah Anda yakin ingin menggabungkan semua duplikat?')) return;
+            
+            try {
+                const result = await sheetsPost({ action: 'mergeduplicates' });
+                if (result) {
+                    showMessage('duplicatesMessage', 'Semua duplikat berhasil digabungkan!', 'success');
+                    loadDuplicatesFromSheets();
+                    loadGuestsFromSheets();
+                }
+            } catch (error) {
+                showMessage('duplicatesMessage', 'Gagal menggabungkan duplikat: ' + error.message, 'danger');
+            }
+        }
+
+        function getAttendanceColor(attendance) {
+            const colors = {
+                'hadir': 'success',
+                'ragu': 'warning',
+                'tidak': 'danger'
+            };
+            return colors[attendance] || 'secondary';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function sheetsGet(action) {
+            return new Promise((resolve, reject) => {
+                const callbackName = `sheetsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+                const script = document.createElement('script');
+                const separator = SHEETS_WEB_APP_URL.includes('?') ? '&' : '?';
+                script.src = `${SHEETS_WEB_APP_URL}${separator}action=${encodeURIComponent(action)}&callback=${callbackName}`;
+                script.onerror = reject;
+                
+                const timeout = setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                    }
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    reject(new Error('Request timeout'));
+                }, 10000);
+                
+                window[callbackName] = (data) => {
+                    clearTimeout(timeout);
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    resolve(data);
+                };
+                
+                document.head.appendChild(script);
+            });
+        }
+
+        function sheetsPost(payload) {
+            return fetch(SHEETS_WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(response => response.json()).catch(() => ({ ok: false }));
+        }
 
     </script>
 </body>
