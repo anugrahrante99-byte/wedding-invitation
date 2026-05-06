@@ -5034,7 +5034,7 @@
             ]
         };
 
-        // Vercel API photo detection - super fast and accurate
+        // GitHub Pages static gallery - no API needed
         async function detectPhotosFromFolder(category, forceRefresh = false) {
             
             // Use cache if not forcing refresh and cache exists
@@ -5044,32 +5044,21 @@
             }
             
             try {
-                console.log(`Fetching photos from Vercel API for category: ${category}`);
+                console.log(`Loading static photos for category: ${category}`);
                 
-                // Call Vercel API with cache busting
-                const timestamp = Date.now();
-                const response = await fetch(`/api/gallery?category=${category}&_t=${timestamp}`);
+                // Simulate network delay for better UX
+                await new Promise(resolve => setTimeout(resolve, 100));
                 
-                if (!response.ok) {
-                    throw new Error(`API responded with ${response.status}`);
-                }
+                // Use static configuration
+                const files = getKnownFilesForCategory(category);
                 
-                const data = await response.json();
-                console.log('API Response:', data);
-                
-                if (data.success && data.files) {
-                    // Update cache
-                    galleryCategories[category] = data.files;
-                    console.log(`Successfully loaded ${data.files.length} photos for ${category}`);
-                    return data.files;
-                } else {
-                    console.error('API Error:', data.error);
-                    // Fallback to known files
-                    return getKnownFilesForCategory(category);
-                }
+                // Update cache
+                galleryCategories[category] = files;
+                console.log(`Successfully loaded ${files.length} photos for ${category}`);
+                return files;
                 
             } catch (error) {
-                console.error('Network Error:', error);
+                console.error('Error loading static photos:', error);
                 // Fallback to known files
                 return getKnownFilesForCategory(category);
             }
