@@ -1256,14 +1256,12 @@ God bless you`;
         // Guest Management Functions
         async function loadGuestList() {
             try {
-                showMessage('guestsMessage', 'Loading data...', 'info');
-                
                 // Load dari Google Sheets dengan action yang sama seperti index.html
                 const result = await sheetsGet('listwishes');
+                
                 guests = result.data || [];
                 displayGuestList();
                 updateStats();
-                showMessage('guestsMessage', 'Data berhasil dimuat dari Google Sheets!', 'success');
             } catch (error) {
                 // Fallback ke localStorage jika Apps Script error
                 console.log('Apps Script error, using localStorage:', error.message);
@@ -1275,7 +1273,6 @@ God bless you`;
                 }
                 displayGuestList();
                 updateStats();
-                showMessage('guestsMessage', 'Data berhasil dimuat dari local storage!', 'info');
             }
         }
 
