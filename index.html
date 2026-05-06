@@ -5087,63 +5087,41 @@
                 }
                 
             } catch (error) {
-                console.error('Error in dynamic file detection:', error);
-                return getKnownFilesForCategory(category);
-            }
-        }
-        
-        // Smart file detection - only tries realistic files
-        async function dynamicFileDetection(category) {
             const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
             const detectedFiles = [];
             
-            // Method 1: Try ONLY the files that actually exist (based on folder scan)
-            const existingFiles = {
-                'bride': ['wanita.webp'],
-                'groom': ['pria.webp'],
-                'engagement': [
-                    'LUK_7950.webp', 'LUK_8191.webp', 'LUK_8267.webp', 'LUK_8509.webp', 
-                    'LUK_8693.webp', 'LUK_8696.webp', 'LUK_8753.webp'
-                ],
-                'prewedding': [
-                    'GM4_0288.webp', 'GM4_9453.webp', 'GM4_9585.webp', 'GM4_9606.webp', 
-                    'GM4_9625.webp', 'GM4_9672.webp'
-                ],
-                'moments': [
-                    'GM4_0256.webp', 'GM4_0477.webp', 'GM4_0541.webp', 'GM4_0715.webp'
-                ],
-                'together': [
-                    'DSC00304.webp', 'DSC00316.webp', 'DSC00325.webp', 'DSC00329.webp', 'DSC00348.webp'
-                ]
-            };
-            
-            // Add existing files first (highest priority)
-            const existing = existingFiles[category] || [];
-            for (const file of existing) {
-                detectedFiles.push(file);
-            }
-            
-            // Method 2: Try sequential numbers for NEW files (1-20 only)
-            for (let i = 1; i <= 20; i++) {
+            // Method 1: Check for simple numbered files (1-50)
+            for (let i = 1; i <= 50; i++) {
                 for (const ext of imageExtensions) {
                     const filename = `${i}${ext}`;
                     detectedFiles.push(filename);
                 }
             }
             
-            // Method 3: Try category-specific names for NEW files (1-10 only)
+            // Method 2: Check for common prefixes (IMG_0001-IMG_0099)
+            const prefixes = ['IMG_', 'DSC', 'photo', 'img'];
+            for (const prefix of prefixes) {
+                for (let i = 1; i <= 99; i++) {
+                    for (const ext of imageExtensions) {
+                        const filename = `${prefix}${i.toString().padStart(4, '0')}${ext}`;
+                        detectedFiles.push(filename);
+                    }
+                }
+            }
+            
+            // Method 3: Check for category-specific names
             const categoryNames = {
                 'bride': ['bride', 'wanita'],
                 'groom': ['groom', 'pria'],
-                'engagement': ['engagement'],
-                'prewedding': ['prewedding'],
+                'engagement': ['engagement', 'tunangan'],
+                'prewedding': ['prewedding', 'prenup'],
                 'moments': ['moments', 'moment'],
-                'together': ['together', 'couple']
+                'together': ['together', 'couple', 'pasangan']
             };
             
             const names = categoryNames[category] || [category];
             for (const name of names) {
-                for (let i = 1; i <= 10; i++) {
+                for (let i = 1; i <= 50; i++) {
                     for (const ext of imageExtensions) {
                         const filename = `${name}_${i}${ext}`;
                         detectedFiles.push(filename);
@@ -5151,7 +5129,7 @@
                 }
             }
             
-            console.log(`Smart detection for ${category}: ${detectedFiles.length} files`);
+            console.log(`Ultimate file detection for ${category}: ${detectedFiles.length} possible files`);
             return detectedFiles;
         }
         
