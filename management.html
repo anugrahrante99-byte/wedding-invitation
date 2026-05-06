@@ -933,13 +933,26 @@
             <div class="tab-pane fade" id="settings" role="tabpanel">
                 <div class="form-section">
                     <h4><i class="fas fa-cog"></i> Pengaturan</h4>
-                    <div class="alert alert-warning mb-3">
-                        <i class="fas fa-info-circle"></i>
-                        <strong>Penting:</strong> Menu Tamu dipindahkan ke Dashboard untuk pengalaman yang lebih baik.
+                    
+                    <!-- General Settings -->
+                    <div class="general-settings mb-4">
+                        <h5><i class="fas fa-sliders-h"></i> Pengaturan Umum</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-primary w-100 mb-2" onclick="openInvitationPage()">
+                                    <i class="fas fa-external-link-alt"></i> Buka Undangan
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-info w-100 mb-2" onclick="previewInvitation()">
+                                    <i class="fas fa-eye"></i> Preview Undangan
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- GitHub Token Management -->
-                    <div class="token-management mb-4">
+                    <div class="token-management">
                         <h5><i class="fas fa-key"></i> GitHub Token Management</h5>
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
@@ -1008,35 +1021,6 @@
                         </div>
                         
                         <div id="tokenMessage"></div>
-                    </div>
-                    
-                    <!-- General Settings -->
-                    <div class="general-settings">
-                        <h5><i class="fas fa-sliders-h"></i> Pengaturan Umum</h5>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <button class="btn btn-primary w-100 mb-2" onclick="openInvitationPage()">
-                                    <i class="fas fa-external-link-alt"></i> Buka Undangan
-                                </button>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <button class="btn btn-info w-100 mb-2" onclick="previewInvitation()">
-                                    <i class="fas fa-eye"></i> Preview Undangan
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <h5>Informasi Sistem</h5>
-                        <div class="stats-card">
-                            <h3 id="totalGuests">0</h3>
-                            <p>Total Tamu</p>
-                        </div>
-                        <div class="stats-card">
-                            <h3 id="confirmedGuests">0</h3>
-                            <p>Tamu Konfirmasi</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1316,7 +1300,7 @@ God bless you`;
                     guests.push(displayGuest);
                     localStorage.setItem('weddingGuests', JSON.stringify(guests));
                     displayGuestList();
-                    updateStats();
+                    // updateStats(); // Commented out - stats elements removed
                     
                     showMessage('whatsappMessage', 'Data tersimpan di Google Sheets!', 'success');
                 } else {
@@ -1333,7 +1317,7 @@ God bless you`;
                 guests.push(displayGuest);
                 localStorage.setItem('weddingGuests', JSON.stringify(guests));
                 displayGuestList();
-                updateStats();
+                // updateStats(); // Commented out - stats elements removed
                 showMessage('whatsappMessage', 'Data tersimpan di local storage (fallback)', 'info');
             }
 
@@ -1422,10 +1406,18 @@ God bless you`;
             const formData = new URLSearchParams();
             formData.append("action", payload.action);
             formData.append("name", payload.name);
-            formData.append("attendance", payload.attendance);
-            formData.append("guestCount", payload.guestCount);
-            formData.append("message", payload.message);
-            formData.append("type", payload.type);
+            
+            // Add optional fields for WhatsApp generator
+            if (payload.phone !== undefined) formData.append("phone", payload.phone);
+            if (payload.link !== undefined) formData.append("link", payload.link);
+            if (payload.key !== undefined) formData.append("key", payload.key);
+            
+            // Add standard fields for wishes
+            if (payload.attendance !== undefined) formData.append("attendance", payload.attendance);
+            if (payload.guestCount !== undefined) formData.append("guestCount", payload.guestCount);
+            if (payload.message !== undefined) formData.append("message", payload.message);
+            if (payload.type !== undefined) formData.append("type", payload.type);
+            
             formData.append("timestamp", payload.timestamp);
             
             return fetch(CONFIG.WEB_APP_URL, {
@@ -1446,13 +1438,13 @@ God bless you`;
         // Guest Management Functions
         async function loadGuestList() {
             try {
-                // Load dari Google Sheets dengan action yang sama seperti index.html
-                const result = await sheetsGet('listwishes');
+                // Load data tamu dari WhatsApp generator (sheet Terkirim)
+                const result = await sheetsGet('listguests');
                 
                 guests = result.data || [];
                 displayGuestList();
-                updateStats();
-                updateDashboardStats(); // Update dashboard stats
+                // updateStats(); // Commented out - stats elements removed
+                // updateDashboardStats(); // Commented out - dashboard stats removed
             } catch (error) {
                 // Fallback ke localStorage jika Apps Script error
                 console.log('Apps Script error, using localStorage:', error.message);
@@ -1463,8 +1455,8 @@ God bless you`;
                     guests = [];
                 }
                 displayGuestList();
-                updateStats();
-                updateDashboardStats(); // Update dashboard stats
+                // updateStats(); // Commented out - stats elements removed
+                // updateDashboardStats(); // Commented out - dashboard stats removed
             }
         }
 
@@ -1511,25 +1503,6 @@ God bless you`;
             alert('Fitur hapus tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
         }
 
-        function clearAllGuests() {
-            alert('Fitur hapus semua tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
-        }
-
-        function updateStats() {
-            if (!guests) return;
-
-            const totalGuests = guests.length;
-            const confirmedGuests = guests.filter(g => g.attendance === 'hadir').length;
-            const pendingGuests = guests.filter(g => g.attendance === 'ragu').length;
-            
-            document.getElementById('totalGuests').textContent = totalGuests;
-            document.getElementById('confirmedGuests').textContent = confirmedGuests;
-            document.getElementById('pendingGuests').textContent = pendingGuests;
-        }
-
-        // Load data from Google Sheets and display in dashboard
-        async function loadWishesFromSheets() {
-            try {
                 showMessage('wishesMessage', 'Loading data...', 'info');
                 const result = await sheetsGet('listwishes');
                 
