@@ -1218,18 +1218,6 @@ God bless you`;
 
             // Simpan data tamu ke Google Sheets dengan action marksent untuk sheet Terkirim
             try {
-                showMessage('whatsappMessage', 'Menyimpan data ke Google Sheets...', 'info');
-                
-                const guestData = {
-                    action: 'marksent',
-                    name: guestName,
-                    phone: guestPhone || '',
-                    link: invitationLink,
-                    timestamp: new Date().toISOString()
-                };
-
-                // Save to Google Sheets
-                const success = await sheetsPost(guestData);
 
                 if (success) {
                     // Add to local guests array
