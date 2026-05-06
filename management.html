@@ -977,7 +977,7 @@
         // Configuration
         const CONFIG = {
             ADMIN_PASSWORD: 'kawinkawin',
-            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxVa1u1LDQvLFykHamGo_hbaJIivxNXyDWr8yxKYeIc9YwqgRHm7K07qnRUC0PDcfPo/exec',
+            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbzKnNUkiz6_jR3Y2bZYT-IA472TFaVhVXRGYe34oL6WUMzFH7CnmnbzyyN54WTkiWKy/exec',
             SPREADSHEET_ID: '1gvHiIkStxwhnhLZhK7se-TfQucecSy-9ClZe_gKv8A8'
         };
 
@@ -1348,10 +1348,20 @@ God bless you`;
         async function sheetsPost(payload) {
             return fetch(CONFIG.WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
-            }).then(() => true).catch(() => false);
+            })
+            .then(r => r.text())
+            .then(res => {
+                console.log(res);
+                return true;
+            })
+            .catch(err => {
+                console.error(err);
+                return false;
+            });
         }
 
         // Guest Management Functions
@@ -2072,7 +2082,7 @@ God bless you`;
         });
 
         // Google Sheets Management Functions
-        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVa1u1LDQvLFykHamGo_hbaJIivxNXyDWr8yxKYeIc9YwqgRHm7K07qnRUC0PDcfPo/exec';
+        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKnNUkiz6_jR3Y2bZYT-IA472TFaVhVXRGYe34oL6WUMzFH7CnmnbzyyN54WTkiWKy/exec';
 
         function initializeSheetsManagement() {
             loadWishesFromSheets();
@@ -2313,9 +2323,20 @@ God bless you`;
         function sheetsPost(payload) {
             return fetch(SHEETS_WEB_APP_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
-            }).then(response => response.json()).catch(() => ({ ok: false }));
+            })
+            .then(r => r.text())
+            .then(res => {
+                console.log(res);
+                return { ok: true };
+            })
+            .catch(err => {
+                console.error(err);
+                return { ok: false };
+            });
         }
 
     </script>

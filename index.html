@@ -4786,7 +4786,7 @@
         }
 
         // Google Sheets backend. Paste your Apps Script Web App URL here.
-        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVa1u1LDQvLFykHamGo_hbaJIivxNXyDWr8yxKYeIc9YwqgRHm7K07qnRUC0PDcfPo/exec';
+        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKnNUkiz6_jR3Y2bZYT-IA472TFaVhVXRGYe34oL6WUMzFH7CnmnbzyyN54WTkiWKy/exec';
 
         function sheetsEnabled() {
             return SHEETS_WEB_APP_URL && SHEETS_WEB_APP_URL.startsWith('https://');
@@ -4796,10 +4796,20 @@
             if (!sheetsEnabled()) return Promise.resolve(false);
             return fetch(SHEETS_WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
-            }).then(() => true).catch(() => false);
+            })
+            .then(r => r.text())
+            .then(res => {
+                console.log(res);
+                return true;
+            })
+            .catch(err => {
+                console.error(err);
+                return false;
+            });
         }
 
         // Google Sheets GET function for reading data
