@@ -4828,6 +4828,15 @@
         async function submitCombinedForm(event) {
             event.preventDefault();
 
+            // Prevent double submission
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            if (submitButton.disabled) return;
+            
+            // Disable button and show loading
+            submitButton.disabled = true;
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
             const nameInput = document.getElementById('combinedName');
             const attendanceInput = document.getElementById('attendanceStatus');
             const guestCountInput = document.getElementById('guestCount');
@@ -4843,24 +4852,62 @@
                 timestamp: new Date().toISOString()
             };
 
-            if (!wish.name || !wish.attendance || !wish.guestCount || !wish.message) return;
+            if (!wish.name || !wish.attendance || !wish.guestCount || !wish.message) {
+                // Re-enable button if validation fails
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+                return;
+            }
 
-            let wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
-            wishes.unshift({ ...wish });
-            localStorage.setItem('weddingWishes', JSON.stringify(wishes));
-            displayWishes();
+            try {
+                let wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
+                wishes.unshift({ ...wish });
+                localStorage.setItem('weddingWishes', JSON.stringify(wishes));
+                displayWishes();
 
-            await sheetsPost(wish);
-            nameInput.value = '';
-            attendanceInput.value = '';
-            guestCountInput.value = '';
-            messageInput.value = '';
-            showWishConfirmation(wish.name);
-            loadWishes();
+                await sheetsPost(wish);
+                nameInput.value = '';
+                attendanceInput.value = '';
+                guestCountInput.value = '';
+                messageInput.value = '';
+                showWishConfirmation(wish.name);
+                loadWishes();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                // Show error message to user
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #dc3545;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-family: 'Montserrat', sans-serif;
+                    z-index: 10000;
+                `;
+                errorDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
+                document.body.appendChild(errorDiv);
+                setTimeout(() => errorDiv.remove(), 3000);
+            } finally {
+                // Re-enable button after completion
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            }
         }
         // Wishes Functions
-        function submitWish(event) {
+        async function submitWish(event) {
             event.preventDefault();
+
+            // Prevent double submission
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            if (submitButton.disabled) return;
+            
+            // Disable button and show loading
+            submitButton.disabled = true;
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
             
             const name = document.getElementById('guestName').value;
             const message = document.getElementById('guestMessage').value;
@@ -4872,20 +4919,56 @@
                     timestamp: new Date().toISOString()
                 };
                 
-                // Save to localStorage
-                let wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
-                wishes.unshift(wish); // Add to beginning
-                localStorage.setItem('weddingWishes', JSON.stringify(wishes));
-                
-                // Clear form
-                document.getElementById('guestName').value = '';
-                document.getElementById('guestMessage').value = '';
-                
-                // Display wishes
-                displayWishes();
-                
-                // Show confirmation
-                showWishConfirmation(name);
+                try {
+                    // Save to localStorage
+                    let wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
+                    wishes.unshift(wish); // Add to beginning
+                    localStorage.setItem('weddingWishes', JSON.stringify(wishes));
+                    
+                    // Clear form
+                    document.getElementById('guestName').value = '';
+                    document.getElementById('guestMessage').value = '';
+                    
+                    // Display wishes
+                    displayWishes();
+                    
+                    // Show confirmation
+                    showWishConfirmation(name);
+                    
+                    // Save to Google Sheets
+                    await sheetsPost({
+                        action: 'addWish',
+                        name: name,
+                        message: message,
+                        timestamp: wish.timestamp
+                    });
+                } catch (error) {
+                    console.error('Error submitting wish:', error);
+                    // Show error message to user
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #dc3545;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-family: 'Montserrat', sans-serif;
+                        z-index: 10000;
+                    `;
+                    errorDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
+                    document.body.appendChild(errorDiv);
+                    setTimeout(() => errorDiv.remove(), 3000);
+                } finally {
+                    // Re-enable button after completion
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                }
+            } else {
+                // Re-enable button if validation fails
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
             }
         }
         
