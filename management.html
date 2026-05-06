@@ -1503,6 +1503,9 @@ God bless you`;
             alert('Fitur hapus tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
         }
 
+        // Load data from Google Sheets and display in dashboard
+        async function loadWishesFromSheets() {
+            try {
                 showMessage('wishesMessage', 'Loading data...', 'info');
                 const result = await sheetsGet('listwishes');
                 
