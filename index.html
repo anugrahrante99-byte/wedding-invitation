@@ -4891,19 +4891,19 @@
         
         function loadWishes() {
             // Load from Google Sheets first, then fallback to localStorage
-            return loadWishesFromSheets();
+            loadWishesFromSheets();
         }
         
         // Load wishes from Google Sheets with cache management
-        async function loadWishesFromSheets() {
+        async function loadWishesFromSheets(forceUpdate = false) {
             try {
                 const result = await sheetsGet('listwishes');
                 if (result && result.data) {
-                    // Check if data is different from current cache
+                    // Always update on initial load or force update
                     const currentCache = localStorage.getItem('weddingWishesCache');
-                    let shouldUpdate = true;
+                    let shouldUpdate = forceUpdate;
                     
-                    if (currentCache) {
+                    if (!forceUpdate && currentCache) {
                         const cacheData = JSON.parse(currentCache);
                         // Compare data length and last item to detect changes
                         if (cacheData.data && cacheData.data.length === result.data.length) {
@@ -4926,7 +4926,9 @@
                         localStorage.setItem('weddingWishesCache', JSON.stringify(cacheData));
                         localStorage.setItem('weddingWishes', JSON.stringify(result.data));
                         displayWishes();
-                        showNewMessageIndicator();
+                        if (!forceUpdate) {
+                            showNewMessageIndicator();
+                        }
                     }
                 }
             } catch (error) {
@@ -4985,14 +4987,10 @@
             
             if (wishes.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: #666;">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">💝</div>
-                        <div style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">
-                            Belum ada ucapan dan doa
-                        </div>
-                        <div style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; opacity: 0.8;">
-                            Jadilah yang pertama memberikan ucapan untuk kami
-                        </div>
+                    <div style="text-align: center; padding: 40px; color: #999; font-style: italic;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">💝</div>
+                        <div>Belum ada ucapan dan doa</div>
+                        <div style="font-size: 0.9rem; margin-top: 5px;">Jadilah yang pertama memberikan ucapan!</div>
                     </div>
                 `;
                 return;
@@ -5004,104 +5002,101 @@
                 itemElement.style.cssText = `
                     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
                     border: 1px solid #e9ecef;
-                    border-radius: 16px;
-                    padding: 1.5rem;
-                    margin-bottom: 1rem;
+                    border-radius: 15px;
+                    padding: 20px;
+                    margin-bottom: 15px;
                     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
                     transition: all 0.3s ease;
                     position: relative;
                     overflow: hidden;
                 `;
                 
-                // Add subtle animation for new items
+                // Add subtle animation for new messages
                 if (index < 3) {
-                    itemElement.style.animation = `slideInUp 0.5s ease ${index * 0.1}s both`;
+                    itemElement.style.animation = 'slideInUp 0.5s ease-out';
                 }
                 
                 let attendanceBadge = '';
-                let attendanceIcon = '';
+                let attendanceColor = '';
+                let attendanceText = '';
                 
                 if (item.attendance === 'hadir') {
-                    attendanceBadge = `<span style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">
-                        <span>✓</span> Akan Hadir
-                    </span>`;
-                    attendanceIcon = '🎉';
+                    attendanceText = '✅ Akan Hadir';
+                    attendanceColor = '#28a745';
                 } else if (item.attendance === 'ragu') {
-                    attendanceBadge = `<span style="background: linear-gradient(135deg, #ffc107 0%, #ffb347 100%); color: #333; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">
-                        <span>?</span> Masih Ragu
-                    </span>`;
-                    attendanceIcon = '🤔';
+                    attendanceText = '🤔 Masih Ragu';
+                    attendanceColor = '#ffc107';
                 } else if (item.attendance === 'tidak') {
-                    attendanceBadge = `<span style="background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">
-                        <span>✗</span> Tidak Hadir
-                    </span>`;
-                    attendanceIcon = '😔';
+                    attendanceText = '❌ Tidak Hadir';
+                    attendanceColor = '#dc3545';
                 }
                 
-                const guestCount = item.guestCount ? `<span style="color: #666; font-size: 0.8rem; margin-left: 0.5rem;">(${item.guestCount} tamu)</span>` : '';
+                if (attendanceText) {
+                    attendanceBadge = `
+                        <div style="
+                            display: inline-block;
+                            background: ${attendanceColor};
+                            color: white;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                            margin-bottom: 8px;
+                        ">
+                            ${attendanceText} ${item.guestCount ? `(${item.guestCount} tamu)` : ''}
+                        </div>
+                    `;
+                }
                 
                 itemElement.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div style="display: flex; align-items: center; gap: 0.8rem;">
-                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem;">
+                    <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 50%;
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-weight: bold;
+                                margin-right: 12px;
+                                font-size: 1.1rem;
+                            ">
                                 ${item.name ? item.name.charAt(0).toUpperCase() : '?'}
                             </div>
                             <div>
-                                <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.1rem; color: #333; margin-bottom: 0.2rem;">
-                                    ${item.name || 'Anonymous'}
+                                <div style="font-weight: 600; color: #2c3e50; font-size: 1.05rem;">
+                                    ${escapeHtml(item.name || 'Anonymous')}
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    ${attendanceBadge}
-                                    ${guestCount}
+                                <div style="font-size: 0.8rem; color: #6c757d;">
+                                    ${formatTime(item.timestamp)}
                                 </div>
                             </div>
                         </div>
-                        <div style="font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #999; display: flex; align-items: center; gap: 0.3rem;">
-                            <span>🕒</span>
-                            ${formatTime(item.timestamp)}
-                        </div>
                     </div>
                     
+                    ${attendanceBadge ? `<div style="margin-bottom: 10px;">${attendanceBadge}</div>` : ''}
+                    
                     ${item.message ? `
-                        <div style="font-family: 'Montserrat', sans-serif; color: #555; line-height: 1.6; font-size: 0.95rem; padding: 1rem; background: rgba(102, 126, 234, 0.05); border-radius: 12px; border-left: 4px solid #667eea; position: relative;">
-                            <div style="position: absolute; top: -0.5rem; left: -0.5rem; width: 1rem; height: 1rem; background: #667eea; border-radius: 50%; opacity: 0.8;"></div>
-                            ${item.message}
+                        <div style="
+                            background: #f8f9fa;
+                            border-left: 4px solid #667eea;
+                            padding: 12px 15px;
+                            border-radius: 8px;
+                            margin-top: 10px;
+                            font-style: italic;
+                            color: #495057;
+                            line-height: 1.5;
+                        ">
+                            "${escapeHtml(item.message)}"
                         </div>
                     ` : ''}
                 `;
                 
-                // Add hover effect
-                itemElement.addEventListener('mouseenter', () => {
-                    itemElement.style.transform = 'translateY(-2px)';
-                    itemElement.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-                });
-                
-                itemElement.addEventListener('mouseleave', () => {
-                    itemElement.style.transform = 'translateY(0)';
-                    itemElement.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
-                });
-                
                 container.appendChild(itemElement);
             });
-            
-            // Add CSS animation if not exists
-            if (!document.getElementById('wishAnimations')) {
-                const style = document.createElement('style');
-                style.id = 'wishAnimations';
-                style.textContent = `
-                    @keyframes slideInUp {
-                        from {
-                            opacity: 0;
-                            transform: translateY(20px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
         }
         
         function escapeHtml(text) {
@@ -8194,19 +8189,19 @@
         
         // Real-time guest messages system
         function initializeRealTimeWishes() {
-            // Load initial wishes immediately with priority
-            loadWishesFromSheets().then(() => {
-                // Start auto-refresh after initial load
-                setInterval(() => {
-                    loadWishesFromSheets();
-                }, 30000);
-                
-                // Also refresh when page becomes visible again (user returns to tab)
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden) {
-                        loadWishesFromSheets();
-                    }
-                });
+            // Force load from Sheets on initial page load
+            loadWishesFromSheets(true);
+            
+            // Auto-refresh every 30 seconds for real-time updates
+            setInterval(() => {
+                loadWishesFromSheets(false);
+            }, 30000);
+            
+            // Also refresh when page becomes visible again (user returns to tab)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    loadWishesFromSheets(false);
+                }
             });
         }
     </script>
