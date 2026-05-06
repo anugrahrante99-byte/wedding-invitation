@@ -607,29 +607,7 @@
                         </div>
                     </div>
                     
-                    <!-- Duplicates Management -->
-                    <div class="mb-4">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Deteksi Duplikat</h5>
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <strong>Perhatian:</strong> Nama tamu duplikat akan terdeteksi otomatis.
-                        </div>
-                        
-                        <div class="mb-3">
-                            <button class="btn btn-warning" onclick="mergeDuplicates()">
-                                <i class="fas fa-link"></i> Merge Semua Duplikat
-                            </button>
-                        </div>
-                        
-                        <div id="duplicatesMessage" class="message-container mb-3"></div>
-                        
-                        <div id="duplicatesList" class="list-container">
-                            <div class="text-center text-muted">
-                                <i class="fas fa-spinner fa-spin"></i> Loading...
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                    </div>
             </div>
             <!-- WhatsApp Generator Tab -->
             <div class="tab-pane fade" id="whatsapp" role="tabpanel">
@@ -904,29 +882,7 @@
                         </div>
                     </div>
                     
-                    <!-- Duplicates Management -->
-                    <div class="mb-4">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Deteksi Duplikat</h5>
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <strong>Perhatian:</strong> Nama tamu duplikat akan terdeteksi otomatis.
-                        </div>
-                        
-                        <div class="mb-3">
-                            <button class="btn btn-warning" onclick="mergeDuplicates()">
-                                <i class="fas fa-link"></i> Merge Semua Duplikat
-                            </button>
-                        </div>
-                        
-                        <div id="duplicatesMessage" class="message-container mb-3"></div>
-                        
-                        <div id="duplicatesList" class="list-container">
-                            <div class="text-center text-muted">
-                                <i class="fas fa-spinner fa-spin"></i> Loading...
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                    </div>
             </div>
 
             <!-- Settings Tab -->
@@ -1275,6 +1231,26 @@ God bless you`;
 
             const invitationLink = createSecureInvitationLink(guestName);
 
+            // Cek duplikat nama tamu di Google Sheets sebelum menyimpan
+            try {
+                showMessage('whatsappMessage', 'Mengecek duplikat nama...', 'info');
+                const existingGuests = await sheetsGet('listguests');
+                
+                if (existingGuests && existingGuests.data) {
+                    const duplicate = existingGuests.data.find(guest => 
+                        guest.name && guest.name.toLowerCase() === guestName.toLowerCase()
+                    );
+                    
+                    if (duplicate) {
+                        showMessage('whatsappMessage', `Nama "${guestName}" sudah ada di daftar tamu!`, 'warning');
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Error checking duplicates:', error);
+                // Lanjutkan proses jika gagal cek duplikat
+            }
+
             // Simpan data tamu ke Google Sheets dengan action marksent untuk sheet Terkirim
             try {
                 const guestData = {
@@ -1500,7 +1476,34 @@ God bless you`;
         }
 
         function deleteGuest(index) {
-            alert('Fitur hapus tidak tersedia. Data hanya bisa dihapus manual di Google Sheets.');
+            // Tidak ada hapus untuk data tamu WhatsApp
+            alert('Data tamu WhatsApp tidak dapat dihapus.');
+        }
+
+        // Delete wish function
+        async function deleteWish(index) {
+            if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) {
+                return;
+            }
+
+            try {
+                showMessage('wishesMessage', 'Menghapus ucapan...', 'info');
+                
+                const success = await sheetsPost({
+                    action: 'deletewish',
+                    rowId: index
+                });
+
+                if (success) {
+                    showMessage('wishesMessage', 'Ucapan berhasil dihapus!', 'success');
+                    loadWishesFromSheets(); // Refresh data
+                } else {
+                    showMessage('wishesMessage', 'Gagal menghapus ucapan', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting wish:', error);
+                showMessage('wishesMessage', 'Gagal menghapus ucapan: ' + error.message, 'error');
+            }
         }
 
         // Load data from Google Sheets and display in dashboard
@@ -1549,7 +1552,7 @@ God bless you`;
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
-                            <div>
+                            <div class="flex-grow-1">
                                 <h6 class="mb-1">${wish.name || '-'}</h6>
                                 <p class="mb-1">${wish.message || '-'}</p>
                                 <small class="text-muted">
@@ -1557,7 +1560,12 @@ God bless you`;
                                     <i class="fas fa-check-circle"></i> ${wish.attendance || '-'}
                                 </small>
                             </div>
-                            <small class="text-muted">${formatTime(wish.timestamp)}</small>
+                            <div class="d-flex align-items-center gap-2">
+                                <small class="text-muted">${formatTime(wish.timestamp)}</small>
+                                <button class="btn btn-sm btn-danger" onclick="deleteWish(${index + 2})" title="Hapus ucapan">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1567,7 +1575,7 @@ God bless you`;
         function displayGuestsList(guests) {
             const container = document.getElementById('guestsList');
             if (!guests || guests.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted p-4">Belum ada data tamu</div>';
+                container.innerHTML = '<div class="text-center text-muted p-4">Belum ada data tamu dari WhatsApp generator</div>';
                 return;
             }
 
