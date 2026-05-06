@@ -318,6 +318,133 @@
             font-weight: 600;
         }
 
+        /* Gallery Management Styles */
+        .drop-zone {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            margin: 20px 0;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--primary-color);
+            background: #fff;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--secondary-color);
+            background: #e3f2fd;
+        }
+
+        .drop-zone-content {
+            color: #666;
+        }
+
+        .drop-zone-content i {
+            color: var(--primary-color);
+        }
+
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            min-height: 200px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay span {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .gallery-overlay .btn {
+            padding: 5px 10px;
+            font-size: 11px;
+        }
+
+        .upload-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .gallery-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
         @media (max-width: 768px) {
             .management-container {
                 margin: 10px;
@@ -332,6 +459,19 @@
             .btn {
                 padding: 10px 20px;
                 font-size: 14px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .drop-zone {
+                padding: 20px;
+            }
+
+            .drop-zone-content h5 {
+                font-size: 16px;
             }
         }
     </style>
@@ -368,6 +508,11 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="whatsapp-tab" data-bs-toggle="tab" data-bs-target="#whatsapp" type="button" role="tab">
                     <i class="fab fa-whatsapp"></i> WhatsApp Generator
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gallery-tab" data-bs-toggle="tab" data-bs-target="#gallery" type="button" role="tab">
+                    <i class="fas fa-images"></i> Gallery Management
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -420,6 +565,129 @@
                         </div>
                     </form>
                     <div id="whatsappMessage"></div>
+                </div>
+            </div>
+
+            <!-- Gallery Management Tab -->
+            <div class="tab-pane fade" id="gallery" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-images"></i> Photo Gallery Management</h4>
+                    <div id="authMessage"></div>
+                    
+                    <!-- Upload Section -->
+                    <div class="upload-section mb-4">
+                        <h5><i class="fas fa-upload"></i> Upload Photos</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Select Category</label>
+                                <select class="form-select" id="uploadCategory">
+                                    <option value="">Choose category...</option>
+                                    <option value="bride">Bride</option>
+                                    <option value="groom">Groom</option>
+                                    <option value="engagement">Engagement</option>
+                                    <option value="prewedding">Pre-wedding</option>
+                                    <option value="moments">Moments</option>
+                                    <option value="together">Together</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Select Files</label>
+                                <input type="file" class="form-control" id="photoFiles" multiple accept=".webp">
+                            </div>
+                        </div>
+                        
+                        <!-- Drag and Drop Zone -->
+                        <div class="drop-zone" id="dropZone">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                <h5>Drag & Drop Photos Here</h5>
+                                <p class="text-muted">or click to select files</p>
+                                <small>Only WebP files are allowed. Files will be auto-renamed to categorynameX.webp</small>
+                            </div>
+                        </div>
+                        
+                        <!-- File List -->
+                        <div class="file-list mt-3" id="fileList"></div>
+                        
+                        <div class="mt-3">
+                            <button class="btn btn-primary" id="uploadBtn">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload Photos
+                            </button>
+                            <button class="btn btn-secondary ms-2" onclick="clearUpload()">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                        
+                        <div id="uploadMessage"></div>
+                    </div>
+                    
+                    <!-- Gallery View -->
+                    <div class="gallery-section">
+                        <h5><i class="fas fa-th"></i> Current Gallery</h5>
+                        <div class="mb-3">
+                            <button class="btn btn-success" onclick="loadAllGalleries()">
+                                <i class="fas fa-refresh"></i> Refresh All
+                            </button>
+                        </div>
+                        
+                        <!-- Category Tabs -->
+                        <ul class="nav nav-tabs" id="galleryTabs">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#gallery-bride">Bride</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-groom">Groom</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-engagement">Engagement</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-prewedding">Pre-wedding</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-moments">Moments</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-together">Together</button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Gallery Content -->
+                        <div class="tab-content" id="galleryContent">
+                            <div class="tab-pane fade show active" id="gallery-bride">
+                                <div class="gallery-grid" id="gallery-bride">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gallery-groom">
+                                <div class="gallery-grid" id="gallery-groom">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gallery-engagement">
+                                <div class="gallery-grid" id="gallery-engagement">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gallery-prewedding">
+                                <div class="gallery-grid" id="gallery-prewedding">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gallery-moments">
+                                <div class="gallery-grid" id="gallery-moments">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gallery-together">
+                                <div class="gallery-grid" id="gallery-together">
+                                    <div class="text-center text-muted p-4">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="galleryMessage"></div>
+                    </div>
                 </div>
             </div>
 
@@ -1078,6 +1346,462 @@ God bless you`;
         function previewInvitation() {
             window.open('index.html', '_blank');
         }
+    // GitHub API Configuration
+        const GITHUB_CONFIG = {
+            owner: 'anugrahrante99-byte',
+            repo: 'wedding-invitation',
+            branch: 'main',
+            apiBase: 'https://api.github.com'
+        };
+
+        // Gallery Categories
+        const CATEGORIES = ['bride', 'groom', 'engagement', 'prewedding', 'moments', 'together'];
+
+        // GitHub Token Management
+        function getGitHubToken() {
+            return localStorage.getItem('github_token') || '';
+        }
+
+        function setGitHubToken(token) {
+            localStorage.setItem('github_token', token);
+        }
+
+        // GitHub API Functions
+        async function githubRequest(method, path, data = null) {
+            const token = getGitHubToken();
+            if (!token) {
+                throw new Error('GitHub token required');
+            }
+
+            const url = `${GITHUB_CONFIG.apiBase}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}${path}`;
+            const headers = {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+
+            const options = {
+                method: method,
+                headers: headers
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'GitHub API Error');
+            }
+
+            return await response.json();
+        }
+
+        // Get files in directory
+        async function getFilesInDirectory(category) {
+            try {
+                const result = await githubRequest('GET', `/contents/${category}`);
+                return result.filter(file => file.type === 'file' && file.name.endsWith('.webp'));
+            } catch (error) {
+                console.error('Error getting files:', error);
+                return [];
+            }
+        }
+
+        // Upload file to GitHub
+        async function uploadFile(category, filename, content) {
+            const path = `${category}/${filename}`;
+            const message = `Upload ${filename} to ${category}`;
+            
+            try {
+                // Check if file exists
+                let sha = null;
+                try {
+                    const existing = await githubRequest('GET', `/contents/${path}`);
+                    sha = existing.sha;
+                } catch (error) {
+                    // File doesn't exist, that's fine
+                }
+
+                const data = {
+                    message: message,
+                    content: content,
+                    branch: GITHUB_CONFIG.branch
+                };
+
+                if (sha) {
+                    data.sha = sha;
+                }
+
+                const result = await githubRequest('PUT', `/contents/${path}`, data);
+                return result;
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                throw error;
+            }
+        }
+
+        // Delete file from GitHub
+        async function deleteFile(category, filename) {
+            const path = `${category}/${filename}`;
+            const message = `Delete ${filename} from ${category}`;
+            
+            try {
+                const existing = await githubRequest('GET', `/contents/${path}`);
+                const data = {
+                    message: message,
+                    sha: existing.sha,
+                    branch: GITHUB_CONFIG.branch
+                };
+
+                await githubRequest('DELETE', `/contents/${path}`, data);
+                return true;
+            } catch (error) {
+                console.error('Error deleting file:', error);
+                throw error;
+            }
+        }
+
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    // Remove data:image/webp;base64, prefix
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Auto-rename function
+        function autoRename(category, originalName) {
+            const extension = originalName.split('.').pop().toLowerCase();
+            if (extension !== 'webp') {
+                throw new Error('Only WebP files are allowed');
+            }
+
+            // Find next available number
+            const existingFiles = document.querySelectorAll(`#gallery-${category} .gallery-item`);
+            const usedNumbers = Array.from(existingFiles).map(item => {
+                const match = item.dataset.filename.match(/(\d+)\.webp$/);
+                return match ? parseInt(match[1]) : 0;
+            });
+
+            let nextNumber = 1;
+            while (usedNumbers.includes(nextNumber)) {
+                nextNumber++;
+            }
+
+            return `${category}${nextNumber}.webp`;
+        }
+
+        // Upload Photos Function
+        async function uploadPhotos() {
+            const category = document.getElementById('uploadCategory').value;
+            const files = document.getElementById('photoFiles').files;
+            
+            if (!category) {
+                showMessage('uploadMessage', 'Please select a category', 'danger');
+                return;
+            }
+
+            if (files.length === 0) {
+                showMessage('uploadMessage', 'Please select files to upload', 'danger');
+                return;
+            }
+
+            try {
+                showMessage('uploadMessage', 'Uploading files...', 'info');
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length * 100).toFixed(0);
+                    showMessage('uploadMessage', `Uploading ${i + 1}/${files.length} files (${progress}%)`, 'info');
+
+                    // Convert to base64
+                    const base64 = await fileToBase64(file);
+                    
+                    // Auto-rename
+                    const newName = autoRename(category, file.name);
+                    
+                    // Upload to GitHub
+                    await uploadFile(category, newName, base64);
+                    
+                    // Add to gallery
+                    addPhotoToGallery(category, newName, base64);
+                }
+
+                showMessage('uploadMessage', 'All files uploaded successfully!', 'success');
+                document.getElementById('photoFiles').value = '';
+                
+                // Refresh gallery
+                await loadGallery(category);
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('uploadMessage', `Upload failed: ${error.message}`, 'danger');
+            }
+        }
+
+        // Add photo to gallery
+        function addPhotoToGallery(category, filename, base64) {
+            const gallery = document.getElementById(`gallery-${category}`);
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            galleryItem.dataset.filename = filename;
+            
+            galleryItem.innerHTML = `
+                <img src="data:image/webp;base64,${base64}" alt="${filename}">
+                <div class="gallery-overlay">
+                    <span>${filename}</span>
+                    <button class="btn btn-sm btn-danger" onclick="deletePhoto('${category}', '${filename}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            gallery.appendChild(galleryItem);
+        }
+
+        // Delete Photo Function
+        async function deletePhoto(category, filename) {
+            if (!confirm(`Are you sure you want to delete ${filename}?`)) {
+                return;
+            }
+
+            try {
+                showMessage('galleryMessage', 'Deleting photo...', 'info');
+                await deleteFile(category, filename);
+                
+                // Remove from gallery
+                const gallery = document.getElementById(`gallery-${category}`);
+                const item = gallery.querySelector(`[data-filename="${filename}"]`);
+                if (item) {
+                    item.remove();
+                }
+                
+                showMessage('galleryMessage', 'Photo deleted successfully!', 'success');
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage('galleryMessage', `Delete failed: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load Gallery Function
+        async function loadGallery(category = null) {
+            try {
+                if (category) {
+                    // Load specific category
+                    const files = await getFilesInDirectory(category);
+                    const gallery = document.getElementById(`gallery-${category}`);
+                    gallery.innerHTML = '';
+                    
+                    for (const file of files) {
+                        const galleryItem = document.createElement('div');
+                        galleryItem.className = 'gallery-item';
+                        galleryItem.dataset.filename = file.name;
+                        
+                        galleryItem.innerHTML = `
+                            <img src="${file.download_url}" alt="${file.name}">
+                            <div class="gallery-overlay">
+                                <span>${file.name}</span>
+                                <button class="btn btn-sm btn-danger" onclick="deletePhoto('${category}', '${file.name}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        gallery.appendChild(galleryItem);
+                    }
+                } else {
+                    // Load all categories
+                    for (const cat of CATEGORIES) {
+                        await loadGallery(cat);
+                    }
+                }
+            } catch (error) {
+                console.error('Load gallery error:', error);
+                showMessage('galleryMessage', `Load failed: ${error.message}`, 'danger');
+            }
+        }
+
+        // Initialize Gallery Tab
+        async function initializeGallery() {
+            await loadGallery();
+        }
+
+        // Setup GitHub Token
+        function setupGitHubToken() {
+            const token = prompt('Please enter your GitHub Personal Access Token:');
+            if (token) {
+                setGitHubToken(token);
+                showMessage('authMessage', 'GitHub token saved successfully!', 'success');
+                return true;
+            }
+            return false;
+        }
+
+        // Check GitHub Token
+        function checkGitHubToken() {
+            const token = getGitHubToken();
+            if (!token) {
+                showMessage('authMessage', 'GitHub token required. Please setup token first.', 'warning');
+                return false;
+            }
+            return true;
+        }
+
+        // Enhanced upload handler
+        function handleUpload() {
+            if (!checkGitHubToken()) {
+                if (setupGitHubToken()) {
+                    uploadPhotos();
+                }
+            } else {
+                uploadPhotos();
+            }
+        }
+
+        // Enhanced gallery loader
+        function handleLoadGallery() {
+            if (!checkGitHubToken()) {
+                if (setupGitHubToken()) {
+                    initializeGallery();
+                }
+            } else {
+                initializeGallery();
+            }
+        }
+
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup upload button
+            const uploadBtn = document.getElementById('uploadBtn');
+            if (uploadBtn) {
+                uploadBtn.addEventListener('click', handleUpload);
+            }
+
+            // Setup gallery tabs
+            const galleryTabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+            galleryTabs.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    const target = e.target.getAttribute('data-bs-target');
+                    if (target === '#gallery') {
+                        handleLoadGallery();
+                    }
+                });
+            });
+
+            // Setup drag and drop
+            const dropZone = document.getElementById('dropZone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+
+                dropZone.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                });
+
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    const fileInput = document.getElementById('photoFiles');
+                    fileInput.files = files;
+                    
+                    // Update file list display
+                    updateFileList(files);
+                });
+            }
+
+            // File input change handler
+            const fileInput = document.getElementById('photoFiles');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    updateFileList(e.target.files);
+                });
+            }
+        });
+
+        // Update file list display
+        function updateFileList(files) {
+            const fileList = document.getElementById('fileList');
+            if (!fileList) return;
+
+            fileList.innerHTML = '';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                fileItem.innerHTML = `
+                    <span>${file.name} (${formatFileSize(file.size)})</span>
+                    <span class="file-status">Ready</span>
+                `;
+                
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Clear upload function
+        function clearUpload() {
+            document.getElementById('photoFiles').value = '';
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('uploadCategory').value = '';
+        }
+
+        // Load all galleries function
+        async function loadAllGalleries() {
+            if (!checkGitHubToken()) {
+                if (setupGitHubToken()) {
+                    await initializeGallery();
+                }
+            } else {
+                await initializeGallery();
+            }
+        }
+
+        // Enhanced drag and drop click handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup drop zone click
+            const dropZone = document.getElementById('dropZone');
+            if (dropZone) {
+                dropZone.addEventListener('click', function() {
+                    document.getElementById('photoFiles').click();
+                });
+            }
+
+            // Setup gallery tab changes
+            const galleryTabs = document.querySelectorAll('#galleryTabs [data-bs-toggle="tab"]');
+            galleryTabs.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', async function(e) {
+                    const target = e.target.getAttribute('data-bs-target');
+                    const category = target.replace('#gallery-', '');
+                    if (category && CATEGORIES.includes(category)) {
+                        await loadGallery(category);
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 </html>
