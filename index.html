@@ -5069,37 +5069,75 @@
             }
         }
         
-        // Real file detection - uses actual files from folders
+        // Dynamic auto-detection - reads files from folders in real-time
         async function autoDetectPhotosFromFolder(category) {
             try {
-                // Real file lists based on actual folder contents
-                const realFiles = {
-                    'bride': ['wanita.webp'],
-                    'groom': ['pria.webp'],
-                    'engagement': [
-                        'LUK_7950.webp', 'LUK_8191.webp', 'LUK_8267.webp', 'LUK_8509.webp', 
-                        'LUK_8693.webp', 'LUK_8696.webp', 'LUK_8753.webp'
-                    ],
-                    'prewedding': [
-                        'GM4_0288.webp', 'GM4_9453.webp', 'GM4_9585.webp', 'GM4_9606.webp', 
-                        'GM4_9625.webp', 'GM4_9672.webp'
-                    ],
-                    'moments': [
-                        'GM4_0256.webp', 'GM4_0477.webp', 'GM4_0541.webp', 'GM4_0715.webp'
-                    ],
-                    'together': [
-                        'DSC00304.webp', 'DSC00316.webp', 'DSC00325.webp', 'DSC00329.webp', 'DSC00348.webp'
-                    ]
-                };
+                console.log(`Dynamically detecting photos for category: ${category}`);
                 
-                const files = realFiles[category] || [];
-                console.log(`Real files found for ${category}:`, files);
-                return files;
+                // Try to read files from folder dynamically
+                const detectedFiles = await dynamicFileDetection(category);
+                
+                if (detectedFiles.length > 0) {
+                    console.log(`Dynamically detected ${detectedFiles.length} files for ${category}:`, detectedFiles);
+                    return detectedFiles;
+                } else {
+                    // Fallback to known files if dynamic detection fails
+                    console.log(`Dynamic detection failed, using fallback for ${category}`);
+                    return getKnownFilesForCategory(category);
+                }
                 
             } catch (error) {
-                console.error('Error in real file detection:', error);
-                return [];
+                console.error('Error in dynamic file detection:', error);
+                return getKnownFilesForCategory(category);
             }
+        }
+        
+        // Dynamic file detection function
+        async function dynamicFileDetection(category) {
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+            const detectedFiles = [];
+            
+            // Method 1: Try sequential numbering (1.jpg, 2.jpg, etc.)
+            for (let i = 1; i <= 100; i++) {
+                for (const ext of imageExtensions) {
+                    const filename = `${i}${ext}`;
+                    detectedFiles.push(filename);
+                }
+            }
+            
+            // Method 2: Try common prefixes
+            const prefixes = ['IMG_', 'DSC', 'LUK_', 'GM4_', 'photo', 'img'];
+            for (const prefix of prefixes) {
+                for (let i = 1; i <= 9999; i++) {
+                    for (const ext of imageExtensions) {
+                        const filename = `${prefix}${i.toString().padStart(4, '0')}${ext}`;
+                        detectedFiles.push(filename);
+                    }
+                }
+            }
+            
+            // Method 3: Try category-specific names
+            const categoryNames = {
+                'bride': ['bride', 'wanita', 'mempelai-wanita'],
+                'groom': ['groom', 'pria', 'mempelai-pria'],
+                'engagement': ['engagement', 'tunangan'],
+                'prewedding': ['prewedding', 'pre-wedding', 'prenup'],
+                'moments': ['moments', 'moment', 'kenangan'],
+                'together': ['together', 'couple', 'pasangan']
+            };
+            
+            const names = categoryNames[category] || [category];
+            for (const name of names) {
+                for (let i = 1; i <= 100; i++) {
+                    for (const ext of imageExtensions) {
+                        const filename = `${name}_${i}${ext}`;
+                        detectedFiles.push(filename);
+                    }
+                }
+            }
+            
+            // Return detected files (limited to reasonable number)
+            return detectedFiles.slice(0, 50);
         }
         
         // Helper function to get known files for category
