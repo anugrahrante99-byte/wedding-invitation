@@ -5092,52 +5092,66 @@
             }
         }
         
-        // Ultimate simple file system - reads all possible image files in folders
+        // True automatic gallery system - reads actual folder contents
         async function dynamicFileDetection(category) {
-            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-            const detectedFiles = [];
-            
-            // Method 1: Check for simple numbered files (1-50)
-            for (let i = 1; i <= 50; i++) {
-                for (const ext of imageExtensions) {
-                    const filename = `${i}${ext}`;
-                    detectedFiles.push(filename);
-                }
-            }
-            
-            // Method 2: Check for common prefixes (IMG_0001-IMG_0099)
-            const prefixes = ['IMG_', 'DSC', 'photo', 'img'];
-            for (const prefix of prefixes) {
-                for (let i = 1; i <= 99; i++) {
+            try {
+                console.log(`Scanning actual folder contents for ${category}`);
+                
+                // Try to read actual folder contents by testing common file existence
+                const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+                const detectedFiles = [];
+                
+                // Method 1: Test sequential numbers (1-100)
+                for (let i = 1; i <= 100; i++) {
                     for (const ext of imageExtensions) {
-                        const filename = `${prefix}${i.toString().padStart(4, '0')}${ext}`;
-                        detectedFiles.push(filename);
+                        const filename = `${i}${ext}`;
+                        const testUrl = `./${category}/${filename}`;
+                        
+                        // Test if file exists by trying to load it
+                        try {
+                            const response = await fetch(testUrl, { method: 'HEAD' });
+                            if (response.ok) {
+                                detectedFiles.push(filename);
+                                console.log(`Found file: ${filename}`);
+                            }
+                        } catch (error) {
+                            // File doesn't exist, continue
+                        }
                     }
                 }
-            }
-            
-            // Method 3: Check for category-specific names
-            const categoryNames = {
-                'bride': ['bride', 'wanita'],
-                'groom': ['groom', 'pria'],
-                'engagement': ['engagement', 'tunangan'],
-                'prewedding': ['prewedding', 'prenup'],
-                'moments': ['moments', 'moment'],
-                'together': ['together', 'couple', 'pasangan']
-            };
-            
-            const names = categoryNames[category] || [category];
-            for (const name of names) {
-                for (let i = 1; i <= 50; i++) {
-                    for (const ext of imageExtensions) {
-                        const filename = `${name}_${i}${ext}`;
-                        detectedFiles.push(filename);
+                
+                // Method 2: Test common prefixes (IMG_, DSC_, etc.)
+                const prefixes = ['IMG_', 'DSC', 'LUK_', 'GM4_', 'photo', 'img', 'bride', 'groom', 'engagement', 'prewedding', 'moments', 'together'];
+                for (const prefix of prefixes) {
+                    for (let i = 1; i <= 9999; i++) {
+                        for (const ext of imageExtensions) {
+                            const filename = `${prefix}${i.toString().padStart(4, '0')}${ext}`;
+                            const testUrl = `./${category}/${filename}`;
+                            
+                            try {
+                                const response = await fetch(testUrl, { method: 'HEAD' });
+                                if (response.ok) {
+                                    detectedFiles.push(filename);
+                                    console.log(`Found file: ${filename}`);
+                                }
+                            } catch (error) {
+                                // File doesn't exist, continue
+                            }
+                        }
                     }
                 }
+                
+                // Remove duplicates and sort
+                const uniqueFiles = [...new Set(detectedFiles)];
+                console.log(`True automatic detection found ${uniqueFiles.length} files for ${category}:`, uniqueFiles);
+                
+                return uniqueFiles;
+                
+            } catch (error) {
+                console.error('Error in automatic folder scanning:', error);
+                // Fallback to known files
+                return getKnownFilesForCategory(category);
             }
-            
-            console.log(`Ultimate file detection for ${category}: ${detectedFiles.length} possible files`);
-            return detectedFiles;
         }
         
         // Helper function to get known files for category
