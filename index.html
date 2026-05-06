@@ -5092,63 +5092,37 @@
             }
         }
         
-        // True automatic gallery system - reads actual folder contents
+        // Ultra-simple gallery system - only categoryname1.webp to categoryname15.webp
         async function dynamicFileDetection(category) {
             try {
-                console.log(`Scanning actual folder contents for ${category}`);
+                console.log(`Ultra-simple detection for ${category}`);
                 
-                // Try to read actual folder contents by testing common file existence
-                const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+                // Only test categoryname1.webp to categoryname15.webp - INSTANT
                 const detectedFiles = [];
                 
-                // Method 1: Test sequential numbers (1-100)
-                for (let i = 1; i <= 100; i++) {
-                    for (const ext of imageExtensions) {
-                        const filename = `${i}${ext}`;
-                        const testUrl = `./${category}/${filename}`;
-                        
-                        // Test if file exists by trying to load it
-                        try {
-                            const response = await fetch(testUrl, { method: 'HEAD' });
-                            if (response.ok) {
-                                detectedFiles.push(filename);
-                                console.log(`Found file: ${filename}`);
-                            }
-                        } catch (error) {
-                            // File doesn't exist, continue
+                // Convert category name to proper format
+                const categoryName = category.replace('-', '');
+                
+                for (let i = 1; i <= 15; i++) {
+                    const filename = `${categoryName}${i}.webp`;
+                    const testUrl = `./${category}/${filename}`;
+                    
+                    try {
+                        const response = await fetch(testUrl, { method: 'HEAD' });
+                        if (response.ok) {
+                            detectedFiles.push(filename);
+                            console.log(`Found: ${filename}`);
                         }
+                    } catch (error) {
+                        // File doesn't exist, continue
                     }
                 }
                 
-                // Method 2: Test common prefixes (IMG_, DSC_, etc.)
-                const prefixes = ['IMG_', 'DSC', 'LUK_', 'GM4_', 'photo', 'img', 'bride', 'groom', 'engagement', 'prewedding', 'moments', 'together'];
-                for (const prefix of prefixes) {
-                    for (let i = 1; i <= 9999; i++) {
-                        for (const ext of imageExtensions) {
-                            const filename = `${prefix}${i.toString().padStart(4, '0')}${ext}`;
-                            const testUrl = `./${category}/${filename}`;
-                            
-                            try {
-                                const response = await fetch(testUrl, { method: 'HEAD' });
-                                if (response.ok) {
-                                    detectedFiles.push(filename);
-                                    console.log(`Found file: ${filename}`);
-                                }
-                            } catch (error) {
-                                // File doesn't exist, continue
-                            }
-                        }
-                    }
-                }
-                
-                // Remove duplicates and sort
-                const uniqueFiles = [...new Set(detectedFiles)];
-                console.log(`True automatic detection found ${uniqueFiles.length} files for ${category}:`, uniqueFiles);
-                
-                return uniqueFiles;
+                console.log(`Ultra-simple detection found ${detectedFiles.length} files for ${category}`);
+                return detectedFiles;
                 
             } catch (error) {
-                console.error('Error in automatic folder scanning:', error);
+                console.error('Error in ultra-simple detection:', error);
                 // Fallback to known files
                 return getKnownFilesForCategory(category);
             }
