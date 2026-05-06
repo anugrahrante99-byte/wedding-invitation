@@ -528,7 +528,12 @@
         <!-- Navigation Tabs -->
         <ul class="nav nav-tabs" id="mainTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="whatsapp-tab" data-bs-toggle="tab" data-bs-target="#whatsapp" type="button" role="tab">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="whatsapp-tab" data-bs-toggle="tab" data-bs-target="#whatsapp" type="button" role="tab">
                     <i class="fab fa-whatsapp"></i> WhatsApp Generator
                 </button>
             </li>
@@ -538,18 +543,8 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="guests-tab" data-bs-toggle="tab" data-bs-target="#guests" type="button" role="tab">
-                    <i class="fas fa-users"></i> Tamu
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab">
                     <i class="fas fa-tools"></i> Tools
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="sheets-tab" data-bs-toggle="tab" data-bs-target="#sheets" type="button" role="tab">
-                    <i class="fas fa-table"></i> Google Sheets
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -561,8 +556,65 @@
 
         <!-- Tab Content -->
         <div class="tab-content" id="mainTabContent">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="form-section">
+                    <h4><i class="fas fa-tachometer-alt"></i> Dashboard</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-primary"><i class="fas fa-users"></i></h5>
+                                    <p class="card-text" id="totalGuests">0</p>
+                                    <small class="text-muted">Total Tamu</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-success"><i class="fas fa-check"></i></h5>
+                                    <p class="card-text" id="confirmedGuests">0</p>
+                                    <small class="text-muted">Konfirmasi Hadir</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-warning"><i class="fas fa-question"></i></h5>
+                                    <p class="card-text" id="pendingGuests">0</p>
+                                    <small class="text-muted">Ragu-Ragu</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-info"><i class="fas fa-envelope"></i></h5>
+                                    <p class="card-text" id="totalMessages">0</p>
+                                    <small class="text-muted">Total Pesan</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-line"></i> Statistik Real-time</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="statsChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- WhatsApp Generator Tab -->
-            <div class="tab-pane fade show active" id="whatsapp" role="tabpanel">
+            <div class="tab-pane fade" id="whatsapp" role="tabpanel">
                 <div class="form-section">
                     <h4><i class="fab fa-whatsapp"></i> WhatsApp Invitation Generator</h4>
                     <form id="whatsappForm">
@@ -863,6 +915,10 @@
             <div class="tab-pane fade" id="settings" role="tabpanel">
                 <div class="form-section">
                     <h4><i class="fas fa-cog"></i> Pengaturan</h4>
+                    <div class="alert alert-warning mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Penting:</strong> Menu Tamu dipindahkan ke Dashboard untuk pengalaman yang lebih baik.
+                    </div>
                     
                     <!-- GitHub Token Management -->
                     <div class="token-management mb-4">
@@ -982,13 +1038,14 @@
         };
 
         // Global Variables
-        let currentTab = 'whatsapp';
+        let currentTab = 'dashboard';
         let guests = [];
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             setupEventListeners();
+            updateDashboardStats(); // Initialize dashboard stats
         });
 
         // Authentication Functions
@@ -1367,6 +1424,7 @@ God bless you`;
                 guests = result.data || [];
                 displayGuestList();
                 updateStats();
+                updateDashboardStats(); // Update dashboard stats
             } catch (error) {
                 // Fallback ke localStorage jika Apps Script error
                 console.log('Apps Script error, using localStorage:', error.message);
@@ -1378,6 +1436,7 @@ God bless you`;
                 }
                 displayGuestList();
                 updateStats();
+                updateDashboardStats(); // Update dashboard stats
             }
         }
 
@@ -1432,10 +1491,70 @@ God bless you`;
             if (!guests) return;
 
             const totalGuests = guests.length;
-            const confirmedGuests = guests.filter(g => g.attendance === 'Hadir').length;
-
+            const confirmedGuests = guests.filter(g => g.attendance === 'hadir').length;
+            const pendingGuests = guests.filter(g => g.attendance === 'ragu').length;
+            
             document.getElementById('totalGuests').textContent = totalGuests;
             document.getElementById('confirmedGuests').textContent = confirmedGuests;
+            document.getElementById('pendingGuests').textContent = pendingGuests;
+        }
+
+        function updateDashboardStats() {
+            const totalGuests = guests.length;
+            const confirmedGuests = guests.filter(g => g.attendance === 'hadir').length;
+            const pendingGuests = guests.filter(g => g.attendance === 'ragu').length;
+            const totalMessages = guests.filter(g => g.message && g.message.trim()).length;
+            
+            document.getElementById('totalGuests').textContent = totalGuests;
+            document.getElementById('confirmedGuests').textContent = confirmedGuests;
+            document.getElementById('pendingGuests').textContent = pendingGuests;
+            document.getElementById('totalMessages').textContent = totalMessages;
+            
+            // Update chart
+            updateStatsChart();
+        }
+
+        function updateStatsChart() {
+            const canvas = document.getElementById('statsChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Simple bar chart data
+            const confirmed = guests.filter(g => g.attendance === 'hadir').length;
+            const pending = guests.filter(g => g.attendance === 'ragu').length;
+            const notComing = guests.filter(g => g.attendance === 'tidak').length;
+            
+            // Clear previous chart
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw simple bars
+            const barWidth = 80;
+            const barSpacing = 20;
+            const maxHeight = 150;
+            const startX = 50;
+            const startY = 170;
+            
+            // Confirmed guests bar
+            const confirmedHeight = Math.min((confirmed / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
+            ctx.fillStyle = '#28a745';
+            ctx.fillRect(startX, startY - confirmedHeight, barWidth, confirmedHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Hadir', startX + 10, startY - confirmedHeight - 5);
+            
+            // Pending guests bar
+            const pendingHeight = Math.min((pending / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
+            ctx.fillStyle = '#ffc107';
+            ctx.fillRect(startX + barWidth + barSpacing, startY - pendingHeight, barWidth, pendingHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Ragu', startX + barWidth + barSpacing + 10, startY - pendingHeight - 5);
+            
+            // Not coming guests bar
+            const notComingHeight = Math.min((notComing / Math.max(1, confirmed, pending, notComing)) * maxHeight, maxHeight);
+            ctx.fillStyle = '#dc3545';
+            ctx.fillRect(startX + (barWidth + barSpacing) * 2, startY - notComingHeight, barWidth, notComingHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Tidak', startX + (barWidth + barSpacing) * 2 + 10, startY - notComingHeight - 5);
         }
 
         // Tools Functions
