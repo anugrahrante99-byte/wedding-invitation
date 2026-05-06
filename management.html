@@ -1931,34 +1931,17 @@ God bless you`;
             }
         }
 
-        // Enhanced token check with auto-setup
+        // Enhanced token check with auto-setup (no popup)
         function checkAndSetupToken() {
             const token = getGitHubToken();
             
             if (!token) {
-                showMessage('tokenMessage', 'Token diperlukan untuk fitur gallery. Silakan setup token di tab Settings.', 'warning');
+                // Don't show popup - just return false
                 return false;
             }
             
             return true;
         }
-
-        // Auto-check token status on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check token status when Settings tab is shown
-            const settingsTab = document.getElementById('settings-tab');
-            if (settingsTab) {
-                settingsTab.addEventListener('shown.bs.tab', function() {
-                    checkTokenStatus();
-                });
-            }
-            
-            // Setup token update form
-            const updateTokenForm = document.getElementById('updateTokenForm');
-            if (updateTokenForm) {
-                updateTokenForm.addEventListener('submit', updateToken);
-            }
-        });
 
         // Clear upload function
         function clearUpload() {
@@ -1978,27 +1961,13 @@ God bless you`;
             }
         }
 
-        // Enhanced drag and drop click handler
+        // Auto-check token status on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup drop zone click
-            const dropZone = document.getElementById('dropZone');
-            if (dropZone) {
-                dropZone.addEventListener('click', function() {
-                    document.getElementById('photoFiles').click();
-                });
+            // Setup token update form
+            const updateTokenForm = document.getElementById('updateTokenForm');
+            if (updateTokenForm) {
+                updateTokenForm.addEventListener('submit', updateToken);
             }
-
-            // Setup gallery tab changes
-            const galleryTabs = document.querySelectorAll('#galleryTabs [data-bs-toggle="tab"]');
-            galleryTabs.forEach(tab => {
-                tab.addEventListener('shown.bs.tab', async function(e) {
-                    const target = e.target.getAttribute('data-bs-target');
-                    const category = target.replace('#gallery-', '');
-                    if (category && CATEGORIES.includes(category)) {
-                        await loadGallery(category);
-                    }
-                });
-            });
         });
 
     </script>
