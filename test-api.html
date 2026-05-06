@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Wedding Invitation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 API Testing Dashboard</h1>
+    
+    <div class="test-container">
+        <h2>📊 Test Google Sheets API</h2>
+        <p>Web App URL: <code>https://script.google.com/macros/s/AKfycbzTS2wdS3nAcH6mHJyFThjMbgp1W0eBnAqWW6wVdusPkfry__OobiNHJaHfmB0UUbl0/exec</code></p>
+        
+        <button class="test-button" onclick="testGetAPI()">🔍 Test GET API</button>
+        <button class="test-button" onclick="testPostAPI()">📤 Test POST API</button>
+        <button class="test-button" onclick="testAddWish()">💬 Test Add Wish</button>
+        <button class="test-button" onclick="testMarkSent()">📱 Test Mark Sent</button>
+        <button class="test-button" onclick="testListWishes()">📋 Test List Wishes</button>
+        <button class="test-button" onclick="testListSent()">📤 Test List Sent</button>
+        
+        <div id="getResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔍 Debug Information</h2>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzTS2wdS3nAcH6mHJyFThjMbgp1W0eBnAqWW6wVdusPkfry__OobiNHJaHfmB0UUbl0/exec';
+        
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        function showDebug(message) {
+            const element = document.getElementById('debugInfo');
+            element.innerHTML = `<div class="result info">${message}</div>`;
+        }
+
+        async function testGetAPI() {
+            showResult('getResult', 'Testing GET API...', 'info');
+            try {
+                const response = await fetch(`${API_URL}?action=test&callback=callback123`);
+                const text = await response.text();
+                showResult('getResult', `✅ GET API Response:\n${text}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ GET API Error:\n${error.message}`, 'error');
+            }
+        }
+
+        async function testPostAPI() {
+            showResult('getResult', 'Testing POST API...', 'info');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'test'
+                    })
+                });
+                const result = await response.json();
+                showResult('getResult', `✅ POST API Response:\n${JSON.stringify(result, null, 2)}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ POST API Error:\n${error.message}`, 'error');
+            }
+        }
+
+        async function testAddWish() {
+            showResult('getResult', 'Testing Add Wish...', 'info');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addwish',
+                        name: 'Test User',
+                        attendance: 'Hadir',
+                        guestcount: '2',
+                        message: 'Test message from API test',
+                        type: 'test'
+                    })
+                });
+                const result = await response.json();
+                showResult('getResult', `✅ Add Wish Response:\n${JSON.stringify(result, null, 2)}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ Add Wish Error:\n${error.message}`, 'error');
+            }
+        }
+
+        async function testMarkSent() {
+            showResult('getResult', 'Testing Mark Sent...', 'info');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'marksent',
+                        name: 'Test WhatsApp User',
+                        phone: '628123456789',
+                        link: 'https://anugrahrante99-byte.github.io/wedding-invitation/',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                const result = await response.json();
+                showResult('getResult', `✅ Mark Sent Response:\n${JSON.stringify(result, null, 2)}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ Mark Sent Error:\n${error.message}`, 'error');
+            }
+        }
+
+        async function testListWishes() {
+            showResult('getResult', 'Testing List Wishes...', 'info');
+            try {
+                const response = await fetch(`${API_URL}?action=listwishes&callback=callback123`);
+                const text = await response.text();
+                showResult('getResult', `✅ List Wishes Response:\n${text}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ List Wishes Error:\n${error.message}`, 'error');
+            }
+        }
+
+        async function testListSent() {
+            showResult('getResult', 'Testing List Sent...', 'info');
+            try {
+                const response = await fetch(`${API_URL}?action=listsent&callback=callback123`);
+                const text = await response.text();
+                showResult('getResult', `✅ List Sent Response:\n${text}`, 'success');
+            } catch (error) {
+                showResult('getResult', `❌ List Sent Error:\n${error.message}`, 'error');
+            }
+        }
+
+        // Show debug info on load
+        window.onload = function() {
+            showDebug(`
+                <strong>🔍 Debug Information:</strong><br>
+                • API URL: ${API_URL}<br>
+                • User Agent: ${navigator.userAgent}<br>
+                • Current Time: ${new Date().toISOString()}<br>
+                • Page Protocol: ${window.location.protocol}<br>
+                • Page Host: ${window.location.host}<br>
+                <br>
+                <strong>📋 Testing Instructions:</strong><br>
+                1. Test GET API - Should return success message<br>
+                2. Test POST API - Should return success message<br>
+                3. Test Add Wish - Should add data to "Ucapan" sheet<br>
+                4. Test Mark Sent - Should add data to "Terkirim" sheet<br>
+                5. Test List functions - Should return data from sheets<br>
+                <br>
+                <strong>⚠️ Common Issues:</strong><br>
+                • CORS errors - Check Apps Script deployment settings<br>
+                • Permission denied - Check "Who has access" setting<br>
+                • 404 errors - Check Web App URL<br>
+                • 500 errors - Check Apps Script code
+            `);
+        };
+    </script>
+</body>
+</html>

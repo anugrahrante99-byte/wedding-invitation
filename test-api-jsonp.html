@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 JSONP API Testing Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .test-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 8px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .test-button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .url-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+            word-break: break-all;
+        }
+        
+        .url-display code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 JSONP API Testing Dashboard</h1>
+    
+    <div class="test-container">
+        <h2>📊 Test Google Sheets API (JSONP)</h2>
+        <div class="url-display">
+            <p>Web App URL: <code>https://script.google.com/macros/s/AKfycbx8mj0Z6ufuUTFaIM79YdyY8-r4hbTbaYO0O1YXzawq07ccxcKTm5vwf9RYOlA_rhhr/exec</code></p>
+        </div>
+        
+        <button class="test-button" onclick="testGetAPI()">🔍 Test GET API</button>
+        <button class="test-button" onclick="testPostAPI()">📤 Test POST API</button>
+        <button class="test-button" onclick="testAddWish()">💬 Test Add Wish</button>
+        <button class="test-button" onclick="testMarkSent()">📱 Test Mark Sent</button>
+        <button class="test-button" onclick="testListWishes()">📋 Test List Wishes</button>
+        <button class="test-button" onclick="testListSent()">📤 Test List Sent</button>
+        
+        <div id="getResult"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>👥 Guest Management</h2>
+        
+        <button class="test-button" onclick="testAddGuest()">👥 Test Add Guest</button>
+        <button class="test-button" onclick="testListGuests()">👥 Test List Guests</button>
+        <button class="test-button" onclick="testListDuplicates()">🔍 Test List Duplicates</button>
+        <button class="test-button" onclick="testMergeDuplicates()">🔗 Test Merge Duplicates</button>
+        
+        <div id="guestResult"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>🔍 Debug Information</h2>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbx8mj0Z6ufuUTFaIM79YdyY8-r4hbTbaYO0O1YXzawq07ccxcKTm5vwf9RYOlA_rhhr/exec';
+        
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        function showDebug(message) {
+            const element = document.getElementById('debugInfo');
+            element.innerHTML = `<div class="result info">${message}</div>`;
+        }
+
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '<div class="loading"></div> Loading...';
+        }
+
+        // JSONP helper function
+        function jsonpRequest(url, data, callback) {
+            const callbackName = 'jsonp_callback_' + Date.now();
+            const script = document.createElement('script');
+            
+            // Create global callback function
+            window[callbackName] = function(response) {
+                callback(response);
+                // Clean up
+                delete window[callbackName];
+                document.body.removeChild(script);
+            };
+            
+            // Build URL with parameters
+            const params = new URLSearchParams();
+            Object.keys(data).forEach(key => {
+                params.append(key, data[key]);
+            });
+            params.append('callback', callbackName);
+            
+            script.src = url + '?' + params.toString();
+            document.body.appendChild(script);
+        }
+
+        // Test GET API
+        function testGetAPI() {
+            showLoading('getResult');
+            showDebug('Testing GET API with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'test' }, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ GET API Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ GET API Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test POST API
+        function testPostAPI() {
+            showLoading('getResult');
+            showDebug('Testing POST API with JSONP...');
+            
+            const data = {
+                action: 'test',
+                message: 'Hello from JSONP POST!',
+                timestamp: new Date().toISOString()
+            };
+            
+            jsonpRequest(API_URL, data, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ POST API Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ POST API Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test Add Wish
+        function testAddWish() {
+            showLoading('getResult');
+            showDebug('Testing Add Wish with JSONP...');
+            
+            const data = {
+                action: 'addwish',
+                name: 'Test User ' + Date.now(),
+                attendance: 'Hadir',
+                guestcount: '2',
+                message: 'This is a test wish from JSONP!',
+                type: 'web'
+            };
+            
+            jsonpRequest(API_URL, data, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ Add Wish Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ Add Wish Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test Mark Sent
+        function testMarkSent() {
+            showLoading('getResult');
+            showDebug('Testing Mark Sent with JSONP...');
+            
+            const data = {
+                action: 'marksent',
+                name: 'Test User ' + Date.now(),
+                phone: '+628123456789',
+                link: 'https://wa.me/628123456789'
+            };
+            
+            jsonpRequest(API_URL, data, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ Mark Sent Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ Mark Sent Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test List Wishes
+        function testListWishes() {
+            showLoading('getResult');
+            showDebug('Testing List Wishes with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'listwishes' }, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ List Wishes Success!\n\nFound ${response.data.length} wishes:\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ List Wishes Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test List Sent
+        function testListSent() {
+            showLoading('getResult');
+            showDebug('Testing List Sent with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'listsent' }, function(response) {
+                if (response.ok) {
+                    showResult('getResult', `✅ List Sent Success!\n\nFound ${response.data.length} sent items:\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('getResult', `❌ List Sent Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test Add Guest
+        function testAddGuest() {
+            showLoading('guestResult');
+            showDebug('Testing Add Guest with JSONP...');
+            
+            const data = {
+                action: 'addguest',
+                name: 'Guest Test ' + Date.now(),
+                phone: '+628987654321',
+                attendance: 'Hadir',
+                guestcount: '1',
+                message: 'Test guest from JSONP'
+            };
+            
+            jsonpRequest(API_URL, data, function(response) {
+                if (response.ok) {
+                    showResult('guestResult', `✅ Add Guest Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('guestResult', `❌ Add Guest Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test List Guests
+        function testListGuests() {
+            showLoading('guestResult');
+            showDebug('Testing List Guests with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'listguests' }, function(response) {
+                if (response.ok) {
+                    showResult('guestResult', `✅ List Guests Success!\n\nFound ${response.data.length} guests:\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('guestResult', `❌ List Guests Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test List Duplicates
+        function testListDuplicates() {
+            showLoading('guestResult');
+            showDebug('Testing List Duplicates with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'listduplicates' }, function(response) {
+                if (response.ok) {
+                    showResult('guestResult', `✅ List Duplicates Success!\n\nFound ${response.data.length} duplicates:\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('guestResult', `❌ List Duplicates Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Test Merge Duplicates
+        function testMergeDuplicates() {
+            showLoading('guestResult');
+            showDebug('Testing Merge Duplicates with JSONP...');
+            
+            jsonpRequest(API_URL, { action: 'mergeduplicates' }, function(response) {
+                if (response.ok) {
+                    showResult('guestResult', `✅ Merge Duplicates Success!\n\n${JSON.stringify(response, null, 2)}`, 'success');
+                } else {
+                    showResult('guestResult', `❌ Merge Duplicates Error!\n\n${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            });
+        }
+
+        // Auto-test on page load
+        window.onload = function() {
+            showDebug('JSONP API Testing Dashboard loaded! Ready to test all endpoints with JSONP (no CORS issues!).');
+        };
+    </script>
+</body>
+</html>
