@@ -1553,6 +1553,11 @@ God bless you`;
                 return;
             }
 
+            // Debug: Log each wish to check rowId
+            wishes.forEach((wish) => {
+                console.log(wish);
+            });
+
             container.innerHTML = wishes.map((wish) => `
                 <div class="card mb-2">
                     <div class="card-body">
@@ -2502,6 +2507,10 @@ God bless you`;
             });
         }
 
+        // Dummy function untuk updateStats
+        function updateStats() {
+            console.log("updateStats placeholder");
+        }
     </script>
 </body>
 </html>
