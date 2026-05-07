@@ -1378,7 +1378,14 @@ God bless you`;
             .then(r => r.text())
             .then(res => {
                 console.log(res);
-                return true;
+                try {
+                    const json = JSON.parse(res);
+                    console.log(json);
+                    return json.ok === true;
+                } catch (e) {
+                    console.error(e);
+                    return false;
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -1456,7 +1463,7 @@ God bless you`;
         }
 
         // Delete wish function
-        async function deleteWish(wish) {
+        async function deleteWish(rowId) {
             if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) {
                 return;
             }
@@ -1466,7 +1473,7 @@ God bless you`;
                 
                 const success = await sheetsPost({
                     action: 'deletewish',
-                    rowId: wish.rowId
+                    rowId: rowId
                 });
 
                 if (success) {
@@ -1537,7 +1544,7 @@ God bless you`;
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <small class="text-muted">${formatTime(wish.timestamp)}</small>
-                                <button class="btn btn-sm btn-danger" onclick="deleteWish(${JSON.stringify(wish)})" title="Hapus ucapan">
+                                <button class="btn btn-sm btn-danger" onclick="deleteWish(${wish.rowId})" title="Hapus ucapan">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
