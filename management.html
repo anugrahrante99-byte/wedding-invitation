@@ -1353,60 +1353,52 @@ God bless you`;
         async function sheetsPost(payload) {
             const formData = new URLSearchParams();
 
-            // REQUIRED
-            if (payload.action !== undefined)
-                formData.append("action", payload.action);
+            formData.append("action", payload.action || "");
+            formData.append("name", payload.name || "");
+            formData.append("phone", payload.phone || "");
+            formData.append("link", payload.link || "");
+            formData.append("key", payload.key || "");
+            formData.append("attendance", payload.attendance || "");
+            formData.append("guestCount", payload.guestCount || "");
+            formData.append("message", payload.message || "");
+            formData.append("type", payload.type || "");
+            formData.append("timestamp", payload.timestamp || "");
 
-            // OPTIONAL
-            if (payload.name !== undefined)
-                formData.append("name", payload.name);
+            // INI PALING PENTING
+            formData.append(
+                "rowId",
+                String(payload.rowId || "")
+            );
 
-            if (payload.phone !== undefined)
-                formData.append("phone", payload.phone);
-
-            if (payload.link !== undefined)
-                formData.append("link", payload.link);
-
-            if (payload.key !== undefined)
-                formData.append("key", payload.key);
-
-            if (payload.attendance !== undefined)
-                formData.append("attendance", payload.attendance);
-
-            if (payload.guestCount !== undefined)
-                formData.append("guestCount", payload.guestCount);
-
-            if (payload.message !== undefined)
-                formData.append("message", payload.message);
-
-            if (payload.type !== undefined)
-                formData.append("type", payload.type);
-
-            if (payload.rowId !== undefined)
-                formData.append("rowId", payload.rowId);
-
-            if (payload.timestamp !== undefined)
-                formData.append("timestamp", payload.timestamp);
+            console.log(
+                "SENDING ROW ID:",
+                payload.rowId
+            );
 
             try {
-                const response = await fetch(CONFIG.WEB_APP_URL, {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch(
+                    CONFIG.WEB_APP_URL,
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
 
                 const text = await response.text();
 
-                console.log("RAW RESPONSE:", text);
+                console.log(text);
 
                 const json = JSON.parse(text);
 
-                console.log("PARSED:", json);
-
                 return json.ok === true;
+
             } catch (err) {
-                console.error("FETCH ERROR:", err);
+                console.error(err);
+
                 return false;
+
             }
+
         }
 
         // Guest Management Functions
