@@ -542,12 +542,7 @@
                     <i class="fas fa-images"></i> Gallery Management
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab">
-                    <i class="fas fa-tools"></i> Tools
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation">
                 <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
                     <i class="fas fa-cog"></i> Pengaturan
                 </button>
@@ -802,35 +797,7 @@
                 </div>
             </div>
 
-            <!-- Tools Tab -->
-            <div class="tab-pane fade" id="tools" role="tabpanel">
-                <div class="form-section">
-                    <h4><i class="fas fa-tools"></i> Tools & Utilities</h4>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-info w-100 mb-2" onclick="exportData()">
-                                <i class="fas fa-download"></i> Export Data
-                            </button>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-warning w-100 mb-2" onclick="importData()">
-                                <i class="fas fa-upload"></i> Import Data
-                            </button>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-success w-100 mb-2" onclick="testConnection()">
-                                <i class="fas fa-plug"></i> Test Connection
-                            </button>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-secondary w-100 mb-2" onclick="clearCache()">
-                                <i class="fas fa-broom"></i> Clear Cache
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
             <!-- Google Sheets Tab -->
             <div class="tab-pane fade" id="sheets" role="tabpanel">
                 <div class="form-section">
@@ -902,6 +869,11 @@
                             <div class="col-md-6 mb-3">
                                 <button class="btn btn-info w-100 mb-2" onclick="previewInvitation()">
                                     <i class="fas fa-eye"></i> Preview Undangan
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-secondary w-100 mb-2" onclick="clearCache()">
+                                    <i class="fas fa-broom"></i> Clear Cache
                                 </button>
                             </div>
                         </div>
