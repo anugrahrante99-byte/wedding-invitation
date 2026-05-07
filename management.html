@@ -1338,28 +1338,37 @@ God bless you`;
 
                     };
 
-                    const query =
-                        new URLSearchParams({
+                    let url =
+                        CONFIG.WEB_APP_URL +
+                        '?action=' +
+                        encodeURIComponent(action) +
+                        '&callback=' +
+                        callbackName;
 
-                            action:
-                                action,
+                    Object.keys(params)
+                        .forEach(key => {
 
-                            callback:
-                                callbackName,
-
-                            ...params
+                            url +=
+                                '&' +
+                                encodeURIComponent(key)
+                                + '=' +
+                                encodeURIComponent(
+                                    params[key]
+                                );
 
                         });
+
+                    console.log(
+                        'JSONP URL:',
+                        url
+                    );
 
                     const script =
                         document.createElement(
                             'script'
                         );
 
-                    script.src =
-                        CONFIG.WEB_APP_URL +
-                        '?' +
-                        query.toString();
+                    script.src = url;
 
                     script.onerror =
                         reject;
