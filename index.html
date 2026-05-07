@@ -5041,6 +5041,8 @@
 
     try {
 
+        console.log('Loading wishes from Google Sheets...');
+
         const data =
             await sheetsGet(
                 'listwishes'
@@ -5058,10 +5060,23 @@
             )
         ) {
 
-            wishes =
-                data.data;
+            // Clear localStorage cache to ensure only Sheets data is used
+            localStorage.removeItem('weddingWishes');
+            
+            // Update global wishes variable
+            window.wishes = data.data;
 
-            renderWishes();
+            // Render wishes from Sheets data
+            displayWishes();
+
+            console.log('Wishes loaded from Sheets:', data.data.length, 'items');
+
+        } else {
+
+            // Clear cache if Sheets data is invalid
+            localStorage.removeItem('weddingWishes');
+            window.wishes = [];
+            displayWishes();
 
         }
 
@@ -5071,6 +5086,11 @@
             'Load wishes error:',
             err
         );
+
+        // Clear cache on error
+        localStorage.removeItem('weddingWishes');
+        window.wishes = [];
+        displayWishes();
 
     }
 
@@ -5110,7 +5130,8 @@
             const container = document.getElementById('wishesContainer');
             container.innerHTML = '';
             
-            const wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
+            // Use wishes from global variable (loaded from Sheets)
+            const wishes = window.wishes || [];
             
             if (wishes.length === 0) {
                 container.innerHTML = `
@@ -8312,22 +8333,25 @@
             
             // Initialize real-time guest messages
             initializeRealTimeWishes();
+            
+            // Load wishes immediately on page load
+            loadWishes();
         });
         
         // Real-time guest messages system
         function initializeRealTimeWishes() {
             // Force load from Sheets on initial page load
-            loadWishesFromSheets(true);
+            loadWishesFromSheets();
             
             // Auto-refresh every 30 seconds for real-time updates
             setInterval(() => {
-                loadWishesFromSheets(false);
+                loadWishesFromSheets();
             }, 30000);
             
             // Also refresh when page becomes visible again (user returns to tab)
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
-                    loadWishesFromSheets(false);
+                    loadWishesFromSheets();
                 }
             });
         }
