@@ -1203,72 +1203,7 @@ God bless you`;
 
             const invitationLink = createSecureInvitationLink(guestName);
 
-            // Cek duplikat nama tamu di Google Sheets sebelum menyimpan
-            try {
-                showMessage('whatsappMessage', 'Mengecek duplikat nama...', 'info');
-                const existingGuests = await sheetsGet('listguests');
-                
-                if (existingGuests && existingGuests.data) {
-                    const duplicate = existingGuests.data.find(guest => 
-                        guest.name && guest.name.toLowerCase() === guestName.toLowerCase()
-                    );
-                    
-                    if (duplicate) {
-                        showMessage('whatsappMessage', `Nama "${guestName}" sudah ada di daftar tamu!`, 'warning');
-                        return;
-                    }
-                }
-            } catch (error) {
-                console.log('Error checking duplicates:', error);
-                // Lanjutkan proses jika gagal cek duplikat
-            }
-
-            // Simpan data tamu ke Google Sheets dengan action marksent untuk sheet Terkirim
-            try {
-                const guestData = {
-                    action: 'marksent',
-                    name: guestName,
-                    phone: guestPhone || '', // Nomor WhatsApp opsional
-                    link: guestPhone ? `https://wa.me/${guestPhone.replace(/[^\d]/g, '')}` : '',
-                    key: generateUniqueToken(guestName),
-                    timestamp: new Date().toISOString()
-                };
-
-                const success = await sheetsPost(guestData);
-
-                if (success) {
-                    // Add to local guests array
-                    const displayGuest = {
-                        name: guestName,
-                        phone: guestPhone || '',
-                        link: invitationLink,
-                        timestamp: new Date().toISOString()
-                    };
-                    
-                    guests.push(displayGuest);
-                    localStorage.setItem('weddingGuests', JSON.stringify(guests));
-                    displayGuestList();
-                    // updateStats(); // Commented out - stats elements removed
-                    
-                    showMessage('whatsappMessage', 'Data tersimpan di Google Sheets!', 'success');
-                } else {
-                    showMessage('whatsappMessage', 'Gagal menyimpan ke Google Sheets', 'error');
-                }
-            } catch (error) {
-                // Fallback to localStorage
-                const displayGuest = {
-                    name: guestName,
-                    phone: guestPhone || '',
-                    link: invitationLink,
-                    timestamp: new Date().toISOString()
-                };
-                guests.push(displayGuest);
-                localStorage.setItem('weddingGuests', JSON.stringify(guests));
-                displayGuestList();
-                // updateStats(); // Commented out - stats elements removed
-                showMessage('whatsappMessage', 'Data tersimpan di local storage (fallback)', 'info');
-            }
-
+            // Buat pesan WhatsApp
             const personalizedMessage = `${guestName}
 
 "Tuhan adalah kasih" (1 Yohanes 4:16)
@@ -1287,13 +1222,13 @@ Jumat, 26 Juni 2026
 Gereja Toraja Jemaat Bua Tallulolo
 
 *Resepsi*
-13.00 WITA - Selesai
-Ballroom D'Rij Hotel & Convention
+Jumat, 26 Juni 2026
+11.00 WITA - Selesai
+Gedung Serbaguna Bua Tallulolo
 
-*Digital Invitation:*
+*Undangan Digital*
 ${invitationLink}
 
-*Your presence means the world to us*
 *Your prayers are our greatest blessing*
 
 With love in Christ,
@@ -1302,14 +1237,57 @@ With love in Christ,
 
 God bless you`;
 
+            // Encode pesan untuk URL
             const encodedMessage = encodeURIComponent(personalizedMessage);
-            const whatsappUrl = guestPhone 
-                ? `https://wa.me/${guestPhone.replace(/[^\d]/g, '')}?text=${encodedMessage}`
-                : `https://wa.me/?text=${encodedMessage}`;
+            
+            // Buat URL WhatsApp
+            let whatsappUrl;
+            if (guestPhone) {
+                // Jika ada nomor, langsung buka chat dengan nomor tersebut
+                const cleanPhone = guestPhone.replace(/[^\d]/g, '');
+                whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            } else {
+                // Jika tidak ada nomor, buka WhatsApp dengan pesan (user bisa pilih kontak)
+                whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            }
 
+            // Buka WhatsApp
             window.open(whatsappUrl, '_blank');
-            showMessage('whatsappMessage', 'WhatsApp terbuka!', 'success');
-        }
+            
+            showMessage('whatsappMessage', 'WhatsApp berhasil dibuka!', 'success');
+
+            // Simpan data ke Google Sheets (opsional, tidak menghambat pengiriman)
+            try {
+                const guestData = {
+                    action: 'marksent',
+                    name: guestName,
+                    phone: guestPhone || '', // Nomor WhatsApp opsional
+                    link: whatsappUrl,
+                    key: generateUniqueToken(guestName),
+                    timestamp: new Date().toISOString()
+                };
+
+                const success = await sheetsPost(guestData);
+
+                if (success) {
+                    // Add to guests array and display
+                    const displayGuest = {
+                        name: guestName,
+                        phone: guestPhone || '',
+                        link: whatsappUrl,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    guests.push(displayGuest);
+                    displayGuestList();
+                    
+                    console.log('Data tersimpan di Google Sheets');
+                } else {
+                    console.log('Gagal menyimpan ke Google Sheets, tapi WhatsApp sudah terkirim');
+                }
+            } catch (error) {
+                console.error('Error saving to Sheets, tapi WhatsApp sudah terkirim:', error);
+            }
 
         // Google Sheets API Functions
         function sheetsGet(
@@ -1445,17 +1423,10 @@ God bless you`;
                 // updateStats(); // Commented out - stats elements removed
                 // updateDashboardStats(); // Commented out - dashboard stats removed
             } catch (error) {
-                // Fallback ke localStorage jika Apps Script error
-                console.log('Apps Script error, using localStorage:', error.message);
-                const storedGuests = localStorage.getItem('weddingGuests');
-                if (storedGuests) {
-                    guests = JSON.parse(storedGuests);
-                } else {
-                    guests = [];
-                }
+                // Handle error without localStorage fallback
+                console.error('Load guests error:', error);
+                guests = [];
                 displayGuestList();
-                // updateStats(); // Commented out - stats elements removed
-                // updateDashboardStats(); // Commented out - dashboard stats removed
             }
         }
 
@@ -1752,8 +1723,7 @@ God bless you`;
         }
 
         function clearCache() {
-            if (confirm('Clear semua cache dan local storage?')) {
-                localStorage.clear();
+            if (confirm('Clear semua cache?')) {
                 sessionStorage.clear();
                 showMessage('toolsMessage', 'Cache berhasil dibersihkan!', 'success');
             }
@@ -1781,11 +1751,11 @@ God bless you`;
 
         // GitHub Token Management
         function getGitHubToken() {
-            return localStorage.getItem('github_token') || '';
+            return window.githubToken || '';
         }
 
         function setGitHubToken(token) {
-            localStorage.setItem('github_token', token);
+            window.githubToken = token;
         }
 
         // GitHub API Functions
@@ -2244,7 +2214,7 @@ God bless you`;
                 const password = prompt('Masukkan password admin untuk konfirmasi:');
                 
                 if (password === CONFIG.ADMIN_PASSWORD) {
-                    localStorage.removeItem('github_token');
+                    window.githubToken = null;
                     showMessage('tokenMessage', 'Token berhasil dihapus!', 'success');
                     checkTokenStatus();
                 } else {
@@ -2447,17 +2417,11 @@ God bless you`;
         }
 
         
-        async function deleteGuest(rowId) {
-            if (!confirm('Apakah Anda yakin ingin menghapus data tamu ini?')) return;
-            
-            try {
-                const result = await sheetsPost({ action: 'deleteguest', rowId });
-                if (result) {
-                    showMessage('guestsMessage', 'Data tamu berhasil dihapus!', 'success');
-                    loadGuestsFromSheets();
-                }
-            } catch (error) {
-                showMessage('guestsMessage', 'Gagal menghapus data tamu: ' + error.message, 'danger');
+        async function deleteGuest(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data tamu ini?')) {
+                guests.splice(index, 1);
+                displayGuestList();
+                showMessage('guestMessage', 'Data tamu berhasil dihapus!', 'success');
             }
         }
 
