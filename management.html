@@ -769,9 +769,6 @@
                         <button class="btn btn-success" onclick="loadGuestList()">
                             <i class="fas fa-refresh"></i> Refresh
                         </button>
-                        <button class="btn btn-danger" onclick="clearAllGuests()">
-                            <i class="fas fa-trash"></i> Hapus Semua
-                        </button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -780,11 +777,8 @@
                                     <th>No</th>
                                     <th>Nama</th>
                                     <th>WhatsApp</th>
-                                    <th>Kehadiran</th>
-                                    <th>Jumlah</th>
-                                    <th>Pesan</th>
                                     <th>Waktu</th>
-                                    <th>Aksi</th>
+                                    <th>Link</th>
                                 </tr>
                             </thead>
                             <tbody id="guestList">
@@ -1439,23 +1433,40 @@ God bless you`;
             const tbody = document.getElementById('guestList');
             
             if (!guests || guests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Belum ada data tamu</td></tr>';
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="5"
+                        class="text-center text-muted">
+                        Belum ada data tamu
+                    </td>
+                </tr>
+                `;
                 return;
             }
 
             tbody.innerHTML = guests.map((guest, index) => `
                 <tr>
-                    <td>${index + 1}</td>
-                    <td>${guest.name || '-'}</td>
-                    <td>${guest.phone || '-'}</td>
-                    <td>${guest.attendance || '-'}</td>
-                    <td>${guest.guestCount || '-'}</td>
-                    <td>${guest.message ? (guest.message.length > 50 ? guest.message.substring(0, 50) + '...' : guest.message) : '-'}</td>
-                    <td>${formatTime(guest.timestamp)}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteGuest(${index + 2})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        ${index + 1}
+                    </td>
+                    <td>
+                        ${guest.name || '-'}
+                    </td>
+                    <td>
+                        ${guest.phone || '-'}
+                    </td>
+                    <td>
+                        ${formatTime(guest.timestamp)}
+                    </td>
+                    <td>
+                        <a
+                            href="${guest.link || '#'}"
+                            target="_blank"
+                            class="btn btn-sm btn-success"
+                        >
+                            <i class="fab fa-whatsapp"></i>
+                            Buka
+                        </a>
                     </td>
                 </tr>
             `).join('');
@@ -1474,10 +1485,6 @@ God bless you`;
             return 'Baru saja';
         }
 
-        function deleteGuest(index) {
-            // Tidak ada hapus untuk data tamu WhatsApp
-            alert('Data tamu WhatsApp tidak dapat dihapus.');
-        }
 
         // Delete wish function
         async function deleteWish(rowId) {
