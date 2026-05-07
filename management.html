@@ -1354,44 +1354,38 @@ God bless you`;
 
     try {
 
-        // DEBUG
-        console.log("PAYLOAD:", payload);
-
-        const formData = new FormData();
-
-        // LOOP SEMUA PAYLOAD
-        Object.keys(payload).forEach(key => {
-
-            formData.append(
-                key,
-                String(payload[key])
-            );
-
-        });
-
-        // DEBUG
-        for (let pair of formData.entries()) {
-
-            console.log(
-                pair[0] + ":",
-                pair[1]
-            );
-
-        }
-
-        const response = await fetch(
-            CONFIG.WEB_APP_URL,
-            {
-                method: 'POST',
-                body: formData
-            }
+        console.log(
+            "PAYLOAD:",
+            payload
         );
+
+        const formData =
+            new FormData();
+
+        Object.keys(payload)
+            .forEach(key => {
+
+                formData.append(
+                    key,
+                    String(payload[key])
+                );
+
+            });
+
+        const response =
+            await fetch(
+                CONFIG.WEB_APP_URL,
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            );
 
         const text =
             await response.text();
 
         console.log(
-            "RAW RESPONSE:",
+            "RAW:",
             text
         );
 
@@ -1399,7 +1393,7 @@ God bless you`;
             JSON.parse(text);
 
         console.log(
-            "PARSED RESPONSE:",
+            "PARSED:",
             json
         );
 
@@ -1407,10 +1401,7 @@ God bless you`;
 
     } catch (err) {
 
-        console.error(
-            "FETCH ERROR:",
-            err
-        );
+        console.error(err);
 
         return false;
 
