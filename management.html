@@ -1480,33 +1480,35 @@ God bless you`;
                 return;
             }
 
-            const success =
-                await sheetsPost({
+            try {
 
-                    action: 'deletewish',
+                const data =
+                    await sheetsGet(
+                        'deletewish&rowId='
+                        + rowId
+                    );
 
-                    rowId: rowId
+                console.log(data);
 
-                });
+                if (data.ok) {
 
-            console.log(
-                "DELETE RESULT:",
-                success
-            );
+                    alert(
+                        'Berhasil dihapus'
+                    );
 
-            if (success) {
+                    loadWishesFromSheets();
 
-                alert(
-                    'Ucapan berhasil dihapus'
-                );
+                } else {
 
-                loadWishesFromSheets();
+                    alert(
+                        'Gagal menghapus'
+                    );
 
-            } else {
+                }
 
-                alert(
-                    'Gagal menghapus ucapan'
-                );
+            } catch (err) {
+
+                console.error(err);
 
             }
 
