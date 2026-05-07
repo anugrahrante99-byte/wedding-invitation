@@ -4786,7 +4786,7 @@
         }
 
         // Google Sheets backend. Paste your Apps Script Web App URL here.
-        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8p3MVu0FqubTGFy2oxgCNNdw_OTgb_iq23C6-YGuJD86DuLxXMk3WPbZmGC2vCLO_/exec';
+        const SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyr95Wz7ui9j9Yfzod-j9niGq3Uzb9a3-TwLB0hSIsMYpganjUUeXlFvmIonvvueBn5/exec';
 
         function sheetsEnabled() {
             return SHEETS_WEB_APP_URL && SHEETS_WEB_APP_URL.startsWith('https://');
@@ -4819,27 +4819,66 @@
             });
         }
 
-        // Google Sheets GET function for reading data
-        async function sheetsGet(action) {
-            if (!sheetsEnabled()) return null;
-            return await sheetsJsonp(action);
-        }
+        function sheetsGet(
+            action,
+            params = {}
+        ) {
 
-        function sheetsJsonp(action) {
-            return new Promise((resolve, reject) => {
-                if (!sheetsEnabled()) return resolve(null);
-                const callbackName = `sheetsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-                const script = document.createElement('script');
-                const separator = SHEETS_WEB_APP_URL.includes('?') ? '&' : '?';
-                script.src = `${SHEETS_WEB_APP_URL}${separator}action=${encodeURIComponent(action)}&callback=${callbackName}`;
-                script.onerror = reject;
-                window[callbackName] = (data) => {
-                    delete window[callbackName];
-                    script.remove();
-                    resolve(data);
-                };
-                document.body.appendChild(script);
-            });
+            return new Promise(
+                (resolve, reject) => {
+
+                    const callbackName =
+                        'jsonp_' +
+                        Date.now();
+
+                    window[
+                        callbackName
+                    ] = function(data) {
+
+                        resolve(data);
+
+                        delete window[
+                            callbackName
+                        ];
+
+                        script.remove();
+
+                    };
+
+                    const query =
+                        new URLSearchParams({
+
+                            action:
+                                action,
+
+                            callback:
+                                callbackName,
+
+                            ...params
+
+                        });
+
+                    const script =
+                        document.createElement(
+                            'script'
+                        );
+
+                    script.src =
+                        SHEETS_WEB_APP_URL +
+                        '?' +
+                        query.toString();
+
+                    script.onerror =
+                        reject;
+
+                    document.body
+                        .appendChild(
+                            script
+                        );
+
+                }
+            );
+
         }
 
         async function submitCombinedForm(event) {
@@ -4998,60 +5037,44 @@
             loadWishesFromSheets();
         }
         
-        // Load wishes from Google Sheets with cache management
-        async function loadWishesFromSheets(forceUpdate = false) {
-            try {
-                const result = await sheetsGet('listwishes');
-                if (result && result.data) {
-                    // Always update on initial load or force update
-                    const currentCache = localStorage.getItem('weddingWishesCache');
-                    let shouldUpdate = forceUpdate;
-                    
-                    if (!forceUpdate && currentCache) {
-                        const cacheData = JSON.parse(currentCache);
-                        // Compare data length and last item to detect changes
-                        if (cacheData.data && cacheData.data.length === result.data.length) {
-                            const lastCurrent = result.data[result.data.length - 1];
-                            const lastCached = cacheData.data[cacheData.data.length - 1];
-                            if (lastCurrent && lastCached && 
-                                lastCurrent.name === lastCached.name && 
-                                lastCurrent.timestamp === lastCached.timestamp) {
-                                shouldUpdate = false; // No changes detected
-                            }
-                        }
-                    }
-                    
-                    if (shouldUpdate) {
-                        // Store in localStorage with timestamp for cache management
-                        const cacheData = {
-                            data: result.data,
-                            timestamp: Date.now()
-                        };
-                        localStorage.setItem('weddingWishesCache', JSON.stringify(cacheData));
-                        localStorage.setItem('weddingWishes', JSON.stringify(result.data));
-                        displayWishes();
-                        if (!forceUpdate) {
-                            showNewMessageIndicator();
-                        }
-                    }
-                }
-            } catch (error) {
-                console.log('Apps Script error, using cache:', error.message);
-                // Fallback to cache or localStorage
-                const cache = localStorage.getItem('weddingWishesCache');
-                if (cache) {
-                    const cacheData = JSON.parse(cache);
-                    // Use cache if less than 5 minutes old
-                    if (Date.now() - cacheData.timestamp < 300000) {
-                        localStorage.setItem('weddingWishes', JSON.stringify(cacheData.data));
-                        displayWishes();
-                        return;
-                    }
-                }
-                // Final fallback to localStorage
-                displayWishes();
-            }
+        async function loadWishesFromSheets() {
+
+    try {
+
+        const data =
+            await sheetsGet(
+                'listwishes'
+            );
+
+        console.log(
+            'WISHES:',
+            data
+        );
+
+        if (
+            data.ok &&
+            Array.isArray(
+                data.data
+            )
+        ) {
+
+            wishes =
+                data.data;
+
+            renderWishes();
+
         }
+
+    } catch (err) {
+
+        console.error(
+            'Load wishes error:',
+            err
+        );
+
+    }
+
+}
         
         // Show indicator when new messages arrive
         function showNewMessageIndicator() {
