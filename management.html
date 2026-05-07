@@ -1351,55 +1351,72 @@ God bless you`;
         }
 
         async function sheetsPost(payload) {
-            const formData = new URLSearchParams();
 
-            formData.append("action", payload.action || "");
-            formData.append("name", payload.name || "");
-            formData.append("phone", payload.phone || "");
-            formData.append("link", payload.link || "");
-            formData.append("key", payload.key || "");
-            formData.append("attendance", payload.attendance || "");
-            formData.append("guestCount", payload.guestCount || "");
-            formData.append("message", payload.message || "");
-            formData.append("type", payload.type || "");
-            formData.append("timestamp", payload.timestamp || "");
+    try {
 
-            // INI PALING PENTING
+        // DEBUG
+        console.log("PAYLOAD:", payload);
+
+        const formData = new FormData();
+
+        // LOOP SEMUA PAYLOAD
+        Object.keys(payload).forEach(key => {
+
             formData.append(
-                "rowId",
-                String(payload.rowId || "")
+                key,
+                String(payload[key])
             );
+
+        });
+
+        // DEBUG
+        for (let pair of formData.entries()) {
 
             console.log(
-                "SENDING ROW ID:",
-                payload.rowId
+                pair[0] + ":",
+                pair[1]
             );
 
-            try {
-                const response = await fetch(
-                    CONFIG.WEB_APP_URL,
-                    {
-                        method: 'POST',
-                        body: formData
-                    }
-                );
-
-                const text = await response.text();
-
-                console.log(text);
-
-                const json = JSON.parse(text);
-
-                return json.ok === true;
-
-            } catch (err) {
-                console.error(err);
-
-                return false;
-
-            }
-
         }
+
+        const response = await fetch(
+            CONFIG.WEB_APP_URL,
+            {
+                method: 'POST',
+                body: formData
+            }
+        );
+
+        const text =
+            await response.text();
+
+        console.log(
+            "RAW RESPONSE:",
+            text
+        );
+
+        const json =
+            JSON.parse(text);
+
+        console.log(
+            "PARSED RESPONSE:",
+            json
+        );
+
+        return json.ok === true;
+
+    } catch (err) {
+
+        console.error(
+            "FETCH ERROR:",
+            err
+        );
+
+        return false;
+
+    }
+
+}
 
         // Guest Management Functions
         async function loadGuestList() {
@@ -1472,35 +1489,48 @@ God bless you`;
 
         // Delete wish function
         async function deleteWish(rowId) {
-            if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) {
+
+            console.log(
+                "DELETE ROW:",
+                rowId
+            );
+
+            if (!confirm(
+                'Hapus ucapan ini?'
+            )) {
                 return;
             }
 
-            console.log("DELETE ROW:", rowId);
+            const success =
+                await sheetsPost({
 
-            const success = await sheetsPost({
-                action: 'deletewish',
-                rowId: rowId
-            });
+                    action: 'deletewish',
 
-            console.log("DELETE RESULT:", success);
+                    rowId: rowId
+
+                });
+
+            console.log(
+                "DELETE RESULT:",
+                success
+            );
 
             if (success) {
-                showMessage(
-                    'wishesMessage',
-                    'Ucapan berhasil dihapus!',
-                    'success'
+
+                alert(
+                    'Ucapan berhasil dihapus'
                 );
 
                 loadWishesFromSheets();
 
             } else {
-                showMessage(
-                    'wishesMessage',
-                    'Gagal menghapus ucapan',
-                    'error'
+
+                alert(
+                    'Gagal menghapus ucapan'
                 );
+
             }
+
         }
 
         // Load data from Google Sheets and display in dashboard
