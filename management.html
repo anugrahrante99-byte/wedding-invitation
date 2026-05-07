@@ -1330,11 +1330,15 @@ God bless you`;
 
                         resolve(data);
 
-                        delete window[
-                            callbackName
-                        ];
+                        setTimeout(() => {
 
-                        script.remove();
+                            delete window[
+                                callbackName
+                            ];
+
+                            script.remove();
+
+                        }, 1000);
 
                     };
 
