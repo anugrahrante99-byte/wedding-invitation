@@ -1008,28 +1008,22 @@
 
         // Event Listeners
         function setupEventListeners() {
-            // Login Form - BYPASS LOGIN UNTUK DEBUGGING
+            // Login Form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                console.log('BYPASS LOGIN: Langsung masuk tanpa password');
-                sessionStorage.setItem('isLoggedIn', 'true');
-                showManagementScreen();
-                showMessage('loginMessage', 'Login berhasil (bypass mode)!', 'success');
+                const password = document.getElementById('password').value;
+                console.log('Login attempt - Password:', password);
+                console.log('Expected password:', CONFIG.ADMIN_PASSWORD);
+                
+                if (password === CONFIG.ADMIN_PASSWORD) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    showManagementScreen();
+                    showMessage('loginMessage', 'Login berhasil!', 'success');
+                } else {
+                    console.log('Password salah!');
+                    showMessage('loginMessage', 'Password salah! Coba: ' + CONFIG.ADMIN_PASSWORD, 'error');
+                }
             });
-            
-            // TAMBAH: Tombol bypass langsung
-            const loginForm = document.getElementById('loginForm');
-            const bypassBtn = document.createElement('button');
-            bypassBtn.type = 'button';
-            bypassBtn.className = 'btn btn-warning w-100 mt-2';
-            bypassBtn.textContent = '🔓 BYPASS LOGIN (Debug Mode)';
-            bypassBtn.onclick = function() {
-                console.log('BYPASS LOGIN: Tombol bypass diklik');
-                sessionStorage.setItem('isLoggedIn', 'true');
-                showManagementScreen();
-                showMessage('loginMessage', 'Login berhasil (bypass mode)!', 'success');
-            };
-            loginForm.appendChild(bypassBtn);
 
             // WhatsApp Form
             document.getElementById('guestName').addEventListener('input', previewMessage);
