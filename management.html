@@ -1352,45 +1352,61 @@ God bless you`;
 
         async function sheetsPost(payload) {
             const formData = new URLSearchParams();
-            formData.append("action", payload.action);
-            formData.append("name", payload.name);
-            
-            // Add optional fields for WhatsApp generator
-            if (payload.phone !== undefined) formData.append("phone", payload.phone);
-            if (payload.link !== undefined) formData.append("link", payload.link);
-            if (payload.key !== undefined) formData.append("key", payload.key);
-            
-            // Add standard fields for wishes
-            if (payload.attendance !== undefined) formData.append("attendance", payload.attendance);
-            if (payload.guestCount !== undefined) formData.append("guestCount", payload.guestCount);
-            if (payload.message !== undefined) formData.append("message", payload.message);
-            if (payload.type !== undefined) formData.append("type", payload.type);
-            
-            // INI YANG PENTING - TAMBAHKAN rowId CHECK
-            if (payload.rowId !== undefined) formData.append("rowId", payload.rowId);
-            
-            formData.append("timestamp", payload.timestamp);
-            
-            return fetch(CONFIG.WEB_APP_URL, {
-                method: 'POST',
-                body: formData
-            })
-            .then(r => r.text())
-            .then(res => {
-                console.log(res);
-                try {
-                    const json = JSON.parse(res);
-                    console.log(json);
-                    return json.ok === true;
-                } catch (e) {
-                    console.error(e);
-                    return false;
-                }
-            })
-            .catch(err => {
-                console.error(err);
+
+            // REQUIRED
+            if (payload.action !== undefined)
+                formData.append("action", payload.action);
+
+            // OPTIONAL
+            if (payload.name !== undefined)
+                formData.append("name", payload.name);
+
+            if (payload.phone !== undefined)
+                formData.append("phone", payload.phone);
+
+            if (payload.link !== undefined)
+                formData.append("link", payload.link);
+
+            if (payload.key !== undefined)
+                formData.append("key", payload.key);
+
+            if (payload.attendance !== undefined)
+                formData.append("attendance", payload.attendance);
+
+            if (payload.guestCount !== undefined)
+                formData.append("guestCount", payload.guestCount);
+
+            if (payload.message !== undefined)
+                formData.append("message", payload.message);
+
+            if (payload.type !== undefined)
+                formData.append("type", payload.type);
+
+            if (payload.rowId !== undefined)
+                formData.append("rowId", payload.rowId);
+
+            if (payload.timestamp !== undefined)
+                formData.append("timestamp", payload.timestamp);
+
+            try {
+                const response = await fetch(CONFIG.WEB_APP_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const text = await response.text();
+
+                console.log("RAW RESPONSE:", text);
+
+                const json = JSON.parse(text);
+
+                console.log("PARSED:", json);
+
+                return json.ok === true;
+            } catch (err) {
+                console.error("FETCH ERROR:", err);
                 return false;
-            });
+            }
         }
 
         // Guest Management Functions
@@ -1468,23 +1484,30 @@ God bless you`;
                 return;
             }
 
-            try {
-                showMessage('wishesMessage', 'Menghapus ucapan...', 'info');
-                
-                const success = await sheetsPost({
-                    action: 'deletewish',
-                    rowId: rowId
-                });
+            console.log("DELETE ROW:", rowId);
 
-                if (success) {
-                    showMessage('wishesMessage', 'Ucapan berhasil dihapus!', 'success');
-                    loadWishesFromSheets(); // Refresh data
-                } else {
-                    showMessage('wishesMessage', 'Gagal menghapus ucapan', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting wish:', error);
-                showMessage('wishesMessage', 'Gagal menghapus ucapan: ' + error.message, 'error');
+            const success = await sheetsPost({
+                action: 'deletewish',
+                rowId: rowId
+            });
+
+            console.log("DELETE RESULT:", success);
+
+            if (success) {
+                showMessage(
+                    'wishesMessage',
+                    'Ucapan berhasil dihapus!',
+                    'success'
+                );
+
+                loadWishesFromSheets();
+
+            } else {
+                showMessage(
+                    'wishesMessage',
+                    'Gagal menghapus ucapan',
+                    'error'
+                );
             }
         }
 
