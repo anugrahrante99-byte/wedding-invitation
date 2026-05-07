@@ -1366,6 +1366,9 @@ God bless you`;
             if (payload.message !== undefined) formData.append("message", payload.message);
             if (payload.type !== undefined) formData.append("type", payload.type);
             
+            // INI YANG PENTING - TAMBAHKAN rowId CHECK
+            if (payload.rowId !== undefined) formData.append("rowId", payload.rowId);
+            
             formData.append("timestamp", payload.timestamp);
             
             return fetch(CONFIG.WEB_APP_URL, {
@@ -1453,7 +1456,7 @@ God bless you`;
         }
 
         // Delete wish function
-        async function deleteWish(index) {
+        async function deleteWish(wish) {
             if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) {
                 return;
             }
@@ -1463,7 +1466,7 @@ God bless you`;
                 
                 const success = await sheetsPost({
                     action: 'deletewish',
-                    rowId: index
+                    rowId: wish.rowId
                 });
 
                 if (success) {
@@ -1520,7 +1523,7 @@ God bless you`;
                 return;
             }
 
-            container.innerHTML = wishes.map((wish, index) => `
+            container.innerHTML = wishes.map((wish) => `
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
@@ -1534,7 +1537,7 @@ God bless you`;
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <small class="text-muted">${formatTime(wish.timestamp)}</small>
-                                <button class="btn btn-sm btn-danger" onclick="deleteWish(${index + 2})" title="Hapus ucapan">
+                                <button class="btn btn-sm btn-danger" onclick="deleteWish(${JSON.stringify(wish)})" title="Hapus ucapan">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
