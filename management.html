@@ -2302,33 +2302,15 @@ God bless you`;
         }
 
         
+        // Dummy function untuk loadDuplicatesFromSheets
         async function loadDuplicatesFromSheets() {
-
-    try {
-
-        const response = await fetch(
-            CONFIG.WEB_APP_URL +
-            '?action=listduplicates'
-        );
-
-        const data =
-            await response.json();
-
-        console.log(
-            "DUPLICATES:",
-            data
-        );
-
-    } catch (err) {
-
-        console.error(
-            "Error loading duplicates:",
-            err
-        );
-
-    }
-
-}
+            try {
+                console.log('Loading duplicates from Google Sheets...');
+                // TODO: Implement actual loading from Sheets
+            } catch (err) {
+                console.error('Error loading duplicates:', err);
+            }
+        }
 
         function displayWishesList(wishes) {
             const container = document.getElementById('wishesList');
@@ -2376,15 +2358,12 @@ God bless you`;
                 const row = document.createElement('div');
                 row.className = 'row mb-2 align-items-center';
                 row.innerHTML = `
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <strong>${escapeHtml(guest.name || '')}</strong>
-                        ${guest.phone ? `<br><small class="text-muted"><i class="fas fa-phone"></i> ${guest.phone}</small>` : ''}
-                        ${guest.attendance ? `<br><span class="badge bg-${getAttendanceColor(guest.attendance)}">${guest.attendance}</span>` : ''}
+                        ${guest.phone ? `<br><small class="text-muted">${escapeHtml(guest.phone)}</small>` : ''}
                     </div>
-                    <div class="col-md-4 text-end">
-                        <button class="btn btn-sm btn-danger" onclick="deleteGuest('${guest.rowId || guest.timestamp}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    <div class="col-md-6">
+                        <small class="text-muted">${new Date(guest.timestamp).toLocaleString('id-ID')}</small>
                     </div>
                 `;
                 container.appendChild(row);
