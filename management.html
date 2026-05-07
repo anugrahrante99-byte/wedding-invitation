@@ -1526,38 +1526,72 @@ God bless you`;
 
         // Load data from Google Sheets and display in dashboard
         async function loadWishesFromSheets() {
-            try {
-                showMessage('wishesMessage', 'Loading data...', 'info');
-                const result = await sheetsGet('listwishes');
-                
-                if (result && result.data) {
-                    displayWishesList(result.data);
-                    showMessage('wishesMessage', 'Data berhasil dimuat!', 'success');
-                } else {
-                    showMessage('wishesMessage', 'Tidak ada data', 'warning');
-                }
-            } catch (error) {
-                console.error('Error loading wishes:', error);
-                showMessage('wishesMessage', 'Gagal memuat data: ' + error.message, 'error');
-            }
+
+    try {
+
+        const response = await fetch(
+            CONFIG.WEB_APP_URL +
+            '?action=listwishes'
+        );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "WISHES:",
+            data
+        );
+
+        if (data.ok) {
+
+            displayWishesList(
+                data.data || []
+            );
+
+        } else {
+
+            console.error(data);
+
         }
 
+    } catch (err) {
+
+        console.error(
+            "Error loading wishes:",
+            err
+        );
+
+    }
+
+}
+
         async function loadGuestsFromSheets() {
-            try {
-                showMessage('guestsMessage', 'Loading data...', 'info');
-                const result = await sheetsGet('listguests');
-                
-                if (result && result.data) {
-                    displayGuestsList(result.data);
-                    showMessage('guestsMessage', 'Data berhasil dimuat!', 'success');
-                } else {
-                    showMessage('guestsMessage', 'Tidak ada data', 'warning');
-                }
-            } catch (error) {
-                console.error('Error loading guests:', error);
-                showMessage('guestsMessage', 'Gagal memuat data: ' + error.message, 'error');
-            }
-        }
+
+    try {
+
+        const response = await fetch(
+            CONFIG.WEB_APP_URL +
+            '?action=listguests'
+        );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "GUESTS:",
+            data
+        );
+
+    } catch (err) {
+
+        console.error(
+            "Error loading guests:",
+            err
+        );
+
+    }
+
+}
 
         function displayWishesList(wishes) {
             const container = document.getElementById('wishesList');
@@ -2265,44 +2299,34 @@ God bless you`;
             loadDuplicatesFromSheets();
         }
 
-        async function loadWishesFromSheets() {
-            try {
-                showMessage('wishesMessage', 'Loading wishes...', 'info');
-                const result = await sheetsGet('listwishes');
-                if (result && result.data) {
-                    displayWishesList(result.data);
-                    showMessage('wishesMessage', 'Data berhasil dimuat!', 'success');
-                }
-            } catch (error) {
-                console.error('Error loading wishes:', error);
-                showMessage('wishesMessage', 'Gagal memuat data: ' + error.message, 'danger');
-            }
-        }
-
-        async function loadGuestsFromSheets() {
-            try {
-                showMessage('guestsMessage', 'Loading guests...', 'info');
-                const result = await sheetsGet('listguests');
-                if (result && result.data) {
-                    displayGuestsList(result.data);
-                    showMessage('guestsMessage', 'Data tamu berhasil dimuat!', 'success');
-                }
-            } catch (error) {
-                console.error('Error loading guests:', error);
-                showMessage('guestsMessage', 'Gagal memuat data tamu: ' + error.message, 'danger');
-            }
-        }
-
+        
         async function loadDuplicatesFromSheets() {
-            try {
-                const result = await sheetsGet('listduplicates');
-                if (result && result.data) {
-                    displayDuplicatesList(result.data);
-                }
-            } catch (error) {
-                console.error('Error loading duplicates:', error);
-            }
-        }
+
+    try {
+
+        const response = await fetch(
+            CONFIG.WEB_APP_URL +
+            '?action=listduplicates'
+        );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "DUPLICATES:",
+            data
+        );
+
+    } catch (err) {
+
+        console.error(
+            "Error loading duplicates:",
+            err
+        );
+
+    }
+
+}
 
         function displayWishesList(wishes) {
             const container = document.getElementById('wishesList');
