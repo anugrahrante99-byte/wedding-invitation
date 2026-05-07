@@ -2303,6 +2303,7 @@ God bless you`;
             }
             
             wishes.forEach((wish, index) => {
+                console.log("WISH:", wish);
                 const row = document.createElement('div');
                 row.className = 'row mb-2 align-items-center';
                 row.innerHTML = `
@@ -2312,7 +2313,7 @@ God bless you`;
                         ${wish.attendance ? `<br><span class="badge bg-${getAttendanceColor(wish.attendance)}">${wish.attendance}</span>` : ''}
                     </div>
                     <div class="col-md-4 text-end">
-                        <button class="btn btn-sm btn-danger" onclick="deleteWish('${wish.rowId || wish.timestamp}')">
+                        <button class="btn btn-sm btn-danger" onclick="deleteWish(${wish.rowId})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -2380,20 +2381,7 @@ God bless you`;
             });
         }
 
-        async function deleteWish(rowId) {
-            if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) return;
-            
-            try {
-                const result = await sheetsPost({ action: 'deletewish', rowId });
-                if (result) {
-                    showMessage('wishesMessage', 'Ucapan berhasil dihapus!', 'success');
-                    loadWishesFromSheets();
-                }
-            } catch (error) {
-                showMessage('wishesMessage', 'Gagal menghapus ucapan: ' + error.message, 'danger');
-            }
-        }
-
+        
         async function deleteGuest(rowId) {
             if (!confirm('Apakah Anda yakin ingin menghapus data tamu ini?')) return;
             
@@ -2509,7 +2497,12 @@ God bless you`;
 
         // Dummy function untuk updateStats
         function updateStats() {
-            console.log("updateStats placeholder");
+            console.log("Stats loaded");
+        }
+
+        // Dummy function untuk updateDashboardStats
+        function updateDashboardStats() {
+            console.log("Dashboard stats loaded");
         }
     </script>
 </body>
