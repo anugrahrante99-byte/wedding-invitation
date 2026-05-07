@@ -2500,37 +2500,7 @@ God bless you`;
             return div.innerHTML;
         }
 
-        async function sheetsGet(action) {
-            return new Promise((resolve, reject) => {
-                const callbackName = `sheetsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-                const script = document.createElement('script');
-                const separator = SHEETS_WEB_APP_URL.includes('?') ? '&' : '?';
-                script.src = `${SHEETS_WEB_APP_URL}${separator}action=${encodeURIComponent(action)}&callback=${callbackName}`;
-                script.onerror = reject;
-                
-                const timeout = setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                    }
-                    if (script.parentNode) {
-                        script.parentNode.removeChild(script);
-                    }
-                    reject(new Error('Request timeout'));
-                }, 10000);
-                
-                window[callbackName] = (data) => {
-                    clearTimeout(timeout);
-                    delete window[callbackName];
-                    if (script.parentNode) {
-                        script.parentNode.removeChild(script);
-                    }
-                    resolve(data);
-                };
-                
-                document.head.appendChild(script);
-            });
-        }
-
+        
         function sheetsPost(payload) {
             const formData = new URLSearchParams();
             formData.append("action", payload.action);
