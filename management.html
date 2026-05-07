@@ -1516,13 +1516,10 @@ God bless you`;
 
     try {
 
-        const response = await fetch(
-            CONFIG.WEB_APP_URL +
-            '?action=listwishes'
-        );
-
         const data =
-            await response.json();
+            await sheetsGet(
+                'listwishes'
+            );
 
         console.log(
             "WISHES:",
@@ -1534,10 +1531,6 @@ God bless you`;
             displayWishesList(
                 data.data || []
             );
-
-        } else {
-
-            console.error(data);
 
         }
 
@@ -1556,18 +1549,23 @@ God bless you`;
 
     try {
 
-        const response = await fetch(
-            CONFIG.WEB_APP_URL +
-            '?action=listguests'
-        );
-
         const data =
-            await response.json();
+            await sheetsGet(
+                'listguests'
+            );
 
         console.log(
             "GUESTS:",
             data
         );
+
+        if (data.ok) {
+
+            displayGuestsList(
+                data.data || []
+            );
+
+        }
 
     } catch (err) {
 
