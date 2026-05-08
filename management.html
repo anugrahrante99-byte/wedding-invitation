@@ -1268,18 +1268,14 @@ God bless you`;
                 const success = await sheetsPost(guestData);
 
                 if (success) {
-                    // Add to guests array and display
-                    const displayGuest = {
-                        name: guestName,
-                        phone: guestPhone || '',
-                        link: whatsappUrl,
-                        timestamp: new Date().toISOString()
-                    };
-                    
-                    guests.push(displayGuest);
-                    displayGuestList();
-                    
                     console.log('Data tersimpan di Google Sheets');
+                    
+                    // Auto-refresh guest list untuk sinkronisasi data
+                    setTimeout(async () => {
+                        await loadGuestList();
+                        console.log('Data tamu otomatis di-refresh dari WhatsApp Generator');
+                    }, 1000);
+                    
                 } else {
                     console.log('Gagal menyimpan ke Google Sheets, tapi WhatsApp sudah terkirim');
                 }
@@ -1418,9 +1414,13 @@ God bless you`;
                 const result = await sheetsGet('listguests');
                 
                 guests = result.data || [];
+                console.log('Data tamu dari WhatsApp Generator:', guests);
                 displayGuestList();
-                // updateStats(); // Commented out - stats elements removed
-                // updateDashboardStats(); // Commented out - dashboard stats removed
+                
+                // Update dashboard stats jika ada
+                if (typeof updateDashboardStats === 'function') {
+                    updateDashboardStats();
+                }
             } catch (error) {
                 // Handle error without localStorage fallback
                 console.error('Load guests error:', error);
