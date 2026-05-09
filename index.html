@@ -212,11 +212,11 @@
             scroll-behavior: smooth;
         }
         
-        /* Simple Elegant Scroll Animation System */
+        /* Simple Elegant Scroll Animation System - Enhanced */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
         
         .fade-in.visible {
@@ -227,7 +227,7 @@
         .slide-left {
             opacity: 0;
             transform: translateX(-30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
         
         .slide-left.visible {
@@ -238,7 +238,7 @@
         .slide-right {
             opacity: 0;
             transform: translateX(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
         
         .slide-right.visible {
@@ -249,10 +249,33 @@
         .smooth-reveal {
             opacity: 0;
             transform: translateY(15px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 1s ease, transform 1s ease;
         }
         
         .smooth-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Additional animation classes for comprehensive coverage */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-down {
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-down.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -3479,22 +3502,24 @@
 
 
 
-        /* Polished auto-hiding music control */
+        /* Enhanced Music Control for Mobile Visibility */
         .music-dock {
             position: fixed;
             right: max(14px, calc((100vw - var(--phone-width, 430px)) / 2 + 14px));
             bottom: max(14px, env(safe-area-inset-bottom));
-            z-index: 100001;
-            display: flex;
+            z-index: 999999 !important;
+            display: flex !important;
             align-items: center;
             gap: 7px;
             padding: 7px;
             border-radius: 999px;
-            background: rgba(36, 30, 29, 0.72);
+            background: rgba(36, 30, 29, 0.85) !important;
             border: 1px solid rgba(255, 255, 255, 0.24);
-            box-shadow: 0 12px 34px rgba(0,0,0,0.28);
-                                    transform: translate3d(0, 0, 0);
-            opacity: 1;
+            box-shadow: 0 12px 34px rgba(0,0,0,0.4);
+            transform: translate3d(0, 0, 0);
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
             transition: opacity 0.35s ease, transform 0.35s ease, padding 0.35s ease, background 0.35s ease;
         }
 
@@ -3560,17 +3585,35 @@
             transform: translate3d(0, 0, 0) scale(1);
         }
         
-        /* Ensure music dock is always visible on mobile */
+        /* Enhanced Mobile Music Control */
         @media (max-width: 768px) {
             .music-dock {
                 opacity: 1 !important;
-                z-index: 100002 !important;
+                z-index: 999999 !important;
                 pointer-events: auto !important;
+                visibility: visible !important;
+                display: flex !important;
+                right: 14px !important;
+                bottom: max(20px, env(safe-area-inset-bottom)) !important;
+                transform: translate3d(0, 0, 0) scale(1) !important;
             }
             
             .music-dock.is-idle {
-                opacity: 0.9 !important;
-                transform: translate3d(0, 0, 0) scale(0.95) !important;
+                opacity: 0.95 !important;
+                transform: translate3d(0, 0, 0) scale(0.98) !important;
+                visibility: visible !important;
+                display: flex !important;
+            }
+            
+            .music-dock-btn {
+                width: 40px !important;
+                height: 40px !important;
+                pointer-events: auto !important;
+            }
+            
+            .music-dock-main {
+                width: 46px !important;
+                height: 46px !important;
             }
         }
 
@@ -5997,45 +6040,82 @@
 
                 
         function setupScrollAnimations() {
-            // Elegant scroll animations with Intersection Observer
+            // Comprehensive Elegant Scroll Animation System
             
-            // Add cinematic animation classes to main content elements
+            // Apply animations to ALL sections and important elements
+            const allSections = document.querySelectorAll('section');
+            allSections.forEach((section, index) => {
+                section.classList.add('fade-in');
+                section.style.transitionDelay = `${index * 0.1}s`;
+            });
+            
+            // Apply animations to cover screen elements
+            const coverElements = document.querySelectorAll('.cover-screen, .cover-content, .cover-title, .cover-subtitle, .guest-name, .open-button');
+            coverElements.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('fade-up', 'animated');
+                    element.style.transitionDelay = `${index * 0.15}s`;
+                }
+            });
+            
+            // Apply animations to content overlays
             const contentElements = document.querySelectorAll('.content-overlay, .overlay-text, .thanks-message');
             contentElements.forEach((element, index) => {
                 element.classList.add('smooth-reveal');
-                // Add staggered delay for cinematic effect
                 element.style.transitionDelay = `${index * 0.15}s`;
             });
             
-            // Add cinematic animations to event items
-            const eventItems = document.querySelectorAll('.event-item');
-            eventItems.forEach((element, index) => {
-                element.classList.add('fade-in');
-                element.style.transitionDelay = `${index * 0.2}s`;
+            // Apply animations to ALL text elements
+            const titles = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            titles.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('fade-in', 'animated');
+                    element.style.transitionDelay = `${index * 0.1}s`;
+                }
             });
             
-            // Add cinematic animations to couple photos
-            const couplePhotos = document.querySelectorAll('.couple-photo');
-            couplePhotos.forEach((element, index) => {
-                element.classList.add('slide-left');
-                element.style.transitionDelay = `${index * 0.15}s`;
+            const paragraphs = document.querySelectorAll('p');
+            paragraphs.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('fade-up', 'animated');
+                    element.style.transitionDelay = `${index * 0.05}s`;
+                }
             });
             
-            // Add cinematic animations to gallery items
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            galleryItems.forEach((element, index) => {
-                element.classList.add('smooth-reveal');
-                element.style.transitionDelay = `${index * 0.1}s`;
+            // Apply animations to buttons and cards
+            const buttons = document.querySelectorAll('button, .map-button, .open-button');
+            buttons.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('slide-left', 'animated');
+                    element.style.transitionDelay = `${index * 0.1}s`;
+                }
             });
             
-            // Add cinematic animations to countdown items
+            const cards = document.querySelectorAll('.event-item, .gallery-item, .gift-item, .couple-item');
+            cards.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('fade-in', 'animated');
+                    element.style.transitionDelay = `${index * 0.15}s`;
+                }
+            });
+            
+            // Apply animations to images
+            const images = document.querySelectorAll('img, .couple-photo');
+            images.forEach((element, index) => {
+                if (!element.classList.contains('animated')) {
+                    element.classList.add('smooth-reveal', 'animated');
+                    element.style.transitionDelay = `${index * 0.1}s`;
+                }
+            });
+            
+            // Apply animations to countdown items
             const countdownItems = document.querySelectorAll('.countdown-item');
             countdownItems.forEach((element, index) => {
-                element.classList.add('fade-in');
+                element.classList.add('fade-in', 'animated');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
-            // Initialize Cinematic Intersection Observer for performance
+            // Initialize Enhanced Intersection Observer for comprehensive coverage
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
@@ -6044,19 +6124,19 @@
                         }
                     });
                 }, {
-                    threshold: 0.15,
-                    rootMargin: '0px 0px -80px 0px'
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
                 });
                 
-                // Observe all cinematic animated elements
-                const animatedElements = document.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade');
+                // Observe ALL animated elements
+                const animatedElements = document.querySelectorAll('.fade-in:not(.visible), .slide-left:not(.visible), .slide-right:not(.visible), .smooth-reveal:not(.visible), .fade-up:not(.visible), .fade-down:not(.visible)');
                 animatedElements.forEach(element => {
                     observer.observe(element);
                 });
             } else {
                 // Fallback for older browsers
                 const checkVisibility = () => {
-                    const animatedElements = document.querySelectorAll('.cinematic-reveal:not(.visible), .cinematic-slide-left:not(.visible), .cinematic-slide-right:not(.visible), .cinematic-fade:not(.visible)');
+                    const animatedElements = document.querySelectorAll('.fade-in:not(.visible), .slide-left:not(.visible), .slide-right:not(.visible), .smooth-reveal:not(.visible), .fade-up:not(.visible), .fade-down:not(.visible)');
                     animatedElements.forEach(element => {
                         const rect = element.getBoundingClientRect();
                         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
