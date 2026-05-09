@@ -891,76 +891,21 @@
                         </div>
                     </div>
                     
-                    <!-- GitHub Token Management -->
-                    <div class="token-management">
-                        <h5><i class="fas fa-key"></i> GitHub Token Management</h5>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Security Note:</strong> Token disimpan secara aman di browser Anda. Jangan bagikan token kepada siapa pun!
+                    <!-- GitHub Token Configuration -->
+                    <div class="token-configuration">
+                        <h5><i class="fas fa-key"></i> GitHub Token Configuration</h5>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Important:</strong> Token GitHub sudah dikonfigurasi langsung di script. 
+                            Untuk mengubah token, edit file management.html dan ganti token di bagian konfigurasi.
                         </div>
-                        
-                        <!-- Token Status -->
-                        <div class="token-status mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="mb-1">Status Token GitHub</h6>
-                                            <span id="tokenStatus" class="badge bg-secondary">Tidak Ada Token</span>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-sm btn-primary" onclick="checkTokenStatus()">
-                                                <i class="fas fa-sync"></i> Check Status
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="mb-2">Status Token</h6>
+                                <span class="badge bg-success">Token Terkonfigurasi</span>
+                                <small class="text-muted d-block mt-2">Token diambil dari konfigurasi script langsung</small>
                             </div>
                         </div>
-                        
-                        <!-- Update Token Form -->
-                        <div class="update-token-form">
-                            <h6><i class="fas fa-edit"></i> Update Token</h6>
-                            <form id="updateTokenForm">
-                                <div class="mb-3">
-                                    <label class="form-label">Password Admin</label>
-                                    <input type="password" class="form-control" id="adminPassword" placeholder="Masukkan password admin" required>
-                                    <small class="text-muted">Password diperlukan untuk keamanan token</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">GitHub Personal Access Token</label>
-                                    <textarea class="form-control" id="newToken" rows="3" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required></textarea>
-                                    <small class="text-muted">Token dengan permissions: repo (Full control of private repositories)</small>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-save"></i> Update Token
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" onclick="clearTokenForm()">
-                                        <i class="fas fa-times"></i> Clear
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Token Actions -->
-                        <div class="token-actions mt-3">
-                            <h6><i class="fas fa-tools"></i> Token Actions</h6>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <button class="btn btn-warning w-100" onclick="revokeToken()">
-                                        <i class="fas fa-trash"></i> Revoke Token
-                                    </button>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <button class="btn btn-info w-100" onclick="testToken()">
-                                        <i class="fas fa-plug"></i> Test Connection
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="tokenMessage"></div>
                     </div>
                 </div>
             </div>
@@ -1779,13 +1724,13 @@ God bless you`;
         // Gallery Categories
         const CATEGORIES = ['bride', 'groom', 'engagement', 'prewedding', 'moments', 'together'];
 
-        // GitHub Token Management
+        // GitHub Token Configuration
+        // PASTE YOUR GITHUB PERSONAL ACCESS TOKEN HERE
+        // Token harus memiliki permissions: repo (Full control of private repositories)
+        const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE';
+        
         function getGitHubToken() {
-            return window.githubToken || '';
-        }
-
-        function setGitHubToken(token) {
-            window.githubToken = token;
+            return GITHUB_TOKEN;
         }
 
         // GitHub API Functions
@@ -2221,22 +2166,11 @@ God bless you`;
             await loadGallery();
         }
 
-        // Setup GitHub Token
-        function setupGitHubToken() {
-            const token = prompt('Please enter your GitHub Personal Access Token:');
-            if (token) {
-                setGitHubToken(token);
-                showMessage('authMessage', 'GitHub token saved successfully!', 'success');
-                return true;
-            }
-            return false;
-        }
-
         // Check GitHub Token
         function checkGitHubToken() {
             const token = getGitHubToken();
-            if (!token) {
-                showMessage('authMessage', 'GitHub token required. Please setup token first.', 'warning');
+            if (!token || token === 'PASTE_YOUR_TOKEN_HERE') {
+                showMessage('authMessage', 'GitHub token required. Please configure token in script.', 'warning');
                 return false;
             }
             return true;
@@ -2354,99 +2288,12 @@ God bless you`;
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Secure Token Management Functions
-        function checkTokenStatus() {
-            const token = getGitHubToken();
-            const statusElement = document.getElementById('tokenStatus');
-            
-            if (token) {
-                statusElement.textContent = 'Token Aktif';
-                statusElement.className = 'badge bg-success';
-                showMessage('tokenMessage', 'Token tersimpan dan siap digunakan', 'success');
-            } else {
-                statusElement.textContent = 'Tidak Ada Token';
-                statusElement.className = 'badge bg-secondary';
-                showMessage('tokenMessage', 'Belum ada token yang tersimpan', 'warning');
-            }
-        }
-
-        function updateToken(event) {
-            event.preventDefault();
-            
-            const password = document.getElementById('adminPassword').value;
-            const newToken = document.getElementById('newToken').value.trim();
-            
-            // Validate admin password
-            if (password !== CONFIG.ADMIN_PASSWORD) {
-                showMessage('tokenMessage', 'Password admin salah!', 'danger');
-                return;
-            }
-            
-            // Validate token format
-            if (!newToken.startsWith('ghp_') || newToken.length < 20) {
-                showMessage('tokenMessage', 'Format token tidak valid!', 'danger');
-                return;
-            }
-            
-            // Save token
-            setGitHubToken(newToken);
-            showMessage('tokenMessage', 'Token berhasil diperbarui!', 'success');
-            
-            // Update status
-            checkTokenStatus();
-            
-            // Clear form
-            clearTokenForm();
-        }
-
-        function clearTokenForm() {
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('newToken').value = '';
-        }
-
-        function revokeToken() {
-            if (confirm('Apakah Anda yakin ingin menghapus token GitHub? Ini akan mematikan fitur upload/delete foto.')) {
-                const password = prompt('Masukkan password admin untuk konfirmasi:');
-                
-                if (password === CONFIG.ADMIN_PASSWORD) {
-                    window.githubToken = null;
-                    showMessage('tokenMessage', 'Token berhasil dihapus!', 'success');
-                    checkTokenStatus();
-                } else {
-                    showMessage('tokenMessage', 'Password admin salah!', 'danger');
-                }
-            }
-        }
-
-        async function testToken() {
-            const token = getGitHubToken();
-            
-            if (!token) {
-                showMessage('tokenMessage', 'Tidak ada token untuk di-test!', 'warning');
-                return;
-            }
-            
-            try {
-                showMessage('tokenMessage', 'Testing token...', 'info');
-                
-                // Test API call
-                const response = await githubRequest('GET', '/repos/' + GITHUB_CONFIG.owner + '/' + GITHUB_CONFIG.repo);
-                
-                if (response) {
-                    showMessage('tokenMessage', 'Token valid dan berhasil terhubung ke GitHub!', 'success');
-                }
-            } catch (error) {
-                console.error('Token test error:', error);
-                showMessage('tokenMessage', 'Token tidak valid atau expired: ' + error.message, 'danger');
-            }
-        }
-
-        // Enhanced token check with auto-setup (no popup)
+        
+        // Enhanced token check
         function checkAndSetupToken() {
             const token = getGitHubToken();
             
-            if (!token) {
-                // Don't show popup - just return false
+            if (!token || token === 'PASTE_YOUR_TOKEN_HERE') {
                 return false;
             }
             
@@ -2468,23 +2315,13 @@ God bless you`;
 
         // Load all galleries function
         async function loadAllGalleries() {
-            if (!checkGitHubToken()) {
-                if (setupGitHubToken()) {
-                    await initializeGallery();
-                }
-            } else {
+            if (checkGitHubToken()) {
                 await initializeGallery();
             }
         }
 
         // Auto-check token status on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup token update form
-            const updateTokenForm = document.getElementById('updateTokenForm');
-            if (updateTokenForm) {
-                updateTokenForm.addEventListener('submit', updateToken);
-            }
-            
             // Initialize Sheets management
             initializeSheetsManagement();
         });
