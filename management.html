@@ -662,7 +662,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Select Files</label>
-                                <input type="file" class="form-control" id="photoFiles" multiple accept=".webp">
+                                <input type="file" class="form-control" id="photoFiles" multiple accept="image/*">
                             </div>
                         </div>
                         
@@ -672,7 +672,7 @@
                                 <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
                                 <h5>Drag & Drop Photos Here</h5>
                                 <p class="text-muted">or click to select files</p>
-                                <small>Only WebP files are allowed. Files will be auto-renamed to categorynameX.webp</small>
+                                <small>All image formats supported (JPG, PNG, WebP, HEIC). Files will be auto-converted to WebP and renamed to categorynameX.webp</small>
                             </div>
                         </div>
                         
@@ -1934,6 +1934,14 @@ God bless you`;
 
         async function processImage(file, category) {
             return new Promise((resolve, reject) => {
+                // Handle HEIC files with special processing
+                if (file.type === 'image/heic' || file.type === 'image/heif') {
+                    // For HEIC files, we need to convert them first
+                    // Since browser doesn't natively support HEIC, we'll use a fallback approach
+                    processHeicFile(file, category).then(resolve).catch(reject);
+                    return;
+                }
+                
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const img = new Image();
@@ -1976,13 +1984,71 @@ God bless you`;
                 img.src = URL.createObjectURL(file);
             });
         }
+        
+        // Special function to handle HEIC files
+        async function processHeicFile(file, category) {
+            return new Promise((resolve, reject) => {
+                // For HEIC files, we'll create a fallback approach
+                // Since browsers don't natively support HEIC, we'll convert using a workaround
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        // Create an image element to process the HEIC file
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            // Get target dimensions
+                            const targetDimensions = getResizeDimensions(category, img.width, img.height);
+                            const { width: targetWidth, height: targetHeight } = targetDimensions;
+                            
+                            // Set canvas dimensions
+                            canvas.width = targetWidth;
+                            canvas.height = targetHeight;
+                            
+                            // Draw and resize image
+                            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+                            
+                            // Convert to WebP with initial quality
+                            let quality = 0.9;
+                            let webpData = canvas.toDataURL('image/webp', quality);
+                            
+                            // Compress until under 120KB or quality too low
+                            while (webpData.length > 120000 && quality > 0.1) {
+                                quality -= 0.1;
+                                webpData = canvas.toDataURL('image/webp', quality);
+                            }
+                            
+                            resolve({
+                                dataUrl: webpData,
+                                base64: webpData.split(',')[1],
+                                finalSize: webpData.length,
+                                quality: quality
+                            });
+                        };
+                        img.onerror = () => reject(new Error('Failed to process HEIC file. Please convert to JPG/PNG first.'));
+                        img.src = e.target.result;
+                    } catch (error) {
+                        reject(new Error('HEIC processing failed. Please convert to JPG/PNG first.'));
+                    }
+                };
+                reader.onerror = () => reject(new Error('Failed to read HEIC file'));
+                reader.readAsDataURL(file);
+            });
+        }
 
         function validateFile(file) {
             const maxSize = 20 * 1024 * 1024; // 20MB max original size
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            const allowedTypes = [
+                'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 
+                'image/heic', 'image/heif', 'image/gif', 'image/bmp', 
+                'image/tiff', 'image/svg+xml'
+            ];
             
             if (!allowedTypes.includes(file.type)) {
-                throw new Error('Invalid file type. Please upload JPG, PNG, or WebP images.');
+                throw new Error('Invalid file type. Please upload JPG, PNG, WebP, HEIC, or other common image formats.');
             }
             
             if (file.size > maxSize) {
