@@ -1374,7 +1374,7 @@ God bless you`;
         async function loadGuestList() {
             try {
                 // Load data tamu dari WhatsApp generator (sheet Terkirim)
-                const result = await sheetsGet('listguests');
+                const result = await sheetsGet('listsent');
                 
                 guests = result.data || [];
                 console.log('Data tamu dari WhatsApp Generator:', guests);
@@ -1538,9 +1538,10 @@ God bless you`;
 
     try {
 
+        // Load data tamu dari sheet Terkirim (hasil WhatsApp Generator)
         const data =
             await sheetsGet(
-                'listguests'
+                'listsent'
             );
 
         console.log(
@@ -1632,7 +1633,8 @@ God bless you`;
             try {
                 showMessage('toolsMessage', 'Exporting data...', 'info');
                 
-                const guests = await sheetsGet('listguests');
+                // Export data tamu dari sheet Terkirim (hasil WhatsApp Generator)
+                const guests = await sheetsGet('listsent');
                 const dataStr = JSON.stringify(guests, null, 2);
                 const dataBlob = new Blob([dataStr], { type: 'application/json' });
                 
