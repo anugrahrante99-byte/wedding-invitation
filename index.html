@@ -3462,9 +3462,9 @@
 
         /* Simple Music Control for Mobile */
         .music-dock {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
+            position: fixed !important;
+            right: 20px !important;
+            bottom: 20px !important;
             z-index: 999999 !important;
             display: flex !important;
             align-items: center;
@@ -3542,9 +3542,10 @@
             transform: translate3d(0, 0, 0) scale(1);
         }
         
-        /* Mobile Music Control */
+        /* Mobile Music Control - Force Visibility */
         @media (max-width: 768px) {
             .music-dock {
+                position: fixed !important;
                 right: 15px !important;
                 bottom: max(15px, env(safe-area-inset-bottom)) !important;
                 opacity: 1 !important;
@@ -3552,10 +3553,29 @@
                 pointer-events: auto !important;
                 visibility: visible !important;
                 display: flex !important;
+                transform: none !important;
             }
             
-            .music-dock.is-idle {
-                opacity: 0.9 !important;
+            .music-dock.is-idle,
+            .music-dock.is-playing,
+            .music-dock.is-hidden {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: flex !important;
+                transform: none !important;
+            }
+        }
+        
+        /* Extra small mobile */
+        @media (max-width: 380px) {
+            .music-dock {
+                position: fixed !important;
+                right: 10px !important;
+                bottom: max(10px, env(safe-area-inset-bottom)) !important;
+                opacity: 1 !important;
+                z-index: 999999 !important;
+                visibility: visible !important;
+                display: flex !important;
             }
         }
 
@@ -5982,7 +6002,7 @@
 
                 
         function setupScrollAnimations() {
-            // Simple Smooth Elegant Animation System
+            // FINAL Simple Smooth Elegant Animation System - Comprehensive Coverage
             
             // Apply animations to ALL sections
             const allSections = document.querySelectorAll('section');
@@ -5991,7 +6011,7 @@
                 section.style.transitionDelay = `${index * 0.1}s`;
             });
             
-            // Apply animations to ALL titles
+            // Apply animations to ALL titles (h1-h6)
             const titles = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
             titles.forEach((element, index) => {
                 element.classList.add('slide-left');
@@ -6006,34 +6026,57 @@
             });
             
             // Apply animations to ALL buttons
-            const buttons = document.querySelectorAll('button, .map-button, .open-button');
+            const buttons = document.querySelectorAll('button, .map-button, .open-button, .btn');
             buttons.forEach((element, index) => {
                 element.classList.add('slide-right');
                 element.style.transitionDelay = `${index * 0.05}s`;
             });
             
-            // Apply animations to ALL cards
-            const cards = document.querySelectorAll('.event-item, .gallery-item, .gift-item, .couple-item');
+            // Apply animations to ALL cards and items
+            const cards = document.querySelectorAll('.event-item, .gallery-item, .gift-item, .couple-item, .card, .item');
             cards.forEach((element, index) => {
                 element.classList.add('fade-in');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
             // Apply animations to ALL images
-            const images = document.querySelectorAll('img, .couple-photo');
+            const images = document.querySelectorAll('img, .couple-photo, .photo');
             images.forEach((element, index) => {
                 element.classList.add('slide-left');
                 element.style.transitionDelay = `${index * 0.05}s`;
             });
             
             // Apply animations to content overlays
-            const contentElements = document.querySelectorAll('.content-overlay, .overlay-text, .thanks-message');
+            const contentElements = document.querySelectorAll('.content-overlay, .overlay-text, .thanks-message, .overlay');
             contentElements.forEach((element, index) => {
                 element.classList.add('fade-in');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
-            // Simple Intersection Observer
+            // Apply animations to cover elements
+            const coverElements = document.querySelectorAll('.cover-screen, .cover-content, .cover-title, .cover-subtitle, .guest-name');
+            coverElements.forEach((element, index) => {
+                element.classList.add('fade-in');
+                element.style.transitionDelay = `${index * 0.1}s`;
+            });
+            
+            // Apply animations to countdown items
+            const countdownItems = document.querySelectorAll('.countdown-item, .countdown');
+            countdownItems.forEach((element, index) => {
+                element.classList.add('slide-left');
+                element.style.transitionDelay = `${index * 0.05}s`;
+            });
+            
+            // Apply animations to all div elements with important content
+            const importantDivs = document.querySelectorAll('div[class*="content"], div[class*="text"], div[class*="title"], div[class*="message"]');
+            importantDivs.forEach((element, index) => {
+                if (!element.classList.contains('music-dock')) {
+                    element.classList.add('fade-in');
+                    element.style.transitionDelay = `${index * 0.05}s`;
+                }
+            });
+            
+            // FINAL Intersection Observer for ALL elements
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
@@ -6046,13 +6089,22 @@
                     rootMargin: '0px 0px -50px 0px'
                 });
                 
-                // Observe all animated elements
+                // Observe ALL animated elements
                 const animatedElements = document.querySelectorAll('.fade-in:not(.visible), .slide-left:not(.visible), .slide-right:not(.visible)');
                 animatedElements.forEach(element => {
                     observer.observe(element);
                 });
+                
+                // Re-observe periodically to catch dynamically loaded content
+                setInterval(() => {
+                    const newElements = document.querySelectorAll('.fade-in:not(.visible), .slide-left:not(.visible), .slide-right:not(.visible)');
+                    newElements.forEach(element => {
+                        observer.observe(element);
+                    });
+                }, 1000);
+                
             } else {
-                // Fallback
+                // Fallback for older browsers
                 const checkVisibility = () => {
                     const animatedElements = document.querySelectorAll('.fade-in:not(.visible), .slide-left:not(.visible), .slide-right:not(.visible)');
                     animatedElements.forEach(element => {
@@ -6066,6 +6118,7 @@
                 
                 window.addEventListener('scroll', checkVisibility);
                 checkVisibility();
+                setInterval(checkVisibility, 500);
             }
         }
         
