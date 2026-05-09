@@ -212,63 +212,64 @@
             scroll-behavior: smooth;
         }
         
-        /* Intersection Observer Animations */
-        .scroll-reveal {
+        /* Luxury Cinematic Minimal Animation System */
+        .cinematic-reveal {
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(30px);
+            filter: blur(6px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .scroll-reveal.visible {
+        .cinematic-reveal.visible {
             opacity: 1;
             transform: translateY(0);
+            filter: blur(0);
         }
         
-        .scroll-reveal-left {
+        .cinematic-slide-left {
             opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-40px);
+            filter: blur(4px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .scroll-reveal-left.visible {
+        .cinematic-slide-left.visible {
             opacity: 1;
             transform: translateX(0);
+            filter: blur(0);
         }
         
-        .scroll-reveal-right {
+        .cinematic-slide-right {
             opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(40px);
+            filter: blur(4px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .scroll-reveal-right.visible {
+        .cinematic-slide-right.visible {
             opacity: 1;
             transform: translateX(0);
+            filter: blur(0);
         }
         
-        .scroll-reveal-scale {
+        .cinematic-fade {
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(3px);
+            transition: all 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .scroll-reveal-scale.visible {
+        .cinematic-fade.visible {
             opacity: 1;
-            transform: scale(1);
+            filter: blur(0);
         }
         
-        /* Parallax Scroll Effects */
-        .parallax-slow {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .parallax-medium {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .parallax-fast {
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        /* Stagger Animation Delays */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
         
         /* Scroll Progress Indicator */
         .scroll-progress {
@@ -1031,35 +1032,7 @@
             margin-bottom: 0;
         }
         
-        /* Scroll animations disabled */
-        
-        .section.fade-in {
-            animation: elegantFadeIn 1.2s ease-out forwards;
-        }
-        
-        .section.slide-left {
-            transform: translateX(-100px);
-        }
-        
-        .section.slide-left.visible {
-            transform: translateX(0);
-        }
-        
-        .section.slide-right {
-            transform: translateX(100px);
-        }
-        
-        .section.slide-right.visible {
-            transform: translateX(0);
-        }
-        
-        .section.scale-in {
-            transform: scale(0.8);
-        }
-        
-        .section.scale-in.visible {
-            transform: scale(1);
-        }
+        /* Old scroll animations disabled - replaced by Luxury Cinematic Minimal */
         
         .content-overlay {
             position: relative;
@@ -1415,45 +1388,7 @@
         .stagger-4 { transition-delay: 0.4s; }
         .stagger-5 { transition-delay: 0.5s; }
         
-        /* Mobile Optimized Animation Classes */
-        .luxury-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            filter: blur(4px);
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .luxury-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-        
-        .luxury-slide-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            filter: blur(3px);
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .luxury-slide-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-            filter: blur(0);
-        }
-        
-        .luxury-slide-right {
-            opacity: 0;
-            transform: translateX(30px);
-            filter: blur(3px);
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .luxury-slide-right.visible {
-            opacity: 1;
-            transform: translateX(0);
-            filter: blur(0);
-        }
+        /* Old luxury animation classes removed - replaced by cinematic system */
         
         /* Essential Animations Only */
         .essential-float {
@@ -2384,124 +2319,7 @@
             }
         }
         
-        @keyframes sparkle {
-            0%, 100% {
-                opacity: 0;
-                transform: scale(0) rotate(0deg);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1) rotate(180deg);
-            }
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        
-        @keyframes glow {
-            0%, 100% {
-                text-shadow: 
-                    0 0 20px rgba(0,0,0,0.8),
-                    0 0 40px rgba(0,0,0,0.6),
-                    0 0 60px rgba(0,0,0,0.4),
-                    2px 2px 4px rgba(0,0,0,0.9),
-                    0 0 80px rgba(255,255,255,0.3);
-            }
-            50% {
-                text-shadow: 
-                    0 0 30px rgba(0,0,0,0.9),
-                    0 0 50px rgba(0,0,0,0.7),
-                    0 0 70px rgba(0,0,0,0.5),
-                    2px 2px 4px rgba(0,0,0,0.9),
-                    0 0 80px rgba(255,255,255,0.3);
-            }
-        }
-        
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes rotateIn {
-            from {
-                opacity: 0;
-                transform: rotate(-10deg) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: rotate(0deg) scale(1);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
+        /* Old keyframes removed - replaced by cinematic system */
         
         /* Ultra-Simple Scroll Animation - Mobile Friendly */
         .scroll-fade {
@@ -2563,14 +2381,16 @@
             transition: all 0.3s ease;
         }
         
+        /* Cinematic Gallery Hover Effects */
         .gallery-item {
-            opacity: 1 !important;
-            transform: none !important;
-            transition: transform 0.3s ease !important;
+            opacity: 1;
+            transform: none;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .gallery-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
         
         /* Luxury animation variants */
@@ -2580,95 +2400,6 @@
             filter: blur(10px);
             transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        
-        .luxury-fade-up.animated {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-        }
-        
-        .elegant-slide-left {
-            opacity: 0;
-            transform: translateX(-100px) rotateY(-15deg);
-            filter: brightness(0.8);
-            transition: all 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .elegant-slide-left.animated {
-            opacity: 1;
-            transform: translateX(0) rotateY(0);
-            filter: brightness(1);
-        }
-        
-        .elegant-slide-right {
-            opacity: 0;
-            transform: translateX(100px) rotateY(15deg);
-            filter: brightness(0.8);
-            transition: all 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .elegant-slide-right.animated {
-            opacity: 1;
-            transform: translateX(0) rotateY(0);
-            filter: brightness(1);
-        }
-        
-        .majestic-scale {
-            opacity: 0;
-            transform: scale(0.3) rotateZ(-5deg);
-            filter: blur(15px) brightness(0.7);
-            transition: all 2s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .majestic-scale.animated {
-            opacity: 1;
-            transform: scale(1) rotateZ(0);
-            filter: blur(0) brightness(1);
-        }
-        
-        .elegant-float {
-            opacity: 0;
-            transform: translateY(80px) scale(0.9);
-            filter: blur(8px) hue-rotate(-10deg);
-            transition: all 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .elegant-float.animated {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0) hue-rotate(0);
-        }
-        
-        .luxury-reveal {
-            opacity: 0;
-            transform: translateY(100px) scale(0.8) rotateX(10deg);
-            filter: blur(12px) contrast(0.8);
-            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-            transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .luxury-reveal.animated {
-            opacity: 1;
-            transform: translateY(0) scale(1) rotateX(0);
-            filter: blur(0) contrast(1);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
-        
-        .premium-glow {
-            opacity: 0;
-            transform: translateY(40px) scale(0.85);
-            filter: blur(6px) brightness(0.6);
-            box-shadow: 0 0 0 rgba(255,215,0,0);
-            transition: all 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .premium-glow.animated {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0) brightness(1);
-            box-shadow: 0 0 60px rgba(255,215,0,0.8);
-        }
-        
         /* Staggered animations for sequential elements */
         .stagger-1 { transition-delay: 0.1s; }
         .stagger-2 { transition-delay: 0.2s; }
@@ -2704,158 +2435,14 @@
             }
         }
         
-        .cover-content::before,
-        .cover-content::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            animation: sparkle 3s infinite;
-        }
-        
-        .cover-content::before {
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .cover-content::after {
-            top: 70%;
-            right: 15%;
-            animation-delay: 1s;
-        }
-        
+        /* Reduced infinite animations for cinematic performance */
         .cover-title {
-            animation: fadeInUp 1s ease forwards, glow 2s ease-in-out infinite alternate;
+            animation: fadeInUp 1s ease forwards;
         }
         
-        /* Scroll Animations */
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+        /* Old scroll animations removed - replaced by cinematic system */
         
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes rotateIn {
-            from {
-                opacity: 0;
-                transform: rotate(-10deg);
-            }
-            to {
-                opacity: 1;
-                transform: rotate(0deg);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 6px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3);
-            }
-        }
-        
-        /* Elegant Scroll Animation Classes */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .scroll-animate.animated {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .scroll-animate.fade-in {
-            transform: translateY(0);
-            opacity: 0;
-        }
-        
-        .scroll-animate.fade-in.animated {
-            opacity: 1;
-        }
-        
-        .scroll-animate.slide-up {
-            transform: translateY(30px);
-        }
-        
-        .scroll-animate.slide-up.animated {
-            transform: translateY(0);
-        }
-        
-        .scroll-animate.scale-in {
-            transform: scale(0.95);
-        }
-        
-        .scroll-animate.scale-in.animated {
-            transform: scale(1);
-        }
+        /* Old scroll-animate classes removed - replaced by cinematic system */
         
         @keyframes glow {
             0%, 100% {
@@ -6525,69 +6112,69 @@
         function setupScrollAnimations() {
             // Elegant scroll animations with Intersection Observer
             
-            // Add animation classes to main content elements
+            // Add cinematic animation classes to main content elements
             const contentElements = document.querySelectorAll('.content-overlay, .overlay-text, .thanks-message');
             contentElements.forEach((element, index) => {
-                element.classList.add('scroll-animate', 'fade-in');
-                // Add staggered delay for elegant effect
-                element.style.transitionDelay = `${index * 0.1}s`;
-            });
-            
-            // Add animations to event items with slide-up effect
-            const eventItems = document.querySelectorAll('.event-item');
-            eventItems.forEach((element, index) => {
-                element.classList.add('scroll-animate', 'slide-up');
-                element.style.transitionDelay = `${index * 0.2}s`;
-            });
-            
-            // Add animations to couple photos with scale-in effect
-            const couplePhotos = document.querySelectorAll('.couple-photo');
-            couplePhotos.forEach((element, index) => {
-                element.classList.add('scroll-animate', 'scale-in');
+                element.classList.add('cinematic-fade');
+                // Add staggered delay for cinematic effect
                 element.style.transitionDelay = `${index * 0.15}s`;
             });
             
-            // Add animations to gallery items
+            // Add cinematic animations to event items
+            const eventItems = document.querySelectorAll('.event-item');
+            eventItems.forEach((element, index) => {
+                element.classList.add('cinematic-reveal');
+                element.style.transitionDelay = `${index * 0.2}s`;
+            });
+            
+            // Add cinematic animations to couple photos
+            const couplePhotos = document.querySelectorAll('.couple-photo');
+            couplePhotos.forEach((element, index) => {
+                element.classList.add('cinematic-slide-left');
+                element.style.transitionDelay = `${index * 0.15}s`;
+            });
+            
+            // Add cinematic animations to gallery items
             const galleryItems = document.querySelectorAll('.gallery-item');
             galleryItems.forEach((element, index) => {
-                element.classList.add('scroll-animate', 'slide-up');
+                element.classList.add('cinematic-fade');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
-            // Add animations to countdown items
+            // Add cinematic animations to countdown items
             const countdownItems = document.querySelectorAll('.countdown-item');
             countdownItems.forEach((element, index) => {
-                element.classList.add('scroll-animate', 'scale-in');
+                element.classList.add('cinematic-reveal');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
-            // Initialize Intersection Observer for performance
+            // Initialize Cinematic Intersection Observer for performance
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            entry.target.classList.add('animated');
+                            entry.target.classList.add('visible');
                         }
                     });
                 }, {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -80px 0px'
                 });
                 
-                // Observe all animated elements
-                const animatedElements = document.querySelectorAll('.scroll-animate');
+                // Observe all cinematic animated elements
+                const animatedElements = document.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade');
                 animatedElements.forEach(element => {
                     observer.observe(element);
                 });
             } else {
                 // Fallback for older browsers
                 const checkVisibility = () => {
-                    const animatedElements = document.querySelectorAll('.scroll-animate:not(.animated)');
+                    const animatedElements = document.querySelectorAll('.cinematic-reveal:not(.visible), .cinematic-slide-left:not(.visible), .cinematic-slide-right:not(.visible), .cinematic-fade:not(.visible)');
                     animatedElements.forEach(element => {
                         const rect = element.getBoundingClientRect();
                         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
                         if (isVisible) {
-                            element.classList.add('animated');
+                            element.classList.add('visible');
                         }
                     });
                 };
@@ -7915,34 +7502,37 @@
             });
         })();
         // Luxury Cinematic Minimal Animation System
-        (function luxuryAnimations() {
+        (function cinematicAnimations() {
             // Mobile performance optimization
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             
-            // Stagger animation for sequential element reveal
-            function initStaggerAnimations() {
+            // Premium stagger animation with cinematic timing
+            function initCinematicAnimations() {
                 const sections = document.querySelectorAll('section');
                 const observerOptions = {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -80px 0px'
                 };
                 
                 const observer = new IntersectionObserver((entries) => {
-                    entries.forEach((entry, index) => {
+                    entries.forEach((entry) => {
                         if (entry.isIntersecting) {
                             const section = entry.target;
-                            const elements = section.querySelectorAll('.luxury-reveal, .luxury-slide-left, .luxury-slide-right, h2, h3, p, img, button, .event-item, .wish-item');
+                            const elements = section.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade, h2, h3, p, img, button, .event-item, .wish-item, .couple-photo');
                             
                             elements.forEach((element, elementIndex) => {
                                 setTimeout(() => {
                                     element.classList.add('visible');
                                     
-                                    // Add stagger classes for sequential reveal
-                                    if (element.classList.contains('luxury-reveal')) {
-                                        element.classList.add(`stagger-${(elementIndex % 5) + 1}`);
+                                    // Add stagger classes for cinematic reveal
+                                    if (element.classList.contains('cinematic-reveal') || 
+                                        element.classList.contains('cinematic-slide-left') || 
+                                        element.classList.contains('cinematic-slide-right') ||
+                                        element.classList.contains('cinematic-fade')) {
+                                        element.classList.add(`stagger-${(elementIndex % 6) + 1}`);
                                     }
-                                }, elementIndex * 100); // 100ms delay between elements
+                                }, elementIndex * 150); // 150ms cinematic delay between elements
                             });
                             
                             observer.unobserve(section);
@@ -7953,14 +7543,14 @@
                 sections.forEach(section => observer.observe(section));
             }
             
-            // Optimized scroll animations for mobile
-            function initScrollAnimations() {
+            // Optimized cinematic scroll animations
+            function initCinematicScrollAnimations() {
                 if (isReducedMotion) return;
                 
-                const scrollElements = document.querySelectorAll('.luxury-reveal, .luxury-slide-left, .luxury-slide-right');
+                const scrollElements = document.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade');
                 
                 function animateOnScroll() {
-                    const triggerBottom = window.innerHeight * 0.85;
+                    const triggerBottom = window.innerHeight * 0.9;
                     
                     scrollElements.forEach(element => {
                         const elementTop = element.getBoundingClientRect().top;
@@ -7971,7 +7561,7 @@
                     });
                 }
                 
-                // Throttled scroll event for mobile performance
+                // Throttled scroll event for cinematic mobile performance
                 let ticking = false;
                 function requestTick() {
                     if (!ticking) {
@@ -7987,10 +7577,10 @@
                 animateOnScroll(); // Initial check
             }
             
-            // Hardware acceleration optimization
-            function optimizePerformance() {
-                // Add hardware acceleration to animated elements
-                const animatedElements = document.querySelectorAll('.luxury-reveal, .luxury-slide-left, .luxury-slide-right, .essential-float, .essential-glow');
+            // Cinematic hardware acceleration optimization
+            function optimizeCinematicPerformance() {
+                // Add hardware acceleration to cinematic animated elements
+                const animatedElements = document.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade');
                 
                 animatedElements.forEach(element => {
                     element.style.transform = 'translateZ(0)';
@@ -7998,9 +7588,9 @@
                     element.style.perspective = '1000px';
                 });
                 
-                // Reduce animations on mobile
+                // Reduce heavy animations on mobile for cinematic performance
                 if (isMobile) {
-                    document.body.classList.add('mobile-optimized');
+                    document.body.classList.add('cinematic-mobile-optimized');
                     
                     // Remove heavy parallax effects on mobile
                     const parallaxElements = document.querySelectorAll('.parallax-element');
@@ -8010,45 +7600,45 @@
                 }
             }
             
-            // Essential animations only (keep scroll progress, smooth reveal, gallery hover, couple card hover)
-            function preserveEssentialAnimations() {
+            // Essential cinematic animations only (keep scroll progress, smooth reveal, gallery hover, couple card hover)
+            function preserveCinematicAnimations() {
                 // Keep scroll progress bar
                 const scrollProgress = document.querySelector('.scroll-progress');
                 if (scrollProgress) {
                     scrollProgress.style.display = 'block';
                 }
                 
-                // Keep smooth reveal animations
-                const revealElements = document.querySelectorAll('.luxury-reveal');
+                // Keep cinematic reveal animations
+                const revealElements = document.querySelectorAll('.cinematic-reveal');
                 revealElements.forEach(element => {
-                    element.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    element.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 });
                 
-                // Keep gallery hover effects
+                // Keep gallery hover effects with cinematic timing
                 const galleryItems = document.querySelectorAll('.gallery-item');
                 galleryItems.forEach(item => {
-                    item.style.transition = 'transform 0.3s ease';
+                    item.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 });
                 
-                // Keep couple card hover effects
+                // Keep couple card hover effects with cinematic timing
                 const coupleCards = document.querySelectorAll('.couple-photo');
                 coupleCards.forEach(card => {
-                    card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                    card.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 });
             }
             
-            // Initialize everything when DOM is ready
+            // Initialize cinematic system when DOM is ready
             document.addEventListener('DOMContentLoaded', function() {
-                optimizePerformance();
-                preserveEssentialAnimations();
+                optimizeCinematicPerformance();
+                preserveCinematicAnimations();
                 
                 if (!isReducedMotion) {
-                    initStaggerAnimations();
-                    initScrollAnimations();
+                    initCinematicAnimations();
+                    initCinematicScrollAnimations();
                 }
             });
             
-            // Re-initialize on cover open
+            // Re-initialize cinematic animations on cover open
             const originalOpenInvitation = window.openInvitation;
             window.openInvitation = function() {
                 if (typeof originalOpenInvitation === 'function') {
@@ -8057,9 +7647,9 @@
                 
                 setTimeout(() => {
                     if (!isReducedMotion) {
-                        initScrollAnimations();
+                        initCinematicScrollAnimations();
                     }
-                }, 500);
+                }, 600);
             };
         })();
 
