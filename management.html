@@ -1901,11 +1901,6 @@ God bless you`;
 
         // Auto-rename function
         function autoRename(category, originalName) {
-            const extension = originalName.split('.').pop().toLowerCase();
-            if (extension !== 'webp') {
-                throw new Error('Only WebP files are allowed');
-            }
-
             // Find next available number
             const existingFiles = document.querySelectorAll(`#gallery-${category} .gallery-item`);
             const usedNumbers = Array.from(existingFiles).map(item => {
