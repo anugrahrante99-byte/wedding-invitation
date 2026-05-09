@@ -3469,7 +3469,7 @@
 
 
 
-        /* Upgraded Music Control for Mobile - Minimal & Non-Intrusive */
+        /* Upgraded Music Control for Mobile - Ultra Minimal & Non-Intrusive */
         .music-dock {
             position: fixed !important;
             right: 20px;
@@ -3486,13 +3486,13 @@
             opacity: 1 !important;
             visibility: visible !important;
             pointer-events: auto !important;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         
-        /* Auto-hide state */
+        /* Ultra-transparent hide state */
         .music-dock.auto-hide {
-            opacity: 0.35;
-            transform: translateX(20px);
+            opacity: 0.12;
+            transform: translateX(15px);
         }
         
         /* Active state */
@@ -3582,7 +3582,7 @@
             transform: translate3d(0, 0, 0) scale(1);
         }
         
-        /* Mobile Music Control - Auto-Hide & Enhanced Visibility */
+        /* Mobile Music Control - Ultra Minimal & Non-Intrusive */
         @media (max-width: 768px) {
             .music-dock {
                 position: fixed !important;
@@ -3597,8 +3597,8 @@
             }
             
             .music-dock.auto-hide {
-                opacity: 0.35 !important;
-                transform: translateX(20px) !important;
+                opacity: 0.12 !important;
+                transform: translateX(15px) !important;
             }
             
             .music-dock.active {
@@ -3607,7 +3607,7 @@
             }
             
             .music-dock.mini {
-                opacity: 0.25 !important;
+                opacity: 0.12 !important;
                 transform: translateX(15px) scale(0.8) !important;
             }
             
@@ -6427,11 +6427,13 @@
                 clearTimeout(musicAutoHideTimer);
             }
             
-            // Schedule mini mode
+            // Schedule ultra-transparent mode (never hide completely)
             musicAutoHideTimer = setTimeout(() => {
                 const musicDock = document.getElementById('musicDock');
                 if (musicDock && !isMusicDockActive) {
-                    minimizeMusicDock();
+                    // Don't hide completely, just make ultra-transparent
+                    musicDock.classList.remove('active', 'mini');
+                    musicDock.classList.add('auto-hide');
                 }
             }, 4000); // 4 seconds
         }
@@ -6439,8 +6441,9 @@
         function hideMusicDock() {
             const musicDock = document.getElementById('musicDock');
             if (musicDock) {
-                musicDock.classList.add('auto-hide');
+                // Never hide completely, just make ultra-transparent
                 musicDock.classList.remove('active', 'mini');
+                musicDock.classList.add('auto-hide');
             }
         }
         
