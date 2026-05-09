@@ -1978,7 +1978,7 @@ God bless you`;
         }
 
         function validateFile(file) {
-            const maxSize = 10 * 1024 * 1024; // 10MB max original size
+            const maxSize = 20 * 1024 * 1024; // 20MB max original size
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             
             if (!allowedTypes.includes(file.type)) {
@@ -1986,7 +1986,7 @@ God bless you`;
             }
             
             if (file.size > maxSize) {
-                throw new Error('File too large. Maximum size is 10MB.');
+                throw new Error('File too large. Maximum size is 20MB.');
             }
             
             return true;
