@@ -3473,7 +3473,7 @@
         .music-dock {
             position: fixed !important;
             right: 20px;
-            bottom: 80px;
+            bottom: 110px;
             z-index: 999999 !important;
             display: flex !important;
             align-items: center;
@@ -3486,7 +3486,7 @@
             opacity: 1 !important;
             visibility: visible !important;
             pointer-events: auto !important;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
         
         /* Auto-hide state */
@@ -3499,6 +3499,25 @@
         .music-dock.active {
             opacity: 1;
             transform: translateX(0);
+        }
+        
+        /* Mini icon state */
+        .music-dock.mini {
+            width: 42px;
+            height: 42px;
+            padding: 4px;
+            border-radius: 50%;
+            gap: 0;
+            background: rgba(36, 30, 29, 0.85) !important;
+        }
+        
+        .music-dock.mini .music-dock-secondary {
+            display: none;
+        }
+        
+        .music-dock.mini .music-dock-main {
+            width: 34px;
+            height: 34px;
         }
 
         .music-dock-btn {
@@ -3568,7 +3587,7 @@
             .music-dock {
                 position: fixed !important;
                 right: 15px !important;
-                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+                bottom: calc(110px + env(safe-area-inset-bottom)) !important;
                 opacity: 1 !important;
                 z-index: 999999 !important;
                 pointer-events: auto !important;
@@ -3585,6 +3604,11 @@
             .music-dock.active {
                 opacity: 1 !important;
                 transform: translateX(0) !important;
+            }
+            
+            .music-dock.mini {
+                opacity: 0.25 !important;
+                transform: translateX(15px) scale(0.8) !important;
             }
             
             .music-dock.is-idle,
@@ -3604,7 +3628,7 @@
                 z-index: 999999 !important;
                 opacity: 1 !important;
                 visibility: visible !important;
-                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+                bottom: calc(110px + env(safe-area-inset-bottom)) !important;
             }
         }
         
@@ -3613,7 +3637,7 @@
             .music-dock {
                 position: fixed !important;
                 right: 10px !important;
-                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+                bottom: calc(110px + env(safe-area-inset-bottom)) !important;
                 opacity: 1 !important;
                 z-index: 999999 !important;
                 visibility: visible !important;
@@ -6202,30 +6226,84 @@
             }
         }
         
-        // PWA Fullscreen Experience Function
+        // PWA Fullscreen Experience Function - Enhanced
         function requestFullscreenExperience() {
             console.log('Requesting fullscreen experience...');
             
             // Try different fullscreen APIs for browser compatibility
             const element = document.documentElement;
             
-            if (element.requestFullscreen) {
-                element.requestFullscreen().catch(err => {
-                    console.log('Fullscreen request failed:', err);
+            // Force fullscreen request with multiple fallbacks
+            try {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen().then(() => {
+                        console.log('Fullscreen successful');
+                    }).catch(err => {
+                        console.log('Fullscreen request failed:', err);
+                        tryWebkitFullscreen();
+                    });
+                } else {
+                    tryWebkitFullscreen();
+                }
+            } catch (err) {
+                console.log('Fullscreen error:', err);
+                tryWebkitFullscreen();
+            }
+        }
+        
+        function tryWebkitFullscreen() {
+            const element = document.documentElement;
+            try {
+                if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen().then(() => {
+                        console.log('Webkit fullscreen successful');
+                    }).catch(err => {
+                        console.log('Webkit fullscreen failed:', err);
+                        tryMozFullscreen();
+                    });
+                } else {
+                    tryMozFullscreen();
+                }
+            } catch (err) {
+                console.log('Webkit fullscreen error:', err);
+                tryMozFullscreen();
+            }
+        }
+        
+        function tryMozFullscreen() {
+            const element = document.documentElement;
+            try {
+                if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen().then(() => {
+                        console.log('Mozilla fullscreen successful');
+                    }).catch(err => {
+                        console.log('Mozilla fullscreen failed:', err);
+                        tryMsFullscreen();
+                    });
+                } else {
+                    tryMsFullscreen();
+                }
+            } catch (err) {
+                console.log('Mozilla fullscreen error:', err);
+                tryMsFullscreen();
+            }
+        }
+        
+        function tryMsFullscreen() {
+            const element = document.documentElement;
+            try {
+                if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen().then(() => {
+                        console.log('MS fullscreen successful');
+                    }).catch(err => {
+                        console.log('MS fullscreen failed:', err);
+                        handleFullscreenError();
+                    });
+                } else {
                     handleFullscreenError();
-                });
-            } else if (element.webkitRequestFullscreen) { /* Safari */
-                element.webkitRequestFullscreen().catch(err => {
-                    console.log('Webkit fullscreen request failed:', err);
-                    handleFullscreenError();
-                });
-            } else if (element.msRequestFullscreen) { /* IE11 */
-                element.msRequestFullscreen().catch(err => {
-                    console.log('MS fullscreen request failed:', err);
-                    handleFullscreenError();
-                });
-            } else {
-                console.log('Fullscreen not supported');
+                }
+            } catch (err) {
+                console.log('MS fullscreen error:', err);
                 handleFullscreenError();
             }
         }
@@ -6237,18 +6315,25 @@
         }
         
         function exitFullscreenExperience() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE11 */
-                document.msExitFullscreen();
+            try {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) { /* Firefox */
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.log('Exit fullscreen error:', err);
             }
         }
         
-        // Upgraded Music Button Auto-Hide System
+        // Upgraded Music Button Auto-Hide System with Mini Icon Mode
         let musicAutoHideTimer = null;
         let isMusicDockActive = false;
+        let isMusicDockMini = false;
         
         function initMusicAutoHide() {
             const musicDock = document.getElementById('musicDock');
@@ -6269,6 +6354,7 @@
             musicDock.addEventListener('mouseenter', handleMusicDockHover);
             musicDock.addEventListener('mouseleave', handleMusicDockLeave);
             musicDock.addEventListener('touchstart', handleMusicDockTouch);
+            musicDock.addEventListener('click', handleMusicDockClick);
         }
         
         function handleUserInteraction() {
@@ -6287,6 +6373,13 @@
             showMusicDockTemporarily();
         }
         
+        function handleMusicDockClick() {
+            // If in mini mode, expand to full control
+            if (isMusicDockMini) {
+                expandMusicDock();
+            }
+        }
+        
         function showMusicDockTemporarily() {
             const musicDock = document.getElementById('musicDock');
             if (!musicDock) return;
@@ -6296,44 +6389,65 @@
                 clearTimeout(musicAutoHideTimer);
             }
             
-            // Show music dock
-            musicDock.classList.remove('auto-hide');
-            musicDock.classList.add('active');
+            // Show music dock in full mode
+            expandMusicDock();
             isMusicDockActive = true;
             
-            // Schedule auto-hide after 3 seconds of inactivity
-            scheduleMusicAutoHide();
+            // Schedule mini mode after 4 seconds of inactivity
+            scheduleMusicMiniMode();
         }
         
-        function scheduleMusicAutoHide() {
+        function expandMusicDock() {
+            const musicDock = document.getElementById('musicDock');
+            if (!musicDock) return;
+            
+            // Remove all states
+            musicDock.classList.remove('auto-hide', 'active', 'mini');
+            
+            // Show full control
+            musicDock.classList.add('active');
+            isMusicDockMini = false;
+        }
+        
+        function minimizeMusicDock() {
+            const musicDock = document.getElementById('musicDock');
+            if (!musicDock) return;
+            
+            // Remove all states
+            musicDock.classList.remove('auto-hide', 'active', 'mini');
+            
+            // Show mini icon
+            musicDock.classList.add('mini');
+            isMusicDockMini = true;
+        }
+        
+        function scheduleMusicMiniMode() {
             // Clear existing timer
             if (musicAutoHideTimer) {
                 clearTimeout(musicAutoHideTimer);
             }
             
-            // Schedule auto-hide
+            // Schedule mini mode
             musicAutoHideTimer = setTimeout(() => {
                 const musicDock = document.getElementById('musicDock');
                 if (musicDock && !isMusicDockActive) {
-                    musicDock.classList.add('auto-hide');
-                    musicDock.classList.remove('active');
+                    minimizeMusicDock();
                 }
-            }, 3000); // 3 seconds
+            }, 4000); // 4 seconds
         }
         
         function hideMusicDock() {
             const musicDock = document.getElementById('musicDock');
             if (musicDock) {
                 musicDock.classList.add('auto-hide');
-                musicDock.classList.remove('active');
+                musicDock.classList.remove('active', 'mini');
             }
         }
         
         function showMusicDock() {
             const musicDock = document.getElementById('musicDock');
             if (musicDock) {
-                musicDock.classList.remove('auto-hide');
-                musicDock.classList.add('active');
+                expandMusicDock();
             }
         }
         
