@@ -7,6 +7,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6c5ce7">
+    <meta name="apple-mobile-web-app-title" content="Undangan Pernikahan">
+    <meta name="application-name" content="Undangan Pernikahan">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
+    
     <!-- SEO Meta Tags -->
     <title>Undangan Perkawinan Adiaksa & Fepprianti - 26 Juni 2026</title>
     <meta name="description" content="Undangan perkawinan digital Adiaksa Anugrah Rante & Pdt. Fepprianti S.Th. Jumat, 26 Juni 2026. Bergabunglah dalam perayaan sakral kami.">
@@ -3542,7 +3551,7 @@
             transform: translate3d(0, 0, 0) scale(1);
         }
         
-        /* Mobile Music Control - Force Visibility */
+        /* Mobile Music Control - Force Visibility for Fullscreen */
         @media (max-width: 768px) {
             .music-dock {
                 position: fixed !important;
@@ -3564,6 +3573,16 @@
                 display: flex !important;
                 transform: none !important;
             }
+            
+            /* Fullscreen mobile optimization */
+            body:fullscreen .music-dock,
+            body:-webkit-full-screen .music-dock,
+            body:-moz-full-screen .music-dock,
+            body:-ms-fullscreen .music-dock {
+                z-index: 999999 !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
         }
         
         /* Extra small mobile */
@@ -3576,6 +3595,44 @@
                 z-index: 999999 !important;
                 visibility: visible !important;
                 display: flex !important;
+            }
+        }
+        
+        /* Fullscreen optimizations for mobile */
+        :fullscreen {
+            height: 100dvh !important;
+            width: 100vw !important;
+        }
+        
+        :-webkit-full-screen {
+            height: 100dvh !important;
+            width: 100vw !important;
+        }
+        
+        :-moz-full-screen {
+            height: 100dvh !important;
+            width: 100vw !important;
+        }
+        
+        :-ms-fullscreen {
+            height: 100dvh !important;
+            width: 100vw !important;
+        }
+        
+        /* Mobile viewport optimization */
+        @supports (height: 100dvh) {
+            body {
+                height: 100dvh;
+                min-height: 100dvh;
+            }
+            
+            .cover-screen {
+                height: 100dvh;
+                min-height: 100dvh;
+            }
+            
+            main {
+                min-height: 100dvh;
             }
         }
 
@@ -6122,6 +6179,50 @@
             }
         }
         
+        // PWA Fullscreen Experience Function
+        function requestFullscreenExperience() {
+            console.log('Requesting fullscreen experience...');
+            
+            // Try different fullscreen APIs for browser compatibility
+            const element = document.documentElement;
+            
+            if (element.requestFullscreen) {
+                element.requestFullscreen().catch(err => {
+                    console.log('Fullscreen request failed:', err);
+                    handleFullscreenError();
+                });
+            } else if (element.webkitRequestFullscreen) { /* Safari */
+                element.webkitRequestFullscreen().catch(err => {
+                    console.log('Webkit fullscreen request failed:', err);
+                    handleFullscreenError();
+                });
+            } else if (element.msRequestFullscreen) { /* IE11 */
+                element.msRequestFullscreen().catch(err => {
+                    console.log('MS fullscreen request failed:', err);
+                    handleFullscreenError();
+                });
+            } else {
+                console.log('Fullscreen not supported');
+                handleFullscreenError();
+            }
+        }
+        
+        function handleFullscreenError() {
+            console.log('Fullscreen not available, continuing in normal mode');
+            // Fallback: ensure website still works perfectly without fullscreen
+            document.body.classList.add('no-fullscreen-support');
+        }
+        
+        function exitFullscreenExperience() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+        }
+        
         // Check if invitation can be opened (time lock system)
         function canOpenInvitation() {
             // Set the unlock date and time (adjust this to your preferred unlock time)
@@ -6698,6 +6799,9 @@
                     console.error('Required elements not found!');
                     return;
                 }
+                
+                // Request fullscreen for premium app-like experience
+                requestFullscreenExperience();
                 
                 // Hide cover screen with animation
                 coverScreen.style.opacity = '0';
