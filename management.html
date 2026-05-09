@@ -1746,7 +1746,7 @@ God bless you`;
 
             const url = `${GITHUB_CONFIG.apiBase}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}${path}`;
             const headers = {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `token ${token}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             };
