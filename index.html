@@ -687,23 +687,6 @@
                 scroll-behavior: auto !important;
             }
         }
-        
-        /* Hardware acceleration untuk elemen animasi */
-        .section,
-        .content-overlay,
-        .gallery-item,
-        .wish-item,
-        .parallax-element,
-        .scroll-progress,
-        .scroll-to-top {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-        
-        /* Desktop optimizations */
-        @media screen and (min-width: 769px) {
-            .music-arrow-trigger {
                 /* Desktop positioning */
                 right: 15px;
                 width: 30px;
@@ -883,8 +866,7 @@
             color: #ffffff;
             margin-bottom: 1rem;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 0.5s;
+            /* Old fadeInUp animation replaced by cinematic system */
             font-weight: 400;
             text-shadow: 
                 0 0 30px rgba(0,0,0,0.8),
@@ -903,8 +885,7 @@
             color: #ffffff;
             margin-bottom: 2rem;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 0.8s;
+            /* Old fadeInUp animation replaced by cinematic system */
             font-weight: 400;
             text-shadow: 
                 0 0 20px rgba(0,0,0,0.8),
@@ -922,8 +903,7 @@
             margin-bottom: 2rem;
             min-height: 3rem;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 1.1s;
+            /* Old fadeInUp animation replaced by cinematic system */
             font-weight: 700;
             text-shadow: 
                 0 0 30px rgba(0,0,0,0.8),
@@ -947,8 +927,7 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.4s ease;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 1.4s;
+            /* Old fadeInUp animation replaced by cinematic system */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
@@ -1095,8 +1074,7 @@
             font-size: 1.1rem;
             margin-bottom: 0.8rem;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 0.5s;
+            /* Old fadeInUp animation replaced by cinematic system */
         }
         
         .hero-names {
@@ -1105,8 +1083,7 @@
             align-items: center;
             margin: 2rem 0;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 0.8s;
+            /* Old fadeInUp animation replaced by cinematic system */
         }
         
         .groom-name, .bride-name {
@@ -1127,8 +1104,7 @@
             font-size: 0.8rem;
             color: #555;
             opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-            animation-delay: 1.1s;
+            /* Old fadeInUp animation replaced by cinematic system */
         }
         
         .event-info, .location-info {
@@ -1292,7 +1268,7 @@
             margin-bottom: 1rem;
             box-shadow: 0 2px 8px rgba(108, 92, 231, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            animation: fadeInUp 0.5s ease;
+            /* Old fadeInUp animation replaced by cinematic system */
         }
         
         .wish-item:hover {
@@ -1409,16 +1385,7 @@
             100% { opacity: 1; }
         }
         
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        /* Old fadeInUp keyframe removed - replaced by cinematic system */
         
         @keyframes elegantFadeIn {
             0% {
@@ -1475,14 +1442,7 @@
             }
         }
         
-        @keyframes parallaxFloat {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
+        /* Old parallaxFloat keyframe removed - replaced by cinematic system */
         
         /* Premium scrollbar styling */
         ::-webkit-scrollbar {
@@ -1503,34 +1463,9 @@
             background: linear-gradient(135deg, rgba(102,126,234,0.8), rgba(118,75,162,0.8));
         }
         
-        /* Parallax background elements */
-        .parallax-element {
-            position: fixed;
-            pointer-events: none;
-            opacity: 0.1;
-            animation: parallaxFloat 6s ease-in-out infinite;
-        }
+        /* Old parallax elements removed - replaced by cinematic system */
         
-        .parallax-1 {
-            top: 10%;
-            left: 10%;
-            font-size: 2rem;
-            animation-delay: 0s;
-        }
-        
-        .parallax-2 {
-            top: 20%;
-            right: 15%;
-            font-size: 1.5rem;
-            animation-delay: 2s;
-        }
-        
-        .parallax-3 {
-            bottom: 20%;
-            left: 20%;
-            font-size: 1.8rem;
-            animation-delay: 4s;
-        }
+        /* Old parallax classes removed - replaced by cinematic system */
         
         /* Scroll progress indicator */
         .scroll-progress {
@@ -1675,9 +1610,9 @@
         }
         
         .gallery-mini-item:hover {
-            transform: scale(1.05) translateY(-6px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            border-radius: 15px;
+            transform: scale(1.02) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-radius: 13px;
         }
         
         .gallery-item {
@@ -1734,31 +1669,19 @@
         }
         
         .gallery-item:hover::after {
-            animation: shimmer 0.6s ease;
+            /* Old shimmer animation replaced by cinematic system */
         }
         
         .gallery-item:hover {
-            transform: translateY(-8px) scale(1.05) rotate(-1deg);
-            box-shadow: 0 12px 30px rgba(108, 92, 231, 0.25);
-            border-color: rgba(108, 92, 231, 0.35);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.2);
+            border-color: rgba(108, 92, 231, 0.3);
             color: #4a148c;
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+            border-radius: 18px;
         }
         
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%) translateY(-100%) rotate(45deg);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100%) translateY(100%) rotate(45deg);
-                opacity: 0;
-            }
-        }
+        /* Old shimmer keyframe removed - replaced by cinematic system */
         
         .gallery-item .icon {
             font-size: 2.5rem;
@@ -1774,7 +1697,7 @@
         }
         
         .gallery-item:hover .icon {
-            transform: scale(1.15) rotate(8deg);
+            transform: scale(1.02) rotate(3deg);
             color: #5f3dc4;
             background: linear-gradient(135deg, #5f3dc4, #4a148c);
             -webkit-background-clip: text;
@@ -1891,13 +1814,10 @@
             align-items: center;
             justify-content: center;
             margin-top: 0.5rem;
-            animation: pulse 2s infinite;
+            /* Old pulse animation replaced by cinematic system */
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
+        /* Old pulse keyframe removed - replaced by cinematic system */
         
         .couple-info {
             display: flex;
@@ -2144,7 +2064,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: heartbeat 1.5s ease-in-out infinite;
+            /* Old heartbeat animation replaced by cinematic system */
         }
         
         .and-text {
@@ -2166,18 +2086,10 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 0.5rem;
-            animation: rotate 4s linear infinite;
+            /* Old rotate animation replaced by cinematic system */
         }
         
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* Old heartbeat and rotate keyframes removed - replaced by cinematic system */
         
         .thanks-message {
             background: linear-gradient(135deg, rgba(173, 216, 230, 0.95), rgba(135, 206, 235, 0.85), rgba(173, 216, 230, 0.95));
@@ -2200,7 +2112,7 @@
             width: 200%;
             height: 200%;
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent, rgba(173, 216, 230, 0.1), transparent);
-            animation: shimmer 4s infinite;
+            /* Old shimmer animation replaced by cinematic system */
         }
         
         .thanks-message::after {
@@ -2385,12 +2297,12 @@
         .gallery-item {
             opacity: 1;
             transform: none;
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .gallery-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
         
         /* Luxury animation variants */
@@ -2437,7 +2349,7 @@
         
         /* Reduced infinite animations for cinematic performance */
         .cover-title {
-            animation: fadeInUp 1s ease forwards;
+            /* Old fadeInUp animation replaced by cinematic system */
         }
         
         /* Old scroll animations removed - replaced by cinematic system */
@@ -3653,7 +3565,7 @@
         }
 
         .music-dock.is-playing .music-dock-main {
-            animation: musicPulse 1.8s ease-in-out infinite;
+            /* Old musicPulse animation replaced by cinematic system */
         }
 
         .music-dock.is-idle {
@@ -3792,13 +3704,13 @@
     <!-- Main Content -->
     <main class="container" id="mainContent" role="main">
         <!-- Section 1: Sampul -->
-        <section class="section" aria-labelledby="heroTitle">
+        <section class="section cinematic-reveal" aria-labelledby="heroTitle">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2 id="heroTitle" style="font-family: 'Great Vibes', cursive; font-size: 2.5rem; font-weight: 400; color: #333; text-align: center; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); letter-spacing: 2px;">Undangan Perkawinan</h2>
-                <div class="hero-names" style="color: #333; margin: 2rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-                    <div class="groom-name" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Adiaksa Anugrah Rante</div>
-                    <div class="and-symbol" style="font-size: 1.5rem; font-family: 'Dancing Script', cursive; margin: 0.8rem 0; color: #666; font-weight: 600;">&</div>
-                    <div class="bride-name" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Pdt. Fepprianti S.Th</div>
+                <h2 id="heroTitle" class="cinematic-reveal" style="font-family: 'Great Vibes', cursive; font-size: 2.5rem; font-weight: 400; color: #333; text-align: center; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); letter-spacing: 2px;">Undangan Perkawinan</h2>
+                <div class="hero-names cinematic-slide-left" style="color: #333; margin: 2rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <div class="groom-name cinematic-reveal" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Adiaksa Anugrah Rante</div>
+                    <div class="and-symbol cinematic-fade" style="font-size: 1.5rem; font-family: 'Dancing Script', cursive; margin: 0.8rem 0; color: #666; font-weight: 600;">&</div>
+                    <div class="bride-name cinematic-reveal" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Pdt. Fepprianti S.Th</div>
                 </div>
                 <p style="color: #555; margin-top: 1rem; font-weight: 400; font-family: 'Playfair Display', serif; letter-spacing: 1.5px; line-height: 1.8; font-style: italic;">
                     Jumat, 26 Juni 2026<br>
@@ -3829,9 +3741,9 @@
         </section>
 
         <!-- Section 2: Cover -->
-        <section class="section">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px); padding: 1rem;">
-                <h2 style="margin-top: 0; margin-bottom: 1rem;">Firman TUHAN</h2>
+        <section class="section cinematic-slide-left">
+            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px); padding: 1rem;">
+                <h2 class="cinematic-reveal" style="margin-top: 0; margin-bottom: 1rem;">Firman TUHAN</h2>
                 <p style="margin: 0 0 0.5rem 0;">
                     "Taruhlah aku seperti meterai pada hatimu,<br>
                     seperti meterai pada lenganmu,<br>
@@ -3843,16 +3755,16 @@
         </section>
 
         <!-- Section 3: Waktu Acara -->
-        <section class="section">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2>Waktu & Tempat</h2>
+        <section class="section cinematic-reveal">
+            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+                <h2 class="cinematic-reveal">Waktu & Tempat</h2>
                 <div class="event-info">
-                    <div class="event-item">
-                        <h3>Pemberkatan</h3>
+                    <div class="event-item cinematic-slide-left">
+                        <h3 class="cinematic-fade">Pemberkatan</h3>
                         <p>Jumat, 26 Juni 2026<br>09.00 - Selesai WITA<br>Gereja Toraja Jemaat Bua Tallulolo</p>
                     </div>
-                    <div class="event-item">
-                        <h3>Resepsi</h3>
+                    <div class="event-item cinematic-slide-right">
+                        <h3 class="cinematic-fade">Resepsi</h3>
                         <p>Jumat, 26 Juni 2026<br>13.00 - Selesai<br>Ballroom D'Rij Hotel & Convention</p>
                     </div>
                 </div>
@@ -3860,9 +3772,9 @@
         </section>
 
         <!-- Section 4: Lokasi -->
-        <section class="section">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2>Lokasi Acara</h2>
+        <section class="section cinematic-slide-right">
+            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+                <h2 class="cinematic-reveal">Lokasi Acara</h2>
                 <div class="location-info">
                     <div class="location-item">
                         <h4>Gereja Toraja Jemaat Bua Tallulolo</h4>
@@ -3879,7 +3791,7 @@
         </section>
 
         <!-- Section 5: Acara -->
-        <section class="section">
+        <section class="section cinematic-reveal">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
                 <h2>Detail Acara</h2>
                 <div class="event-details">
@@ -3901,7 +3813,7 @@
 
         
         <!-- Section 6: Galeri -->
-        <section class="section">
+        <section class="section cinematic-fade">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
                 <h2>Galeri Foto</h2>
                 <div class="gallery-grid">
@@ -3930,7 +3842,7 @@
         </section>
 
         <!-- Section 7: Mempelai -->
-        <section class="section">
+        <section class="section cinematic-slide-left">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
                 <h2>Mempelai</h2>
                 <div class="couple-info">
@@ -3970,7 +3882,7 @@
         </section>
 
         <!-- Section 8: Ucapan & Doa -->
-        <section class="section">
+        <section class="section cinematic-reveal">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
                 <div class="wishes-form">
                     <h2>Ucapan & Doa</h2>
@@ -4004,7 +3916,7 @@
         </section>
 
         <!-- Section 9: Wedding Gift -->
-        <section class="section">
+        <section class="section cinematic-slide-right">
             <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
                 <h2>Wedding Gift</h2>
                 <div class="gift-container">
@@ -4040,7 +3952,7 @@
         </section>
 
         <!-- Section 10: Penutup -->
-        <section class="section">
+        <section class="section cinematic-fade">
             <div class="thanks-message">
                 <div class="decorative-icon icon-hearts"></div>
                 <h2>Terima Kasih</h2>
@@ -5480,19 +5392,12 @@
             // Show premium loading placeholder
             photoElement.innerHTML = `
                 <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,255,255,0.05)); border-radius: 50%; border: 2px dashed rgba(255,215,0,0.3); position: relative; overflow: hidden;">
-                    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.1) 50%, transparent 70%); animation: shimmer 2s infinite;"></div>
-                    <div style="width: 32px; height: 32px; border: 3px solid rgba(255,215,0,0.2); border-top: 3px solid #FFD700; border-radius: 50%; animation: premiumSpin 1s linear infinite; margin-bottom: 8px; position: relative; z-index: 1;"></div>
+                    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.1) 50%, transparent 70%); /* Old shimmer animation replaced by cinematic system */"></div>
+                    <div style="width: 32px; height: 32px; border: 3px solid rgba(255,215,0,0.2); border-top: 3px solid #FFD700; border-radius: 50%; /* Old premiumSpin animation replaced by cinematic system */ margin-bottom: 8px; position: relative; z-index: 1;"></div>
                     <div style="color: rgba(255,215,0,0.8); font-size: 0.7rem; font-weight: 500; position: relative; z-index: 1;">Loading...</div>
                 </div>
                 <style>
-                    @keyframes premiumSpin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                    @keyframes shimmer {
-                        0% { transform: translateX(-100%); }
-                        100% { transform: translateX(100%); }
-                    }
+                    /* Old premiumSpin and shimmer keyframes removed - replaced by cinematic system */
                 </style>
             `;
             
@@ -7634,7 +7539,6 @@
                 
                 if (!isReducedMotion) {
                     initCinematicAnimations();
-                    initCinematicScrollAnimations();
                 }
             });
             
@@ -7647,7 +7551,7 @@
                 
                 setTimeout(() => {
                     if (!isReducedMotion) {
-                        initCinematicScrollAnimations();
+                        initCinematicAnimations();
                     }
                 }, 600);
             };
