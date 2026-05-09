@@ -216,8 +216,8 @@
         .cinematic-reveal {
             opacity: 0;
             transform: translateY(30px);
-            filter: blur(6px);
-            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: blur(0.5px);
+            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .cinematic-reveal.visible {
@@ -229,8 +229,8 @@
         .cinematic-slide-left {
             opacity: 0;
             transform: translateX(-40px);
-            filter: blur(4px);
-            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: blur(0.5px);
+            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .cinematic-slide-left.visible {
@@ -242,8 +242,8 @@
         .cinematic-slide-right {
             opacity: 0;
             transform: translateX(40px);
-            filter: blur(4px);
-            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: blur(0.5px);
+            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .cinematic-slide-right.visible {
@@ -254,8 +254,8 @@
         
         .cinematic-fade {
             opacity: 0;
-            filter: blur(3px);
-            transition: all 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: blur(0.3px);
+            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .cinematic-fade.visible {
@@ -847,7 +847,7 @@
             width: 100%;
             height: 100%;
             background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(0.5px);
         }
         
         .cover-content {
@@ -877,6 +877,7 @@
             letter-spacing: 4px;
             text-transform: none;
             line-height: 1.2;
+            backdrop-filter: blur(1px);
         }
         
         .cover-subtitle {
@@ -926,12 +927,12 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
             /* Old fadeInUp animation replaced by cinematic system */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(1px);
             text-shadow: 
                 0 0 15px rgba(255,255,255,0.9),
                 0 0 30px rgba(255,255,255,0.7),
@@ -997,7 +998,7 @@
             box-sizing: border-box;
             opacity: 1;
             transform: translateY(0);
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             /* Background transparent untuk menampilkan background.jpg yang fixed */
             background: transparent;
             background-color: transparent;
@@ -1023,7 +1024,7 @@
             width: 90%;
             max-width: 90vw;
             background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(2px);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             border: none;
@@ -1043,7 +1044,7 @@
             padding: 1rem;
             color: #333;
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(0.5px);
             border-radius: 20px;
             width: 90%;
             max-width: 90vw;
@@ -1309,7 +1310,7 @@
             0% {
                 opacity: 0;
                 transform: translateY(30px);
-                filter: blur(4px);
+                filter: blur(0.5px);
             }
             100% {
                 opacity: 1;
@@ -1322,7 +1323,7 @@
             0% {
                 opacity: 0;
                 transform: translateX(-30px);
-                filter: blur(3px);
+                filter: blur(0.5px);
             }
             100% {
                 opacity: 1;
@@ -1335,7 +1336,7 @@
             0% {
                 opacity: 0;
                 transform: translateX(30px);
-                filter: blur(3px);
+                filter: blur(0.5px);
             }
             100% {
                 opacity: 1;
@@ -1348,7 +1349,7 @@
             0% {
                 opacity: 0;
                 transform: translateY(40px) scale(0.95);
-                filter: blur(3px);
+                filter: blur(0.5px);
             }
             100% {
                 opacity: 1;
@@ -1391,10 +1392,10 @@
             0% {
                 opacity: 0;
                 transform: translateY(60px) scale(0.95);
-                filter: blur(10px);
+                filter: blur(1px);
             }
             50% {
-                filter: blur(5px);
+                filter: blur(0.5px);
             }
             100% {
                 opacity: 1;
@@ -1530,7 +1531,7 @@
             padding: 1rem;
             border-radius: 20px;
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(0.5px);
             /* No scrolling - natural height */
             overflow: visible;
         }
@@ -1588,7 +1589,7 @@
             padding: 1.5rem;
             border-radius: 20px;
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(0.5px);
             scrollbar-width: thin;
             scrollbar-color: rgba(108, 92, 231, 0.3) transparent;
         }
@@ -1598,7 +1599,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             cursor: pointer;
             background: linear-gradient(135deg, #667eea, #764ba2);
             transform: scale(1);
@@ -1625,12 +1626,12 @@
             font-weight: 600;
             color: #5f3dc4;
             box-shadow: 0 6px 20px rgba(108, 92, 231, 0.12);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 0.9rem;
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(1px);
             min-height: 160px;
             display: flex;
             flex-direction: column;
@@ -1833,10 +1834,10 @@
             border: 3px solid rgba(255,215,0,0.3);
             overflow: hidden;
             position: relative;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 8px rgba(255,215,0,0.3);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(1px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: block;
             flex-shrink: 0;
         }
@@ -1850,14 +1851,14 @@
             box-shadow: 0 12px 40px rgba(255,215,0,0.25), 0 6px 20px rgba(255,215,0,0.15), inset 0 2px 0 rgba(255,255,255,0.4);
             position: relative;
             overflow: visible;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-width: 320px;
             max-width: 380px;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(1px);
         }
         
         .couple-item::before {
@@ -2309,8 +2310,8 @@
         .luxury-fade-up {
             opacity: 0;
             transform: translateY(60px) scale(0.95);
-            filter: blur(10px);
-            transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+            filter: blur(1px);
+            transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
         /* Staggered animations for sequential elements */
         .stagger-1 { transition-delay: 0.1s; }
