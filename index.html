@@ -3469,11 +3469,11 @@
 
 
 
-        /* Simple Music Control for Mobile */
+        /* Upgraded Music Control for Mobile - Minimal & Non-Intrusive */
         .music-dock {
             position: fixed !important;
-            right: 20px !important;
-            bottom: 20px !important;
+            right: 20px;
+            bottom: 80px;
             z-index: 999999 !important;
             display: flex !important;
             align-items: center;
@@ -3486,7 +3486,19 @@
             opacity: 1 !important;
             visibility: visible !important;
             pointer-events: auto !important;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        /* Auto-hide state */
+        .music-dock.auto-hide {
+            opacity: 0.35;
+            transform: translateX(20px);
+        }
+        
+        /* Active state */
+        .music-dock.active {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .music-dock-btn {
@@ -3551,18 +3563,28 @@
             transform: translate3d(0, 0, 0) scale(1);
         }
         
-        /* Mobile Music Control - Force Visibility for Fullscreen */
+        /* Mobile Music Control - Auto-Hide & Enhanced Visibility */
         @media (max-width: 768px) {
             .music-dock {
                 position: fixed !important;
                 right: 15px !important;
-                bottom: max(15px, env(safe-area-inset-bottom)) !important;
+                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
                 opacity: 1 !important;
                 z-index: 999999 !important;
                 pointer-events: auto !important;
                 visibility: visible !important;
                 display: flex !important;
                 transform: none !important;
+            }
+            
+            .music-dock.auto-hide {
+                opacity: 0.35 !important;
+                transform: translateX(20px) !important;
+            }
+            
+            .music-dock.active {
+                opacity: 1 !important;
+                transform: translateX(0) !important;
             }
             
             .music-dock.is-idle,
@@ -3582,6 +3604,7 @@
                 z-index: 999999 !important;
                 opacity: 1 !important;
                 visibility: visible !important;
+                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
             }
         }
         
@@ -3590,7 +3613,7 @@
             .music-dock {
                 position: fixed !important;
                 right: 10px !important;
-                bottom: max(10px, env(safe-area-inset-bottom)) !important;
+                bottom: calc(80px + env(safe-area-inset-bottom)) !important;
                 opacity: 1 !important;
                 z-index: 999999 !important;
                 visibility: visible !important;
@@ -6223,6 +6246,97 @@
             }
         }
         
+        // Upgraded Music Button Auto-Hide System
+        let musicAutoHideTimer = null;
+        let isMusicDockActive = false;
+        
+        function initMusicAutoHide() {
+            const musicDock = document.getElementById('musicDock');
+            if (!musicDock) return;
+            
+            // Show music dock initially for a few seconds
+            showMusicDockTemporarily();
+            
+            // Add event listeners for user interactions
+            document.addEventListener('scroll', handleUserInteraction);
+            document.addEventListener('touchstart', handleUserInteraction);
+            document.addEventListener('touchmove', handleUserInteraction);
+            document.addEventListener('mousedown', handleUserInteraction);
+            document.addEventListener('mousemove', handleUserInteraction);
+            document.addEventListener('click', handleUserInteraction);
+            
+            // Music dock specific interactions
+            musicDock.addEventListener('mouseenter', handleMusicDockHover);
+            musicDock.addEventListener('mouseleave', handleMusicDockLeave);
+            musicDock.addEventListener('touchstart', handleMusicDockTouch);
+        }
+        
+        function handleUserInteraction() {
+            showMusicDockTemporarily();
+        }
+        
+        function handleMusicDockHover() {
+            showMusicDockTemporarily();
+        }
+        
+        function handleMusicDockLeave() {
+            scheduleMusicAutoHide();
+        }
+        
+        function handleMusicDockTouch() {
+            showMusicDockTemporarily();
+        }
+        
+        function showMusicDockTemporarily() {
+            const musicDock = document.getElementById('musicDock');
+            if (!musicDock) return;
+            
+            // Clear existing timer
+            if (musicAutoHideTimer) {
+                clearTimeout(musicAutoHideTimer);
+            }
+            
+            // Show music dock
+            musicDock.classList.remove('auto-hide');
+            musicDock.classList.add('active');
+            isMusicDockActive = true;
+            
+            // Schedule auto-hide after 3 seconds of inactivity
+            scheduleMusicAutoHide();
+        }
+        
+        function scheduleMusicAutoHide() {
+            // Clear existing timer
+            if (musicAutoHideTimer) {
+                clearTimeout(musicAutoHideTimer);
+            }
+            
+            // Schedule auto-hide
+            musicAutoHideTimer = setTimeout(() => {
+                const musicDock = document.getElementById('musicDock');
+                if (musicDock && !isMusicDockActive) {
+                    musicDock.classList.add('auto-hide');
+                    musicDock.classList.remove('active');
+                }
+            }, 3000); // 3 seconds
+        }
+        
+        function hideMusicDock() {
+            const musicDock = document.getElementById('musicDock');
+            if (musicDock) {
+                musicDock.classList.add('auto-hide');
+                musicDock.classList.remove('active');
+            }
+        }
+        
+        function showMusicDock() {
+            const musicDock = document.getElementById('musicDock');
+            if (musicDock) {
+                musicDock.classList.remove('auto-hide');
+                musicDock.classList.add('active');
+            }
+        }
+        
         // Check if invitation can be opened (time lock system)
         function canOpenInvitation() {
             // Set the unlock date and time (adjust this to your preferred unlock time)
@@ -7890,6 +8004,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initSmartMusicDock();
             initCopyButtons();
+            initMusicAutoHide();
             
             // Fix mobile background
             fixMobileBackground();
