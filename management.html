@@ -320,7 +320,10 @@
             padding: 20px;
             margin: 20px 0;
             min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
             white-space: pre-wrap;
+            word-wrap: break-word;
             font-family: 'Courier New', monospace;
             font-size: 14px;
             line-height: 1.6;
@@ -1036,7 +1039,7 @@
         function createSecureInvitationLink(guestName) {
             const token = generateUniqueToken(guestName);
             const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            return `index.html?to=${normalizedName}-${token}`;
+            return `https://uggafeppri.my.id?to=${normalizedName}-${token}`;
         }
 
         function nameToDomain(name) {
@@ -1349,7 +1352,6 @@ God bless you`;
             CONFIG.WEB_APP_URL,
             {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
                     'Content-Type':
                     'application/x-www-form-urlencoded'
@@ -1708,12 +1710,12 @@ God bless you`;
 
         // Settings Functions
         function openInvitationPage() {
-            const invitationUrl = window.location.origin + window.location.pathname.replace('management.html', 'index.html') + '?admin=kawinkawin';
+            const invitationUrl = 'https://uggafeppri.my.id?admin=kawinkawin';
             window.open(invitationUrl, '_blank');
         }
 
         function previewInvitation() {
-            window.open('index.html', '_blank');
+            window.open('https://uggafeppri.my.id', '_blank');
         }
     // GitHub API Configuration
         const GITHUB_CONFIG = {
