@@ -212,55 +212,49 @@
             scroll-behavior: smooth;
         }
         
-        /* Luxury Cinematic Minimal Animation System */
-        .cinematic-reveal {
+        /* Simple Elegant Scroll Animation System */
+        .fade-in {
             opacity: 0;
-            transform: translateY(30px);
-            filter: blur(0.5px);
-            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
         
-        .cinematic-reveal.visible {
+        .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
-            filter: blur(0);
         }
         
-        .cinematic-slide-left {
+        .slide-left {
             opacity: 0;
-            transform: translateX(-40px);
-            filter: blur(0.5px);
-            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(-30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
         
-        .cinematic-slide-left.visible {
+        .slide-left.visible {
             opacity: 1;
             transform: translateX(0);
-            filter: blur(0);
         }
         
-        .cinematic-slide-right {
+        .slide-right {
             opacity: 0;
-            transform: translateX(40px);
-            filter: blur(0.5px);
-            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
         
-        .cinematic-slide-right.visible {
+        .slide-right.visible {
             opacity: 1;
             transform: translateX(0);
-            filter: blur(0);
         }
         
-        .cinematic-fade {
+        .smooth-reveal {
             opacity: 0;
-            filter: blur(0.3px);
-            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(15px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
         
-        .cinematic-fade.visible {
+        .smooth-reveal.visible {
             opacity: 1;
-            filter: blur(0);
+            transform: translateY(0);
         }
         
         /* Stagger Animation Delays */
@@ -847,7 +841,6 @@
             width: 100%;
             height: 100%;
             background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(0.5px);
         }
         
         .cover-content {
@@ -865,8 +858,7 @@
             font-size: 3.5rem;
             color: #ffffff;
             margin-bottom: 1rem;
-            opacity: 0;
-            /* Old fadeInUp animation replaced by cinematic system */
+            opacity: 1;
             font-weight: 400;
             text-shadow: 
                 0 0 30px rgba(0,0,0,0.8),
@@ -877,7 +869,6 @@
             letter-spacing: 4px;
             text-transform: none;
             line-height: 1.2;
-            backdrop-filter: blur(1px);
         }
         
         .cover-subtitle {
@@ -885,8 +876,7 @@
             font-size: 1.4rem;
             color: #ffffff;
             margin-bottom: 2rem;
-            opacity: 0;
-            /* Old fadeInUp animation replaced by cinematic system */
+            opacity: 1;
             font-weight: 400;
             text-shadow: 
                 0 0 20px rgba(0,0,0,0.8),
@@ -903,8 +893,7 @@
             color: #ffffff;
             margin-bottom: 2rem;
             min-height: 3rem;
-            opacity: 0;
-            /* Old fadeInUp animation replaced by cinematic system */
+            opacity: 1;
             font-weight: 700;
             text-shadow: 
                 0 0 30px rgba(0,0,0,0.8),
@@ -927,12 +916,10 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            /* Old fadeInUp animation replaced by cinematic system */
+            opacity: 1;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            backdrop-filter: blur(1px);
             text-shadow: 
                 0 0 15px rgba(255,255,255,0.9),
                 0 0 30px rgba(255,255,255,0.7),
@@ -1024,7 +1011,6 @@
             width: 90%;
             max-width: 90vw;
             background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(2px);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             border: none;
@@ -1044,7 +1030,6 @@
             padding: 1rem;
             color: #333;
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(0.5px);
             border-radius: 20px;
             width: 90%;
             max-width: 90vw;
@@ -1201,7 +1186,6 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(5px);
         }
         
         .form-group textarea {
@@ -1531,7 +1515,6 @@
             padding: 1rem;
             border-radius: 20px;
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(0.5px);
             /* No scrolling - natural height */
             overflow: visible;
         }
@@ -1589,7 +1572,6 @@
             padding: 1.5rem;
             border-radius: 20px;
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(0.5px);
             scrollbar-width: thin;
             scrollbar-color: rgba(108, 92, 231, 0.3) transparent;
         }
@@ -1631,7 +1613,6 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            backdrop-filter: blur(1px);
             min-height: 160px;
             display: flex;
             flex-direction: column;
@@ -1835,7 +1816,6 @@
             overflow: hidden;
             position: relative;
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(1px);
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: block;
@@ -1858,7 +1838,6 @@
             justify-content: flex-start;
             min-width: 320px;
             max-width: 380px;
-            backdrop-filter: blur(1px);
         }
         
         .couple-item::before {
@@ -2197,7 +2176,6 @@
             width: 50px;
             height: 50px;
             background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -2256,7 +2234,6 @@
         
         .event-item {
             background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 15px;
             padding: 1.5rem;
@@ -2384,7 +2361,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
             position: relative;
             overflow: hidden;
         }
@@ -2448,8 +2424,7 @@
             background: rgba(0,0,0,0.8);
             padding: 8px 12px;
             border-radius: 25px;
-            backdrop-filter: blur(10px);
-            /* Hidden by default */
+                        /* Hidden by default */
             /* Tipiskan styling */
             box-shadow: 
                 0 0 20px rgba(0,0,0,0.3),
@@ -2498,8 +2473,7 @@
             background: rgba(255,255,255,0.15);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
-            backdrop-filter: blur(10px);
-            /* Enhanced styling untuk mobile visibility */
+                        /* Enhanced styling untuk mobile visibility */
             box-shadow: 
                 0 4px 15px rgba(0,0,0,0.3),
                 0 0 25px rgba(102,126,234,0.2),
@@ -3247,8 +3221,7 @@
         
         .cover-screen::before {
             background: linear-gradient(180deg, rgba(25,22,20,0.34), rgba(60,38,33,0.18), rgba(25,22,20,0.46)) !important;
-            backdrop-filter: blur(1.5px) saturate(1.05) !important;
-        }
+                    }
 
         .cover-content {
             width: min(88vw, 360px) !important;
@@ -3257,7 +3230,6 @@
             border-radius: 28px;
             background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.07));
             box-shadow: 0 24px 70px rgba(0,0,0,0.28);
-            backdrop-filter: blur(5px);
         }
 
         .cover-title {
@@ -3325,8 +3297,7 @@
             background: var(--paper) !important;
             border: 1px solid rgba(185,139,47,0.22) !important;
             box-shadow: var(--shadow-soft) !important;
-            backdrop-filter: blur(7px) saturate(1.05) !important;
-        }
+                                }
 
         .content-overlay h2,
         .thanks-message h2 {
@@ -3522,8 +3493,7 @@
             background: rgba(36, 30, 29, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.24);
             box-shadow: 0 12px 34px rgba(0,0,0,0.28);
-            backdrop-filter: blur(14px) saturate(1.1);
-            transform: translate3d(0, 0, 0);
+                                    transform: translate3d(0, 0, 0);
             opacity: 1;
             transition: opacity 0.35s ease, transform 0.35s ease, padding 0.35s ease, background 0.35s ease;
         }
@@ -3571,9 +3541,9 @@
 
         .music-dock.is-idle {
             padding: 4px;
-            opacity: 0.34;
-            background: rgba(36, 30, 29, 0.42);
-            transform: translate3d(8px, 0, 0) scale(0.92);
+            opacity: 0.8;
+            background: rgba(36, 30, 29, 0.72);
+            transform: translate3d(0, 0, 0) scale(0.92);
         }
 
         .music-dock.is-idle .music-dock-secondary {
@@ -3588,6 +3558,20 @@
         .music-dock.is-idle:focus-within {
             opacity: 1;
             transform: translate3d(0, 0, 0) scale(1);
+        }
+        
+        /* Ensure music dock is always visible on mobile */
+        @media (max-width: 768px) {
+            .music-dock {
+                opacity: 1 !important;
+                z-index: 100002 !important;
+                pointer-events: auto !important;
+            }
+            
+            .music-dock.is-idle {
+                opacity: 0.9 !important;
+                transform: translate3d(0, 0, 0) scale(0.95) !important;
+            }
         }
 
         .music-dock.is-hidden {
@@ -3705,13 +3689,13 @@
     <!-- Main Content -->
     <main class="container" id="mainContent" role="main">
         <!-- Section 1: Sampul -->
-        <section class="section cinematic-reveal" aria-labelledby="heroTitle">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2 id="heroTitle" class="cinematic-reveal" style="font-family: 'Great Vibes', cursive; font-size: 2.5rem; font-weight: 400; color: #333; text-align: center; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); letter-spacing: 2px;">Undangan Perkawinan</h2>
-                <div class="hero-names cinematic-slide-left" style="color: #333; margin: 2rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-                    <div class="groom-name cinematic-reveal" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Adiaksa Anugrah Rante</div>
-                    <div class="and-symbol cinematic-fade" style="font-size: 1.5rem; font-family: 'Dancing Script', cursive; margin: 0.8rem 0; color: #666; font-weight: 600;">&</div>
-                    <div class="bride-name cinematic-reveal" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Pdt. Fepprianti S.Th</div>
+        <section class="section fade-in" aria-labelledby="heroTitle">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
+                <h2 id="heroTitle" class="fade-in" style="font-family: 'Great Vibes', cursive; font-size: 2.5rem; font-weight: 400; color: #333; text-align: center; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); letter-spacing: 2px;">Undangan Perkawinan</h2>
+                <div class="hero-names slide-left" style="color: #333; margin: 2rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <div class="groom-name fade-in" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Adiaksa Anugrah Rante</div>
+                    <div class="and-symbol smooth-reveal" style="font-size: 1.5rem; font-family: 'Dancing Script', cursive; margin: 0.8rem 0; color: #666; font-weight: 600;">&</div>
+                    <div class="bride-name fade-in" style="font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; text-align: center; line-height: 1.2; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); letter-spacing: 1px;">Pdt. Fepprianti S.Th</div>
                 </div>
                 <p style="color: #555; margin-top: 1rem; font-weight: 400; font-family: 'Playfair Display', serif; letter-spacing: 1.5px; line-height: 1.8; font-style: italic;">
                     Jumat, 26 Juni 2026<br>
@@ -3720,19 +3704,19 @@
                 <div class="countdown-container" style="margin-top: 1.5rem; text-align: center; cursor: pointer;" onclick="addToCalendar()" role="button" tabindex="0" aria-label="Klik untuk menambahkan acara ke kalender">
                     <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.8rem; font-family: 'Playfair Display', serif; font-style: italic;">Klik untuk Mengingatkan</div>
                     <div id="countdown" style="display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap;" role="timer" aria-live="polite">
-                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));  border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div id="days" style="font-size: 1.2rem; font-weight: 800; color: #333; line-height: 1;" aria-label="Hari">00</div>
                             <div style="font-size: 0.6rem; color: #666; opacity: 0.9; margin-top: 0.2rem; font-weight: 500;">HARI</div>
                         </div>
-                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));  border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div id="hours" style="font-size: 1.2rem; font-weight: 800; color: #333; line-height: 1;" aria-label="Jam">00</div>
                             <div style="font-size: 0.6rem; color: #666; opacity: 0.9; margin-top: 0.2rem; font-weight: 500;">JAM</div>
                         </div>
-                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));  border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div id="minutes" style="font-size: 1.2rem; font-weight: 800; color: #333; line-height: 1;" aria-label="Menit">00</div>
                             <div style="font-size: 0.6rem; color: #666; opacity: 0.9; margin-top: 0.2rem; font-weight: 500;">MENIT</div>
                         </div>
-                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="countdown-item" style="background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));  border: 1px solid rgba(255,255,255,0.2); padding: 0.6rem; border-radius: 12px; min-width: 45px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <div id="seconds" style="font-size: 1.2rem; font-weight: 800; color: #333; line-height: 1;" aria-label="Detik">00</div>
                             <div style="font-size: 0.6rem; color: #666; opacity: 0.9; margin-top: 0.2rem; font-weight: 500;">DETIK</div>
                         </div>
@@ -3742,9 +3726,9 @@
         </section>
 
         <!-- Section 2: Cover -->
-        <section class="section cinematic-slide-left">
-            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px); padding: 1rem;">
-                <h2 class="cinematic-reveal" style="margin-top: 0; margin-bottom: 1rem;">Firman TUHAN</h2>
+        <section class="section slide-left">
+            <div class="content-overlay smooth-reveal" style="background-color: rgba(255,255,255,0.7);  padding: 1rem;">
+                <h2 class="fade-in" style="margin-top: 0; margin-bottom: 1rem;">Firman TUHAN</h2>
                 <p style="margin: 0 0 0.5rem 0;">
                     "Taruhlah aku seperti meterai pada hatimu,<br>
                     seperti meterai pada lenganmu,<br>
@@ -3756,16 +3740,16 @@
         </section>
 
         <!-- Section 3: Waktu Acara -->
-        <section class="section cinematic-reveal">
-            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2 class="cinematic-reveal">Waktu & Tempat</h2>
+        <section class="section fade-in">
+            <div class="content-overlay smooth-reveal" style="background-color: rgba(255,255,255,0.7); ">
+                <h2 class="fade-in">Waktu & Tempat</h2>
                 <div class="event-info">
-                    <div class="event-item cinematic-slide-left">
-                        <h3 class="cinematic-fade">Pemberkatan</h3>
+                    <div class="event-item slide-left">
+                        <h3 class="smooth-reveal">Pemberkatan</h3>
                         <p>Jumat, 26 Juni 2026<br>09.00 - Selesai WITA<br>Gereja Toraja Jemaat Bua Tallulolo</p>
                     </div>
-                    <div class="event-item cinematic-slide-right">
-                        <h3 class="cinematic-fade">Resepsi</h3>
+                    <div class="event-item slide-right">
+                        <h3 class="smooth-reveal">Resepsi</h3>
                         <p>Jumat, 26 Juni 2026<br>13.00 - Selesai<br>Ballroom D'Rij Hotel & Convention</p>
                     </div>
                 </div>
@@ -3773,9 +3757,9 @@
         </section>
 
         <!-- Section 4: Lokasi -->
-        <section class="section cinematic-slide-right">
-            <div class="content-overlay cinematic-fade" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
-                <h2 class="cinematic-reveal">Lokasi Acara</h2>
+        <section class="section slide-right">
+            <div class="content-overlay smooth-reveal" style="background-color: rgba(255,255,255,0.7); ">
+                <h2 class="fade-in">Lokasi Acara</h2>
                 <div class="location-info">
                     <div class="location-item">
                         <h4>Gereja Toraja Jemaat Bua Tallulolo</h4>
@@ -3792,8 +3776,8 @@
         </section>
 
         <!-- Section 5: Acara -->
-        <section class="section cinematic-reveal">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+        <section class="section fade-in">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
                 <h2>Detail Acara</h2>
                 <div class="event-details">
                     <div class="event-item">
@@ -3814,8 +3798,8 @@
 
         
         <!-- Section 6: Galeri -->
-        <section class="section cinematic-fade">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+        <section class="section smooth-reveal">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
                 <h2>Galeri Foto</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item" onclick="openSimpleGallery('prewedding')">
@@ -3843,8 +3827,8 @@
         </section>
 
         <!-- Section 7: Mempelai -->
-        <section class="section cinematic-slide-left">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+        <section class="section slide-left">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
                 <h2>Mempelai</h2>
                 <div class="couple-info">
                     <div class="couple-item">
@@ -3883,8 +3867,8 @@
         </section>
 
         <!-- Section 8: Ucapan & Doa -->
-        <section class="section cinematic-reveal">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+        <section class="section fade-in">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
                 <div class="wishes-form">
                     <h2>Ucapan & Doa</h2>
                     <form onsubmit="submitCombinedForm(event)">
@@ -3917,8 +3901,8 @@
         </section>
 
         <!-- Section 9: Wedding Gift -->
-        <section class="section cinematic-slide-right">
-            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); backdrop-filter: blur(2px);">
+        <section class="section slide-right">
+            <div class="content-overlay" style="background-color: rgba(255,255,255,0.7); ">
                 <h2>Wedding Gift</h2>
                 <div class="gift-container">
                     <div class="gift-item">
@@ -3953,7 +3937,7 @@
         </section>
 
         <!-- Section 10: Penutup -->
-        <section class="section cinematic-fade">
+        <section class="section smooth-reveal">
             <div class="thanks-message">
                 <div class="decorative-icon icon-hearts"></div>
                 <h2>Terima Kasih</h2>
@@ -4977,8 +4961,7 @@
                 z-index: 99999;
                 box-shadow: 0 4px 20px rgba(255,215,0,0.2);
                 animation: slideInRight 0.4s ease;
-                backdrop-filter: blur(10px);
-            `;
+                            `;
             notification.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <div style="font-size: 1rem;">📸</div>
@@ -5867,8 +5850,7 @@
                 font-family: 'Montserrat', sans-serif;
                 font-size: 0.9rem;
                 z-index: 100001;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                                border: 1px solid rgba(255, 255, 255, 0.1);
                 animation: slideIn 0.3s ease-out;
             `;
             notification.innerHTML = `
@@ -5905,8 +5887,7 @@
                 font-family: 'Montserrat', sans-serif;
                 font-size: 0.8rem;
                 cursor: pointer;
-                backdrop-filter: blur(10px);
-                transition: all 0.3s ease;
+                                transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
                 gap: 6px;
@@ -6021,7 +6002,7 @@
             // Add cinematic animation classes to main content elements
             const contentElements = document.querySelectorAll('.content-overlay, .overlay-text, .thanks-message');
             contentElements.forEach((element, index) => {
-                element.classList.add('cinematic-fade');
+                element.classList.add('smooth-reveal');
                 // Add staggered delay for cinematic effect
                 element.style.transitionDelay = `${index * 0.15}s`;
             });
@@ -6029,28 +6010,28 @@
             // Add cinematic animations to event items
             const eventItems = document.querySelectorAll('.event-item');
             eventItems.forEach((element, index) => {
-                element.classList.add('cinematic-reveal');
+                element.classList.add('fade-in');
                 element.style.transitionDelay = `${index * 0.2}s`;
             });
             
             // Add cinematic animations to couple photos
             const couplePhotos = document.querySelectorAll('.couple-photo');
             couplePhotos.forEach((element, index) => {
-                element.classList.add('cinematic-slide-left');
+                element.classList.add('slide-left');
                 element.style.transitionDelay = `${index * 0.15}s`;
             });
             
             // Add cinematic animations to gallery items
             const galleryItems = document.querySelectorAll('.gallery-item');
             galleryItems.forEach((element, index) => {
-                element.classList.add('cinematic-fade');
+                element.classList.add('smooth-reveal');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
             // Add cinematic animations to countdown items
             const countdownItems = document.querySelectorAll('.countdown-item');
             countdownItems.forEach((element, index) => {
-                element.classList.add('cinematic-reveal');
+                element.classList.add('fade-in');
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
             
@@ -7425,20 +7406,20 @@
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
                             const section = entry.target;
-                            const elements = section.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade, h2, h3, p, img, button, .event-item, .wish-item, .couple-photo');
+                            const elements = section.querySelectorAll('.fade-in, .slide-left, .slide-right, .smooth-reveal, h2, h3, p, img, button, .event-item, .wish-item, .couple-photo');
                             
                             elements.forEach((element, elementIndex) => {
                                 setTimeout(() => {
                                     element.classList.add('visible');
                                     
-                                    // Add stagger classes for cinematic reveal
-                                    if (element.classList.contains('cinematic-reveal') || 
-                                        element.classList.contains('cinematic-slide-left') || 
-                                        element.classList.contains('cinematic-slide-right') ||
-                                        element.classList.contains('cinematic-fade')) {
+                                    // Add stagger classes for simple elegant reveal
+                                    if (element.classList.contains('fade-in') || 
+                                        element.classList.contains('slide-left') || 
+                                        element.classList.contains('slide-right') || 
+                                        element.classList.contains('smooth-reveal')) {
                                         element.classList.add(`stagger-${(elementIndex % 6) + 1}`);
                                     }
-                                }, elementIndex * 150); // 150ms cinematic delay between elements
+                                }, elementIndex * 100); // 100ms simple delay between elements
                             });
                             
                             observer.unobserve(section);
@@ -7449,11 +7430,11 @@
                 sections.forEach(section => observer.observe(section));
             }
             
-            // Optimized cinematic scroll animations
-            function initCinematicScrollAnimations() {
+            // Optimized simple elegant scroll animations
+            function initSimpleScrollAnimations() {
                 if (isReducedMotion) return;
                 
-                const scrollElements = document.querySelectorAll('.cinematic-reveal, .cinematic-slide-left, .cinematic-slide-right, .cinematic-fade');
+                const scrollElements = document.querySelectorAll('.fade-in, .slide-left, .slide-right, .smooth-reveal');
                 
                 function animateOnScroll() {
                     const triggerBottom = window.innerHeight * 0.9;
@@ -7467,7 +7448,7 @@
                     });
                 }
                 
-                // Throttled scroll event for cinematic mobile performance
+                // Throttled scroll event for simple elegant mobile performance
                 let ticking = false;
                 function requestTick() {
                     if (!ticking) {
