@@ -6932,49 +6932,9 @@
             }, 1000);
         }
         
-        // Security Token Validator
+        // No token validation - invitation is now public
         function validateToken() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tokenParam = urlParams.get('to');
-            const adminParam = urlParams.get('admin');
-            
-            // Admin override - allow access with admin password
-            if (adminParam === 'kawinkawin') {
-                console.log('Admin access granted');
-                return true;
-            }
-            
-            if (!tokenParam) {
-                // No token parameter - deny access for security
-                console.error('No token parameter found');
-                return false;
-            }
-            
-            // Extract name and token from parameter
-            const parts = tokenParam.split('-');
-            if (parts.length < 3) {
-                console.error('Invalid token format');
-                return false;
-            }
-            
-            // Basic token validation - check if it looks like our generated token
-            const namePart = parts.slice(0, -2).join('-');
-            const timestampPart = parts[parts.length - 2];
-            const randomPart = parts[parts.length - 1];
-            
-            // Validate timestamp (base36) and random (base36) format
-            if (!/^[a-z0-9]+$/.test(timestampPart) || !/^[a-z0-9]+$/.test(randomPart)) {
-                console.error('Invalid token format');
-                return false;
-            }
-            
-            // Extract guest name for display
-            const guestName = namePart.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            
-            // Store guest name for personalization
-            window.currentGuest = guestName;
-            
-            console.log('Token validated successfully for:', guestName);
+            // Always return true - no token required
             return true;
         }
 
@@ -8223,34 +8183,9 @@
         }
         })();
 
-        // Initialize security validation on page load
+        // Initialize invitation - no token validation required
         document.addEventListener('DOMContentLoaded', function() {
-            // Validate token if present
-            const isValid = validateToken();
-            
-            if (!isValid) {
-                // Show access denied message
-                document.body.innerHTML = `
-                    <div style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        height: 100vh;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        font-family: 'Montserrat', sans-serif;
-                        text-align: center;
-                        color: white;
-                        padding: 2rem;
-                    ">
-                        <div>
-                            <h1 style="font-size: 2rem; margin-bottom: 1rem;">🔒 Akses Ditolak</h1>
-                            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Link undangan tidak valid atau sudah kadaluarsa.</p>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">Silakan hubungi pengirim undangan untuk mendapatkan link yang valid.</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+            // No token validation - invitation is now public
             
             // Personalize greeting if guest name is available
             if (window.currentGuest) {
