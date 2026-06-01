@@ -882,11 +882,6 @@
                                 </button>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <button class="btn btn-info w-100 mb-2" onclick="previewInvitation()">
-                                    <i class="fas fa-eye"></i> Preview Undangan
-                                </button>
-                            </div>
-                            <div class="col-md-6 mb-3">
                                 <button class="btn btn-secondary w-100 mb-2" onclick="clearCache()">
                                     <i class="fas fa-broom"></i> Clear Cache
                                 </button>
@@ -1054,17 +1049,8 @@
         }
 
         // WhatsApp Generator Functions
-        function generateUniqueToken(guestName) {
-            const timestamp = Date.now().toString(36);
-            const nameHash = guestName.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 8);
-            const random = Math.random().toString(36).substring(2, 8);
-            return `${nameHash}-${timestamp}-${random}`;
-        }
-
-        function createSecureInvitationLink(guestName) {
-            const token = generateUniqueToken(guestName);
-            const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            return `https://uggafeppri.my.id?to=${normalizedName}-${token}`;
+        function createSimpleInvitationLink() {
+            return `https://uggafeppri.my.id`;
         }
 
         function nameToDomain(name) {
@@ -1084,7 +1070,7 @@
                 return;
             }
 
-            const invitationLink = createSecureInvitationLink(guestName);
+            const invitationLink = createSimpleInvitationLink();
 
             const personalizedMessage = `Kepada Yth. Bapak/Ibu/Saudara/i
 
@@ -1132,7 +1118,7 @@ God bless you`;
                 return;
             }
 
-            const invitationLink = createSecureInvitationLink(guestName);
+            const invitationLink = createSimpleInvitationLink();
 
             const personalizedMessage = `${guestName}
 
@@ -1190,7 +1176,7 @@ God bless you`;
                 return;
             }
 
-            const invitationLink = createSecureInvitationLink(guestName);
+            const invitationLink = createSimpleInvitationLink();
 
             // Buat pesan WhatsApp
             const personalizedMessage = `${guestName}
@@ -1252,7 +1238,7 @@ God bless you`;
                     name: guestName,
                     phone: guestPhone || '', // Nomor WhatsApp opsional
                     link: whatsappUrl,
-                    key: generateUniqueToken(guestName),
+                    key: Date.now().toString(),
                     timestamp: new Date().toISOString()
                 };
 
@@ -1735,12 +1721,8 @@ God bless you`;
 
         // Settings Functions
         function openInvitationPage() {
-            const invitationUrl = 'https://uggafeppri.my.id?admin=kawinkawin';
+            const invitationUrl = 'https://uggafeppri.my.id';
             window.open(invitationUrl, '_blank');
-        }
-
-        function previewInvitation() {
-            window.open('https://uggafeppri.my.id', '_blank');
         }
     // GitHub API Configuration
         const GITHUB_CONFIG = {
