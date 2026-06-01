@@ -5599,62 +5599,9 @@
         function openSimpleGallery(category) {
             console.log(`Opening gallery for category: ${category}`);
             
-            // Check if we have cached photos for instant loading
-            if (galleryCategories[category] && galleryCategories[category].length > 0) {
-                console.log(`Using cached photos for ${category}:`, galleryCategories[category].length);
-                
-                // Create gallery immediately with cached photos
-                const photoPaths = galleryCategories[category].map(photo => `${category}/${photo}`);
-                createGalleryModal(category, photoPaths);
-                
-                // Background refresh to check for new photos
-                detectPhotosFromFolder(category, false).then(detectedPhotos => {
-                    const oldPhotos = galleryCategories[category] || [];
-                    const photosChanged = JSON.stringify(oldPhotos.sort()) !== JSON.stringify(detectedPhotos.sort());
-                    
-                    if (photosChanged) {
-                        // Update gallery if photos changed
-                        galleryCategories[category] = detectedPhotos;
-                        const newPhotoPaths = detectedPhotos.map(photo => `${category}/${photo}`);
-                        
-                        // Update existing gallery modal if still open
-                        const existingModal = document.querySelector('.gallery-modal');
-                        if (existingModal) {
-                            // Refresh the gallery with new photos
-                            existingModal.remove();
-                            createGalleryModal(category, newPhotoPaths);
-                        }
-                    }
-                }).catch(error => {
-                    console.log('Background refresh failed:', error);
-                });
-                
-                return;
-            }
-            
-            // Show loading indicator only for first load
-            const loadingIndicator = document.createElement('div');
-            loadingIndicator.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 99999;
-                color: white;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 1.2rem;
-            `;
-            loadingIndicator.innerHTML = '<div>🔍 Memuat foto...</div>';
-            document.body.appendChild(loadingIndicator);
-            
-            // Detect photos (use cache if available)
-            detectPhotosFromFolder(category, false).then(detectedPhotos => {
+            // Always force refresh to ensure latest data from GitHub
+            detectPhotosFromFolder(category, true).then(detectedPhotos => {
                 console.log(`Detected ${detectedPhotos.length} photos for ${category}:`, detectedPhotos);
-                
-                // Remove loading indicator
-                document.body.removeChild(loadingIndicator);
                 
                 if (detectedPhotos.length === 0) {
                     // Show user feedback for no photos
@@ -5688,23 +5635,39 @@
                 // Create photo paths
                 const photoPaths = detectedPhotos.map(photo => `${category}/${photo}`);
                 
-                // Debug: Log photo paths untuk troubleshooting
-                console.log('Photo paths created:', photoPaths);
-                console.log('Category:', category);
-                console.log('Detected photos:', detectedPhotos);
-                
-                // Update gallery categories with latest detection
+                // Update cache with latest data
                 galleryCategories[category] = detectedPhotos;
                 
-                // Open gallery with detected photos
+                // Create gallery modal
                 createGalleryModal(category, photoPaths);
-                
             }).catch(error => {
-                console.error('Error detecting photos:', error);
-                document.body.removeChild(loadingIndicator);
-                alert('Error mendeteksi foto: ' + error.message);
+                console.error('Error loading gallery:', error);
+                
+                // Show error message
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 99999;
+                    color: white;
+                    font-family: 'Montserrat', sans-serif;
+                    text-align: center;
+                    padding: 2rem;
+                `;
+                modal.innerHTML = `
+                    <div>
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Gagal memuat galeri</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Error: ${error.message}</div>
+                        <button onclick="this.closest('div').parentElement.remove()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;">Tutup</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
             });
-        }
         
         function createGalleryModal(category, photoPaths) {
 
