@@ -5599,9 +5599,62 @@
         function openSimpleGallery(category) {
             console.log(`Opening gallery for category: ${category}`);
             
-            // Always force refresh to ensure latest data from GitHub
-            detectPhotosFromFolder(category, true).then(detectedPhotos => {
+            // Check if we have cached photos for instant loading
+            if (galleryCategories[category] && galleryCategories[category].length > 0) {
+                console.log(`Using cached photos for ${category}:`, galleryCategories[category].length);
+                
+                // Create gallery immediately with cached photos
+                const photoPaths = galleryCategories[category].map(photo => `${category}/${photo}`);
+                createGalleryModal(category, photoPaths);
+                
+                // Background refresh to check for new photos
+                detectPhotosFromFolder(category, false).then(detectedPhotos => {
+                    const oldPhotos = galleryCategories[category] || [];
+                    const photosChanged = JSON.stringify(oldPhotos.sort()) !== JSON.stringify(detectedPhotos.sort());
+                    
+                    if (photosChanged) {
+                        // Update gallery if photos changed
+                        galleryCategories[category] = detectedPhotos;
+                        const newPhotoPaths = detectedPhotos.map(photo => `${category}/${photo}`);
+                        
+                        // Update existing gallery modal if still open
+                        const existingModal = document.querySelector('.gallery-modal');
+                        if (existingModal) {
+                            // Refresh the gallery with new photos
+                            existingModal.remove();
+                            createGalleryModal(category, newPhotoPaths);
+                        }
+                    }
+                }).catch(error => {
+                    console.log('Background refresh failed:', error);
+                });
+                
+                return;
+            }
+            
+            // Show loading indicator only for first load
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+                color: white;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 1.2rem;
+            `;
+            loadingIndicator.innerHTML = '<div>🔍 Memuat foto...</div>';
+            document.body.appendChild(loadingIndicator);
+            
+            // Detect photos (use cache if available)
+            detectPhotosFromFolder(category, false).then(detectedPhotos => {
                 console.log(`Detected ${detectedPhotos.length} photos for ${category}:`, detectedPhotos);
+                
+                // Remove loading indicator
+                document.body.removeChild(loadingIndicator);
                 
                 if (detectedPhotos.length === 0) {
                     // Show user feedback for no photos
@@ -5635,39 +5688,23 @@
                 // Create photo paths
                 const photoPaths = detectedPhotos.map(photo => `${category}/${photo}`);
                 
-                // Update cache with latest data
+                // Debug: Log photo paths untuk troubleshooting
+                console.log('Photo paths created:', photoPaths);
+                console.log('Category:', category);
+                console.log('Detected photos:', detectedPhotos);
+                
+                // Update gallery categories with latest detection
                 galleryCategories[category] = detectedPhotos;
                 
-                // Create gallery modal
+                // Open gallery with detected photos
                 createGalleryModal(category, photoPaths);
-            }).catch(error => {
-                console.error('Error loading gallery:', error);
                 
-                // Show error message
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed;
-                    inset: 0;
-                    background: rgba(0,0,0,0.8);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 99999;
-                    color: white;
-                    font-family: 'Montserrat', sans-serif;
-                    text-align: center;
-                    padding: 2rem;
-                `;
-                modal.innerHTML = `
-                    <div>
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
-                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Gagal memuat galeri</div>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">Error: ${error.message}</div>
-                        <button onclick="this.closest('div').parentElement.remove()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;">Tutup</button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
+            }).catch(error => {
+                console.error('Error detecting photos:', error);
+                document.body.removeChild(loadingIndicator);
+                alert('Error mendeteksi foto: ' + error.message);
             });
+        }
         
         function createGalleryModal(category, photoPaths) {
 
@@ -6932,9 +6969,49 @@
             }, 1000);
         }
         
-        // No token validation - invitation is now public
+        // Security Token Validator
         function validateToken() {
-            // Always return true - no token required
+            const urlParams = new URLSearchParams(window.location.search);
+            const tokenParam = urlParams.get('to');
+            const adminParam = urlParams.get('admin');
+            
+            // Admin override - allow access with admin password
+            if (adminParam === 'kawinkawin') {
+                console.log('Admin access granted');
+                return true;
+            }
+            
+            if (!tokenParam) {
+                // No token parameter - deny access for security
+                console.error('No token parameter found');
+                return false;
+            }
+            
+            // Extract name and token from parameter
+            const parts = tokenParam.split('-');
+            if (parts.length < 3) {
+                console.error('Invalid token format');
+                return false;
+            }
+            
+            // Basic token validation - check if it looks like our generated token
+            const namePart = parts.slice(0, -2).join('-');
+            const timestampPart = parts[parts.length - 2];
+            const randomPart = parts[parts.length - 1];
+            
+            // Validate timestamp (base36) and random (base36) format
+            if (!/^[a-z0-9]+$/.test(timestampPart) || !/^[a-z0-9]+$/.test(randomPart)) {
+                console.error('Invalid token format');
+                return false;
+            }
+            
+            // Extract guest name for display
+            const guestName = namePart.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            // Store guest name for personalization
+            window.currentGuest = guestName;
+            
+            console.log('Token validated successfully for:', guestName);
             return true;
         }
 
@@ -8183,9 +8260,34 @@
         }
         })();
 
-        // Initialize invitation - no token validation required
+        // Initialize security validation on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // No token validation - invitation is now public
+            // Validate token if present
+            const isValid = validateToken();
+            
+            if (!isValid) {
+                // Show access denied message
+                document.body.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100vh;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        font-family: 'Montserrat', sans-serif;
+                        text-align: center;
+                        color: white;
+                        padding: 2rem;
+                    ">
+                        <div>
+                            <h1 style="font-size: 2rem; margin-bottom: 1rem;">🔒 Akses Ditolak</h1>
+                            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Link undangan tidak valid atau sudah kadaluarsa.</p>
+                            <p style="font-size: 0.9rem; opacity: 0.8;">Silakan hubungi pengirim undangan untuk mendapatkan link yang valid.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
             
             // Personalize greeting if guest name is available
             if (window.currentGuest) {
