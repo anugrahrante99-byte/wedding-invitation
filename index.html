@@ -4094,7 +4094,27 @@
         function getGuestName() {
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('to');
-            return name || 'Tamu Undangan';
+            
+            if (!name) {
+                return 'Tamu Undangan';
+            }
+            
+            // Normalize name from URL format (with dashes) to readable format
+            const normalizedName = name
+                .replace(/-/g, ' ')  // Replace dashes with spaces
+                .replace(/\b\w/g, l => l.toUpperCase());  // Capitalize first letter of each word
+            
+            return normalizedName;
+        }
+        
+        // Display guest name on page load
+        function displayGuestName() {
+            const guestName = getGuestName();
+            const guestNameDisplay = document.getElementById('guestNameDisplay');
+            
+            if (guestNameDisplay) {
+                guestNameDisplay.textContent = guestName;
+            }
         }
         
         
@@ -8219,6 +8239,9 @@
         // Initialize invitation - no token validation required
         document.addEventListener('DOMContentLoaded', function() {
             // No token validation - invitation is now public
+            
+            // Display guest name from URL parameter
+            displayGuestName();
             
             // Initialize real-time guest messages
             initializeRealTimeWishes();
