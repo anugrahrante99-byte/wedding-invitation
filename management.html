@@ -1049,7 +1049,11 @@
         }
 
         // WhatsApp Generator Functions
-        function createSimpleInvitationLink() {
+        function createSimpleInvitationLink(guestName) {
+            if (guestName) {
+                const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                return `https://uggafeppri.my.id?to=${normalizedName}`;
+            }
             return `https://uggafeppri.my.id`;
         }
 
@@ -1721,8 +1725,15 @@ God bless you`;
 
         // Settings Functions
         function openInvitationPage() {
-            const invitationUrl = 'https://uggafeppri.my.id';
-            window.open(invitationUrl, '_blank');
+            const guestName = document.getElementById('guestName')?.value;
+            if (guestName) {
+                const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const invitationUrl = `https://uggafeppri.my.id?to=${normalizedName}`;
+                window.open(invitationUrl, '_blank');
+            } else {
+                const invitationUrl = 'https://uggafeppri.my.id';
+                window.open(invitationUrl, '_blank');
+            }
         }
     // GitHub API Configuration
         const GITHUB_CONFIG = {
