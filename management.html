@@ -159,12 +159,12 @@
             transform: translateY(-2px);
         }
 
-        .btn-success {
-            background: var(--success-color);
+        .btn-suess {
+            background: var(--suess-color);
             color: white;
         }
 
-        .btn-success:hover {
+        .btn-suess:hover {
             background: #27ae60;
             transform: translateY(-2px);
         }
@@ -261,8 +261,8 @@
             }
         }
 
-        .message.success {
-            border-left-color: var(--success-color);
+        .message.suess {
+            border-left-color: var(--suess-color);
         }
 
         .message.error {
@@ -1049,13 +1049,12 @@
         }
 
         // WhatsApp Generator Functions
-        function createSimpleInvitationLink(guestName) {
-            if (guestName) {
-                const normalizedName = guestName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                return `https://uggafeppri.my.id?to=${normalizedName}`;
-            }
-            return `https://uggafeppri.my.id`;
-        }
+      function createSimpleInvitationLink(guestName) {
+    if (guestName) {
+        return `https://uggafeppri.my.id?to=${encodeURIComponent(guestName)}`;
+    }
+    return `https://uggafeppri.my.id`;
+}
 
         function nameToDomain(name) {
             return name.toLowerCase()
