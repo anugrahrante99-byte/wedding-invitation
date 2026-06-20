@@ -4071,17 +4071,24 @@
         let invitationOpened = false;
 
         // Get guest name from URL parameter
-        function getGuestName() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('to');
-            
-            if (!name) {
-                return 'Tamu Undangan';
-            }
-            
-            // Normalize name from URL format (with dashes) to readable format
-           return decodeURIComponent(name);
-        }
+       function getGuestName() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('to');
+
+    if (!name) {
+        return 'Tamu Undangan';
+    }
+
+    const decodedName = decodeURIComponent(name);
+
+    if (!decodedName.includes(' ')) {
+        return decodedName
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    return decodedName;
+}
         
         // Display guest name on page load
         function displayGuestName() {
